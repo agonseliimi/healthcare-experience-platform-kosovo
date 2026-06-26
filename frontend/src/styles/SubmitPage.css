@@ -1,0 +1,64 @@
+/* SubmitPage styles */
+
+.submit-page {
+  min-height: 100vh;
+}
+
+/* Header */
+.submit-page-header {
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-10) 0 var(--space-8);
+}
+
+.submit-page-header-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.submit-page-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.submit-page-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: var(--space-6);
+}
+
+/* Trust row */
+.submit-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.submit-trust-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* Form wrapper */
+.submit-form-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-16);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .submit-trust-row {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
