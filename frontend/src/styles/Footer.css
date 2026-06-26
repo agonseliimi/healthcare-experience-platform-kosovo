@@ -1,0 +1,123 @@
+/* Footer styles */
+
+.footer {
+  background-color: #1E293B; /* Dark slate */
+  color: #94A3B8;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-6);
+}
+
+/* Disclaimer banner at top of footer */
+.footer-disclaimer {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-10);
+}
+
+.footer-disclaimer-text {
+  font-size: var(--font-size-sm);
+  color: #FCA5A5;
+  line-height: 1.6;
+}
+
+.footer-disclaimer-text strong {
+  color: #FEE2E2;
+}
+
+/* Column layout */
+.footer-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-10);
+}
+
+/* Brand column */
+.footer-brand {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: #F1F5F9;
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.footer-tagline {
+  font-size: var(--font-size-sm);
+  color: #94A3B8;
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+
+.footer-mvp-note {
+  font-size: var(--font-size-xs);
+  color: #64748B;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Column headings */
+.footer-col-title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #CBD5E1;
+  margin-bottom: var(--space-4);
+}
+
+/* Links */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.footer-link {
+  font-size: var(--font-size-sm);
+  color: #94A3B8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: #F1F5F9;
+}
+
+.footer-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.footer-text-item {
+  font-size: var(--font-size-sm);
+  color: #94A3B8;
+  line-height: 1.4;
+}
+
+/* Bottom row */
+.footer-bottom {
+  border-top: 1px solid #334155;
+  padding-top: var(--space-5);
+}
+
+.footer-copy {
+  font-size: var(--font-size-xs);
+  color: #64748B;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
