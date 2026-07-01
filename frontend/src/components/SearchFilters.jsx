@@ -1,149 +1,66 @@
-import { medicalCategories, kosovoCities } from '../data/mockExperiences'
-import '../styles/SearchFilters.css'
+import { CATEGORIES, CITIES, INSTITUTION_TYPES, VERIFICATION_LEVELS } from '../utils/constants'
 
 /**
- * SearchFilters component — sidebar filter panel for the Search page.
- *
- * Allows users to narrow down experiences by:
- *   - Institution type (public / private)
- *   - Medical category
- *   - City
- *   - Approximate cost range
- *   - Waiting time
- *   - Verification level
+ * Sidebar filter panel for the Search page (fully controlled by the parent).
  *
  * Props:
- *   filters (object)    — current filter state (controlled from SearchPage)
- *   onChange (function) — callback to update a specific filter field
- *   onReset (function)  — callback to clear all filters
- *
- * FUTURE: Filter options will come from a backend endpoint that returns
- * available facets based on actual data in the database.
+ *   filters  - current filter values
+ *   onChange - (key, value) => void
+ *   onReset  - () => void
  */
 function SearchFilters({ filters, onChange, onReset }) {
   return (
-    <aside className="search-filters" aria-label="Filter experiences">
-      <div className="filters-header">
-        <h2 className="filters-title">Filter Results</h2>
-        <button
-          className="filters-reset"
-          onClick={onReset}
-          aria-label="Clear all filters"
-        >
-          Clear all
-        </button>
+    <aside className="filters card">
+      <div className="filters-head">
+        <h2 className="filters-title">Filters</h2>
+        <button className="link-btn" onClick={onReset}>Clear all</button>
       </div>
 
-      {/* Institution type */}
       <div className="filter-group">
-        <h3 className="filter-group-label">Institution Type</h3>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="institutionType"
-            value=""
-            checked={filters.institutionType === ''}
-            onChange={(e) => onChange('institutionType', e.target.value)}
-          />
-          <span>All</span>
-        </label>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="institutionType"
-            value="public"
-            checked={filters.institutionType === 'public'}
-            onChange={(e) => onChange('institutionType', e.target.value)}
-          />
-          <span>Public Hospital</span>
-        </label>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="institutionType"
-            value="private"
-            checked={filters.institutionType === 'private'}
-            onChange={(e) => onChange('institutionType', e.target.value)}
-          />
-          <span>Private Clinic</span>
-        </label>
-      </div>
-
-      {/* Medical category */}
-      <div className="filter-group">
-        <h3 className="filter-group-label">Category</h3>
-        <select
-          className="filter-select"
-          value={filters.category}
-          onChange={(e) => onChange('category', e.target.value)}
-          aria-label="Filter by medical category"
-        >
-          <option value="">All Categories</option>
-          {medicalCategories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
+        <label className="form-label" htmlFor="f-city">City</label>
+        <select id="f-city" className="form-select" value={filters.city} onChange={(e) => onChange('city', e.target.value)}>
+          <option value="">All cities</option>
+          {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 
-      {/* City */}
       <div className="filter-group">
-        <h3 className="filter-group-label">City</h3>
-        <select
-          className="filter-select"
-          value={filters.city}
-          onChange={(e) => onChange('city', e.target.value)}
-          aria-label="Filter by city"
-        >
-          <option value="">All Cities</option>
-          {kosovoCities.map((city) => (
-            <option key={city} value={city}>{city}</option>
-          ))}
+        <label className="form-label" htmlFor="f-cat">Category</label>
+        <select id="f-cat" className="form-select" value={filters.category} onChange={(e) => onChange('category', e.target.value)}>
+          <option value="">All categories</option>
+          {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 
-      {/* Verification level */}
       <div className="filter-group">
-        <h3 className="filter-group-label">Verification Level</h3>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="verificationStatus"
-            value=""
-            checked={filters.verificationStatus === ''}
-            onChange={(e) => onChange('verificationStatus', e.target.value)}
-          />
-          <span>All Levels</span>
-        </label>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="verificationStatus"
-            value="self-reported"
-            checked={filters.verificationStatus === 'self-reported'}
-            onChange={(e) => onChange('verificationStatus', e.target.value)}
-          />
-          <span>Self-Reported</span>
-        </label>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="verificationStatus"
-            value="document-supported"
-            checked={filters.verificationStatus === 'document-supported'}
-            onChange={(e) => onChange('verificationStatus', e.target.value)}
-          />
-          <span>Document-Supported</span>
-        </label>
-        <label className="filter-radio">
-          <input
-            type="radio"
-            name="verificationStatus"
-            value="high-confidence"
-            checked={filters.verificationStatus === 'high-confidence'}
-            onChange={(e) => onChange('verificationStatus', e.target.value)}
-          />
-          <span>High-Confidence</span>
-        </label>
+        <span className="form-label">Institution</span>
+        <label className="radio"><input type="radio" name="inst" checked={filters.institutionType === ''} onChange={() => onChange('institutionType', '')} /> All</label>
+        {INSTITUTION_TYPES.map((t) => (
+          <label className="radio" key={t.value}>
+            <input type="radio" name="inst" checked={filters.institutionType === t.value} onChange={() => onChange('institutionType', t.value)} /> {t.label}
+          </label>
+        ))}
+      </div>
+
+      <div className="filter-group">
+        <span className="form-label">Approximate cost (€)</span>
+        <div className="filter-row">
+          <input type="number" min="0" className="form-input" placeholder="Min" value={filters.minCost} onChange={(e) => onChange('minCost', e.target.value)} />
+          <input type="number" min="0" className="form-input" placeholder="Max" value={filters.maxCost} onChange={(e) => onChange('maxCost', e.target.value)} />
+        </div>
+      </div>
+
+      <div className="filter-group">
+        <label className="form-label" htmlFor="f-wait">Waiting time contains</label>
+        <input id="f-wait" type="text" className="form-input" placeholder="e.g. weeks, days" value={filters.waitingTime} onChange={(e) => onChange('waitingTime', e.target.value)} />
+      </div>
+
+      <div className="filter-group">
+        <label className="form-label" htmlFor="f-verif">Verification level</label>
+        <select id="f-verif" className="form-select" value={filters.verificationLevel} onChange={(e) => onChange('verificationLevel', e.target.value)}>
+          <option value="">All levels</option>
+          {VERIFICATION_LEVELS.map((v) => <option key={v.value} value={v.value}>{v.label}</option>)}
+        </select>
       </div>
     </aside>
   )

@@ -1,39 +1,51 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import HomePage from './pages/HomePage'
-import SearchPage from './pages/SearchPage'
-import SubmitPage from './pages/SubmitPage'
-import PrivacyPage from './pages/PrivacyPage'
-import './styles/global.css'
+import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/AdminRoute'
+
+import Home from './pages/Home'
+import Search from './pages/Search'
+import ExperienceDetails from './pages/ExperienceDetails'
+import SubmitExperience from './pages/SubmitExperience'
+import Privacy from './pages/Privacy'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Dashboard from './pages/Dashboard'
+import AdminDashboard from './pages/AdminDashboard'
+import AdminReports from './pages/AdminReports'
+import AdminVerification from './pages/AdminVerification'
 
 /**
- * App.jsx — Root application component.
+ * App shell + route table.
  *
- * Defines the page routing structure:
- *   /          → Home page
- *   /search    → Browse / search experiences
- *   /submit    → Submit an anonymous experience
- *   /privacy   → Trust & privacy explanation
- *
- * Navbar and Footer appear on every page.
- *
- * FUTURE: Add authentication routes here (login, register, profile).
+ * Public:     /, /search, /experiences/:id, /privacy, /login, /register
+ * Protected:  /submit, /dashboard
+ * Admin only: /admin, /admin/reports, /admin/verification
  */
 function App() {
   return (
     <div className="app-shell">
       <Navbar />
-
-      <main className="main-content">
+      <main className="main">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/submit" element={<SubmitPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/experiences/:id" element={<ExperienceDetails />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route path="/submit" element={<ProtectedRoute><SubmitExperience /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
+          <Route path="/admin/verification" element={<AdminRoute><AdminVerification /></AdminRoute>} />
+
+          <Route path="*" element={<Home />} />
         </Routes>
       </main>
-
       <Footer />
     </div>
   )

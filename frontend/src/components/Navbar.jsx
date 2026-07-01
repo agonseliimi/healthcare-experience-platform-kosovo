@@ -1,93 +1,69 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import '../styles/Navbar.css'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 /**
- * Navbar component — appears on every page.
- *
- * Provides navigation between main sections:
- *   Home, Search Experiences, Share Experience, Privacy & Trust
- *
- * Includes a mobile hamburger menu for small screens.
- *
- * FUTURE: Show logged-in user avatar/name here once authentication is added.
+ * Top navigation bar. Shows different links depending on auth state:
+ *   - guest: Home, Search, Privacy, Login, Register
+ *   - user:  + Share, Dashboard, Logout
+ *   - admin: + Admin
  */
 function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const location = useLocation()
+  const { isAuthenticated, isAdmin, user, logout } = useAuth()
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
-  const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/search', label: 'Search' },
-    { to: '/submit', label: 'Share Experience' },
-    { to: '/privacy', label: 'Privacy & Trust' },
-  ]
-
-  // Highlight the active link based on current URL path
-  const isActive = (path) => {
-    if (path === '/') return location.pathname === '/'
-    return location.pathname.startsWith(path)
+  function handleLogout() {
+    logout()
+    setOpen(false)
+    navigate('/')
   }
 
+  const linkClass = ({ isActive }) => `nav-link ${isActive ? 'nav-link--active' : ''}`
+
   return (
-    <nav className="navbar" role="navigation" aria-label="Main navigation">
+    <nav className="navbar">
       <div className="navbar-inner">
-        {/* Brand / Logo */}
-        <Link to="/" className="navbar-brand" onClick={() => setMenuOpen(false)}>
-          <span className="navbar-logo-icon" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+        <Link to="/" className="brand" onClick={() => setOpen(false)}>
+          <span className="brand-mark" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
               <rect width="32" height="32" rx="8" fill="#0EA5E9" />
               <path d="M16 7v18M7 16h18" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
             </svg>
           </span>
-          <span className="navbar-brand-text">
-            HealthPath <span className="navbar-brand-sub">Kosovo</span>
-          </span>
+          <span className="brand-text">HealthPath <span className="brand-sub">Kosovo</span></span>
         </Link>
 
-        {/* Desktop nav links */}
-        <ul className="navbar-links" role="list">
-          {navLinks.map((link) => (
-            <li key={link.to}>
-              <Link
-                to={link.to}
-                className={`navbar-link ${isActive(link.to) ? 'navbar-link--active' : ''}`}
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        {/* Mobile hamburger button */}
         <button
-          className="navbar-hamburger"
-          aria-label="Toggle navigation menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
+          className="nav-toggle"
+          aria-label="Toggle menu"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
         >
-          <span className={`hamburger-bar ${menuOpen ? 'open' : ''}`} />
-          <span className={`hamburger-bar ${menuOpen ? 'open' : ''}`} />
-          <span className={`hamburger-bar ${menuOpen ? 'open' : ''}`} />
+          <span /><span /><span />
         </button>
-      </div>
 
-      {/* Mobile dropdown menu */}
-      {menuOpen && (
-        <div className="navbar-mobile-menu" role="menu">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`navbar-mobile-link ${isActive(link.to) ? 'navbar-link--active' : ''}`}
-              onClick={() => setMenuOpen(false)}
-              role="menuitem"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div className={`nav-links ${open ? 'nav-links--open' : ''}`} onClick={() => setOpen(false)}>
+          <NavLink to="/" className={linkClass} end>Home</NavLink>
+          <NavLink to="/search" className={linkClass}>Search</NavLink>
+          {isAuthenticated && <NavLink to="/submit" className={linkClass}>Share Experience</NavLink>}
+          <NavLink to="/privacy" className={linkClass}>Privacy</NavLink>
+          {isAuthenticated && <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>}
+          {isAdmin && <NavLink to="/admin" className={linkClass}>Admin</NavLink>}
+
+          {!isAuthenticated ? (
+            <div className="nav-auth">
+              <NavLink to="/login" className="btn btn-ghost btn-sm">Login</NavLink>
+              <NavLink to="/register" className="btn btn-primary btn-sm">Register</NavLink>
+            </div>
+          ) : (
+            <div className="nav-auth">
+              <span className="nav-user" title={user?.email}>Hi, {user?.displayName}</span>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   )
 }

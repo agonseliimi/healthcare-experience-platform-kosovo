@@ -1,26 +1,30 @@
-# Dependencies
+# ---- Node / frontend ----
 node_modules/
 frontend/node_modules/
-backend/node_modules/
-
-# Vite build output
 frontend/dist/
 frontend/.vite/
 
-# Environment variables — never commit secrets
+# ---- Java / backend ----
+backend/target/
+*.class
+
+# ---- SQLite database files (created at runtime, never commit) ----
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/*.sqlite
+
+# ---- Environment / secrets ----
 .env
 .env.local
 .env.*.local
 backend/.env
 
-# OS files
+# ---- OS / editor ----
 .DS_Store
 Thumbs.db
-
-# Editor
 .vscode/
 .idea/
 
-# Logs
+# ---- Logs ----
 *.log
 npm-debug.log*

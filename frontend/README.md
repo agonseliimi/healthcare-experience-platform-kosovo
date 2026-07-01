@@ -1,146 +1,99 @@
 # HealthPath Kosovo — Frontend
 
-> **MVP Prototype** | University Mentorship Project — Week 3 Implementation
+React + Vite single-page app for the healthcare transparency platform.
 
-This is the React frontend for the **HealthPath Kosovo** healthcare transparency platform. It allows users to read and share anonymous healthcare experiences. It does **not** provide medical advice.
+> This app does not provide medical advice. It shows anonymous patient journeys only.
 
 ---
 
-## How to Run
+## Stack
+
+- **React 18** + **Vite 5**
+- **React Router 6** for routing
+- **Context API** for authentication state
+- Plain **CSS** (single `src/styles/global.css` design system)
+- Native `fetch` for API calls (no axios)
+
+---
+
+## Run
 
 ```bash
-# 1. Navigate to the frontend folder
 cd frontend
-
-# 2. Install dependencies
 npm install
-
-# 3. Start the development server
-npm run dev
+npm run dev      # dev server at http://localhost:5173
+npm run build    # production build into dist/
+npm run preview  # preview the production build
 ```
 
-The app will be available at: **http://localhost:5173**
+The backend must be running at `http://localhost:5000` (see `backend/README.md`).
 
 ---
 
-## Project Structure
+## Pages & routes
+
+| Route                  | Page                | Access        |
+|------------------------|---------------------|---------------|
+| `/`                    | Home                | Public        |
+| `/search`              | Search / browse     | Public (guest-limited) |
+| `/experiences/:id`     | Experience details  | Public (guest-limited) |
+| `/privacy`             | Privacy & Trust     | Public        |
+| `/login`               | Login               | Public        |
+| `/register`            | Register            | Public        |
+| `/submit`              | Submit experience   | User          |
+| `/dashboard`           | User dashboard      | User          |
+| `/admin`               | Admin dashboard     | Admin         |
+| `/admin/reports`       | Report moderation   | Admin         |
+| `/admin/verification`  | Verification review | Admin         |
+
+Route protection is handled by `components/ProtectedRoute.jsx` (auth) and
+`components/AdminRoute.jsx` (admin).
+
+---
+
+## Structure
 
 ```
-frontend/
-├── index.html                     # HTML entry point
-├── vite.config.js                 # Vite configuration
-├── package.json                   # Dependencies
-├── public/
-│   └── favicon.svg                # App favicon
-└── src/
-    ├── main.jsx                   # React root entry point
-    ├── App.jsx                    # Routing setup
-    │
-    ├── components/                # Reusable UI components
-    │   ├── Navbar.jsx             # Navigation bar (all pages)
-    │   ├── Footer.jsx             # Footer with disclaimer (all pages)
-    │   ├── Hero.jsx               # Hero section (Home page)
-    │   ├── HowItWorks.jsx         # 3-step explainer (Home page)
-    │   ├── ExperienceCard.jsx     # Single experience card
-    │   ├── SearchFilters.jsx      # Sidebar filter panel
-    │   ├── SubmitExperienceForm.jsx  # Anonymous submission form
-    │   └── PrivacySection.jsx     # Trust & privacy content
-    │
-    ├── pages/                     # Page components (one per route)
-    │   ├── HomePage.jsx           # / — Landing page
-    │   ├── SearchPage.jsx         # /search — Browse experiences
-    │   ├── SubmitPage.jsx         # /submit — Share an experience
-    │   └── PrivacyPage.jsx        # /privacy — Privacy & Trust
-    │
-    ├── data/
-    │   └── mockExperiences.js     # Static mock data (replaces backend for MVP)
-    │
-    └── styles/                    # CSS files (one per component + global)
-        ├── global.css             # Design tokens, reset, utilities, buttons
-        ├── Navbar.css
-        ├── Footer.css
-        ├── Hero.css
-        ├── HowItWorks.css
-        ├── ExperienceCard.css
-        ├── SearchFilters.css
-        ├── SubmitExperienceForm.css
-        ├── PrivacySection.css
-        ├── HomePage.css
-        ├── SearchPage.css
-        ├── SubmitPage.css
-        └── PrivacyPage.css
+frontend/src/
+├── api/api.js            # All backend calls; attaches JWT automatically
+├── context/AuthContext.jsx  # Current user + login/register/logout
+├── components/           # Reusable UI (Navbar, Footer, ExperienceCard, modals, badges, ...)
+├── pages/                # One component per route
+├── utils/
+│   ├── constants.js      # Cities, categories, enums for dropdowns
+│   └── guestUsage.js     # Guest limit tracking (localStorage)
+└── styles/global.css     # Design tokens + all component styles
 ```
 
----
+### Key components
 
-## Pages
-
-| Route | Description |
-|-------|-------------|
-| `/` | Home — hero, how it works, recent experiences |
-| `/search` | Browse all experiences with search + filters |
-| `/submit` | Submit an anonymous healthcare journey |
-| `/privacy` | Trust & Privacy explanation |
-
----
-
-## Mock Data
-
-All experience data is in `src/data/mockExperiences.js`. It contains:
-
-- `mockExperiences` — 6 sample anonymous patient journeys
-- `verificationLevels` — definitions for self-reported / document-supported / high-confidence
-- `kosovoCities` — city list for filters and form
-- `medicalCategories` — category list for filters and form
-
-**Important:** This file will be replaced by real API calls once the backend is connected.
+- `Navbar`, `Footer`, `Hero`
+- `ExperienceCard` — one experience with like/dislike/report/view actions
+- `SearchFilters` — city, category, institution, cost range, waiting, verification
+- `SubmitExperienceForm` — posts a new experience (+ optional verification)
+- `PrivacySection` — trust & privacy content
+- `GuestLimitBanner`, `ReportModal`, `TrustBadge`, `VerificationBox`
+- `ProtectedRoute`, `AdminRoute`, `LoadingState`, `ErrorState`
 
 ---
 
-## What Should Be Implemented Next
+## API connection
 
-### Backend (Phase 2)
-- [ ] Express.js or FastAPI backend with REST endpoints
-- [ ] `GET /api/experiences` — fetch experiences with filters
-- [ ] `POST /api/experiences` — submit new experience
-- [ ] `GET /api/stats` — platform statistics
-- [ ] PostgreSQL database schema for experiences
+`src/api/api.js`:
 
-### Authentication (Phase 3)
-- [ ] Optional user accounts (JWT-based)
-- [ ] Users can track their own submissions
-- [ ] Admin panel for verification review
-
-### Document Verification (Phase 4)
-- [ ] Secure encrypted document upload
-- [ ] Documents stored privately — only metadata shown publicly
-- [ ] Admin review workflow for document-supported verification
-
-### ML Features (Phase 5)
-- [ ] Cost/waiting-time estimation based on category + city + institution
-- [ ] Semantic search ("knee injury after sport" finds orthopaedics results)
-- [ ] Anomaly detection for clearly inaccurate submissions
-
-### Other
-- [ ] GDPR-aligned privacy policy page
-- [ ] Right-to-erasure for submitted experiences
-- [ ] Albanian / Serbian language support
+- base URL `http://localhost:5000/api`
+- automatically adds `Authorization: Bearer <token>` from `localStorage`
+- every call is wrapped in try/catch and throws a readable `Error`
+- if the backend is offline, a friendly message is shown (the UI never crashes)
 
 ---
 
-## Design System
+## Guest access
 
-All CSS variables (colours, spacing, typography, shadows) are in `src/styles/global.css` under `:root`. Change these to retheme the entire platform.
+Guests (not logged in) can browse the home page and a limited number of searches /
+detail views. Usage is tracked in `localStorage` under `healthcare_guest_usage`
+(limit **5** meaningful actions). After the limit a modal prompts the guest to
+**Register**, **Login**, or **Continue Limited Preview**.
 
-Key colours:
-- **Primary:** `#0EA5E9` (sky blue — calm, trustworthy)
-- **Accent:** `#10B981` (emerald — verified / success)
-- **Warning:** `#F59E0B` (amber — self-reported / disclaimers)
-
----
-
-## Disclaimer
-
-> This platform does not provide medical diagnosis or medical advice.
-> All content represents anonymous patient experiences shared voluntarily.
-> Always consult a qualified healthcare professional for medical decisions.
+Guests cannot submit experiences, vote, report, request verification, or open the
+dashboard — those actions trigger a login/register prompt.
