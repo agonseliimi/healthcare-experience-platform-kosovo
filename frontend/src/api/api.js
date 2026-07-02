@@ -89,6 +89,8 @@ export function getExperiences(filters = {}) {
 }
 export const getMyExperiences = () => request('/experiences/mine')
 export const getExperienceById = (id) => request(`/experiences/${id}`, { auth: false })
+// Authenticated fetch — lets an owner load their own non-published (e.g. HIDDEN) post for editing.
+export const getExperienceForEdit = (id) => request(`/experiences/${id}`)
 export const createExperience = (data) => request('/experiences', { method: 'POST', body: data })
 export const updateExperience = (id, data) => request(`/experiences/${id}`, { method: 'PUT', body: data })
 export const deleteExperience = (id) => request(`/experiences/${id}`, { method: 'DELETE' })

@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createExperience, createVerificationRequest } from '../api/api'
+import { createExperience, updateExperience, createVerificationRequest } from '../api/api'
 import { CATEGORIES, CITIES, INSTITUTION_TYPES } from '../utils/constants'
 
 /**
- * Form to submit an anonymous experience to the backend.
+ * Form to submit or edit an anonymous experience.
+ *
+ * Props:
+ *   experience - when provided (with an id), the form runs in EDIT mode:
+ *                it prefills from this object and PUTs to /experiences/{id}
+ *                instead of creating a new one. The optional verification
+ *                request is only offered when creating.
  *
  * The backend also runs a privacy sanitization check and will reject
  * submissions that appear to contain personal identifiers.
  */
-const initialState = {
+const emptyState = {
   category: '',
   institutionType: '',
   city: '',
@@ -24,8 +30,27 @@ const initialState = {
   documentNote: '',
 }
 
-function SubmitExperienceForm() {
-  const [form, setForm] = useState(initialState)
+/** Build initial form state from an existing experience (edit mode) or blanks (create). */
+function toFormState(experience) {
+  if (!experience) return emptyState
+  return {
+    ...emptyState,
+    category: experience.category ?? '',
+    institutionType: experience.institutionType ?? '',
+    city: experience.city ?? '',
+    stepsTaken: experience.stepsTaken ?? '',
+    testsPerformed: experience.testsPerformed ?? '',
+    approximateCost: experience.approximateCost == null ? '' : String(experience.approximateCost),
+    waitingTime: experience.waitingTime ?? '',
+    resultTime: experience.resultTime ?? '',
+    summary: experience.summary ?? '',
+    isAnonymous: experience.isAnonymous ?? true,
+  }
+}
+
+function SubmitExperienceForm({ experience }) {
+  const isEdit = Boolean(experience?.id)
+  const [form, setForm] = useState(() => toFormState(experience))
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -43,21 +68,30 @@ function SubmitExperienceForm() {
       return
     }
 
+    const payload = {
+      category: form.category,
+      institutionType: form.institutionType,
+      city: form.city,
+      stepsTaken: form.stepsTaken,
+      testsPerformed: form.testsPerformed,
+      approximateCost: form.approximateCost === '' ? null : Number(form.approximateCost),
+      waitingTime: form.waitingTime,
+      resultTime: form.resultTime,
+      summary: form.summary,
+      isAnonymous: form.isAnonymous,
+    }
+
     setSubmitting(true)
     try {
+      if (isEdit) {
+        // Edit mode: update the existing experience and return to its detail page.
+        await updateExperience(experience.id, payload)
+        navigate(`/experiences/${experience.id}`)
+        return
+      }
+
       // 1) Create the experience.
-      const created = await createExperience({
-        category: form.category,
-        institutionType: form.institutionType,
-        city: form.city,
-        stepsTaken: form.stepsTaken,
-        testsPerformed: form.testsPerformed,
-        approximateCost: form.approximateCost === '' ? null : Number(form.approximateCost),
-        waitingTime: form.waitingTime,
-        resultTime: form.resultTime,
-        summary: form.summary,
-        isAnonymous: form.isAnonymous,
-      })
+      const created = await createExperience(payload)
 
       // 2) Optionally request verification for it right away.
       if (form.requestVerification) {
@@ -156,26 +190,40 @@ function SubmitExperienceForm() {
         <span>Submit anonymously (your identity is never shown on the experience)</span>
       </label>
 
-      <label className="checkbox-row">
-        <input type="checkbox" checked={form.requestVerification} onChange={(e) => set('requestVerification', e.target.checked)} />
-        <span>Request optional verification (documents are never shown publicly)</span>
-      </label>
+      {!isEdit && (
+        <>
+          <label className="checkbox-row">
+            <input type="checkbox" checked={form.requestVerification} onChange={(e) => set('requestVerification', e.target.checked)} />
+            <span>Request optional verification (documents are never shown publicly)</span>
+          </label>
 
-      {form.requestVerification && (
-        <div className="form-group">
-          <label className="form-label" htmlFor="s-docnote">Document verification note</label>
-          <textarea id="s-docnote" className="form-textarea" rows={2} value={form.documentNote}
-            onChange={(e) => set('documentNote', e.target.value)}
-            placeholder="Describe (without identifiers) what evidence supports this experience." />
-          <p className="form-hint">
-            By requesting verification you confirm you removed all personal identifiers.
-          </p>
-        </div>
+          {form.requestVerification && (
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-docnote">Document verification note</label>
+              <textarea id="s-docnote" className="form-textarea" rows={2} value={form.documentNote}
+                onChange={(e) => set('documentNote', e.target.value)}
+                placeholder="Describe (without identifiers) what evidence supports this experience." />
+              <p className="form-hint">
+                By requesting verification you confirm you removed all personal identifiers.
+              </p>
+            </div>
+          )}
+        </>
       )}
 
-      <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
-        {submitting ? 'Submitting...' : 'Submit Experience'}
-      </button>
+      <div className="form-actions">
+        <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
+          {submitting
+            ? (isEdit ? 'Saving...' : 'Submitting...')
+            : (isEdit ? 'Save Changes' : 'Submit Experience')}
+        </button>
+        {isEdit && (
+          <button type="button" className="btn btn-secondary btn-lg" disabled={submitting}
+            onClick={() => navigate(`/experiences/${experience.id}`)}>
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   )
 }

@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Search from './pages/Search'
 import ExperienceDetails from './pages/ExperienceDetails'
 import SubmitExperience from './pages/SubmitExperience'
+import EditExperience from './pages/EditExperience'
 import Privacy from './pages/Privacy'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -20,7 +21,7 @@ import AdminVerification from './pages/AdminVerification'
  * App shell + route table.
  *
  * Public:     /, /search, /experiences/:id, /privacy, /login, /register
- * Protected:  /submit, /dashboard
+ * Protected:  /submit, /experiences/:id/edit, /dashboard
  * Admin only: /admin, /admin/reports, /admin/verification
  */
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/submit" element={<ProtectedRoute><SubmitExperience /></ProtectedRoute>} />
+          <Route path="/experiences/:id/edit" element={<ProtectedRoute><EditExperience /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

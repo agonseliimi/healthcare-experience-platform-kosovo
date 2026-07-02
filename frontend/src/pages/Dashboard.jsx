@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getMyExperiences, getMyVerificationRequests } from '../api/api'
+import { getMyExperiences, getMyVerificationRequests, deleteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import { INSTITUTION_LABELS, VERIFICATION_LABELS } from '../components/ExperienceCard'
 import TrustBadge from '../components/TrustBadge'
@@ -14,6 +14,8 @@ function Dashboard() {
   const [verifications, setVerifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
+  const [actionError, setActionError] = useState(null)
 
   async function load() {
     setLoading(true)
@@ -30,6 +32,25 @@ function Dashboard() {
   }
 
   useEffect(() => { load() }, [])
+
+  // Soft-delete an experience the user owns (backend sets its status to HIDDEN).
+  async function handleDelete(exp) {
+    const ok = window.confirm(
+      `Delete your "${exp.category}" experience in ${exp.city}? It will be removed from public view.`
+    )
+    if (!ok) return
+
+    setActionError(null)
+    setDeletingId(exp.id)
+    try {
+      await deleteExperience(exp.id)
+      await load()
+    } catch (err) {
+      setActionError(err.message)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   return (
     <div className="page">
@@ -60,13 +81,14 @@ function Dashboard() {
         <>
           <section className="section">
             <h2 className="section-title">My experiences ({experiences.length})</h2>
+            {actionError && <div className="alert alert-error">{actionError}</div>}
             {experiences.length === 0 ? (
               <p className="muted">You have not submitted any experiences yet.</p>
             ) : (
               <div className="table-wrap">
                 <table className="table">
                   <thead>
-                    <tr><th>Category</th><th>Institution</th><th>City</th><th>Status</th><th>Verification</th><th>Likes</th><th></th></tr>
+                    <tr><th>Category</th><th>Institution</th><th>City</th><th>Status</th><th>Verification</th><th>Likes</th><th>Actions</th></tr>
                   </thead>
                   <tbody>
                     {experiences.map((e) => (
@@ -77,7 +99,22 @@ function Dashboard() {
                         <td><span className={`status status--${e.status}`}>{e.status}</span></td>
                         <td>{VERIFICATION_LABELS[e.verificationLevel]}</td>
                         <td>{e.likes}</td>
-                        <td><Link className="link" to={`/experiences/${e.id}`}>View</Link></td>
+                        <td>
+                          <div className="row-actions">
+                            <Link className="link" to={`/experiences/${e.id}`}>View</Link>
+                            <Link className="link" to={`/experiences/${e.id}/edit`}>Edit</Link>
+                            {e.status !== 'HIDDEN' && (
+                              <button
+                                type="button"
+                                className="link link-danger"
+                                onClick={() => handleDelete(e)}
+                                disabled={deletingId === e.id}
+                              >
+                                {deletingId === e.id ? 'Deleting…' : 'Delete'}
+                              </button>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

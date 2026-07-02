@@ -89,6 +89,15 @@ img, svg { display: block; max-width: 100%; }
 .link:hover { text-decoration: underline; }
 .link-btn { color: var(--primary-dark); font-weight: 600; font-size: 0.85rem; }
 .link-btn:hover { text-decoration: underline; }
+.link-danger { color: #c0392b; }
+.link-danger:hover { text-decoration: underline; }
+.link:disabled { opacity: 0.6; cursor: not-allowed; text-decoration: none; }
+
+/* Inline action links (e.g. View / Edit / Delete inside a table row). */
+.row-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Form footer holding primary + secondary actions (e.g. Save / Cancel). */
+.form-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
 /* ---------- Navbar ---------- */
 .navbar {
