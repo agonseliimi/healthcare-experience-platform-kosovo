@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Top navigation bar. Shows different links depending on auth state:
@@ -12,6 +13,7 @@ function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const { t, i18n } = useTranslation()
 
   function handleLogout() {
     logout()
@@ -20,6 +22,11 @@ function Navbar() {
   }
 
   const linkClass = ({ isActive }) => `nav-link ${isActive ? 'nav-link--active' : ''}`
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'sq' ? 'en' : 'sq'
+    i18n.changeLanguage(newLang)
+  }
 
   return (
     <nav className="navbar">
@@ -44,22 +51,28 @@ function Navbar() {
         </button>
 
         <div className={`nav-links ${open ? 'nav-links--open' : ''}`} onClick={() => setOpen(false)}>
-          <NavLink to="/" className={linkClass} end>Home</NavLink>
-          <NavLink to="/search" className={linkClass}>Search</NavLink>
-          {isAuthenticated && <NavLink to="/submit" className={linkClass}>Share Experience</NavLink>}
-          <NavLink to="/privacy" className={linkClass}>Privacy</NavLink>
-          {isAuthenticated && <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>}
-          {isAdmin && <NavLink to="/admin" className={linkClass}>Admin</NavLink>}
+          <NavLink to="/" className={linkClass} end>{t('navbar.home')}</NavLink>
+          <NavLink to="/search" className={linkClass}>{t('navbar.search')}</NavLink>
+          {isAuthenticated && <NavLink to="/submit" className={linkClass}>{t('navbar.share')}</NavLink>}
+          <NavLink to="/privacy" className={linkClass}>{t('navbar.privacy')}</NavLink>
+          {isAuthenticated && <NavLink to="/dashboard" className={linkClass}>{t('navbar.dashboard')}</NavLink>}
+          {isAdmin && <NavLink to="/admin" className={linkClass}>{t('navbar.admin')}</NavLink>}
 
           {!isAuthenticated ? (
             <div className="nav-auth">
-              <NavLink to="/login" className="btn btn-ghost btn-sm">Login</NavLink>
-              <NavLink to="/register" className="btn btn-primary btn-sm">Register</NavLink>
+              <NavLink to="/login" className="btn btn-ghost btn-sm">{t('navbar.login')}</NavLink>
+              <NavLink to="/register" className="btn btn-primary btn-sm">{t('navbar.register')}</NavLink>
+              <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); toggleLanguage(); }} title="Toggle Language">
+                {i18n.language === 'sq' ? '🇬🇧 EN' : '🇦🇱 SQ'}
+              </button>
             </div>
           ) : (
             <div className="nav-auth">
-              <span className="nav-user" title={user?.email}>Hi, {user?.displayName}</span>
-              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Logout</button>
+              <span className="nav-user" title={user?.email}>{t('navbar.greeting')}, {user?.displayName}</span>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>{t('navbar.logout')}</button>
+              <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); toggleLanguage(); }} title="Toggle Language">
+                {i18n.language === 'sq' ? '🇬🇧 EN' : '🇦🇱 SQ'}
+              </button>
             </div>
           )}
         </div>

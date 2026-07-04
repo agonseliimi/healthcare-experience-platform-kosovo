@@ -1,23 +1,25 @@
 import { Link } from 'react-router-dom'
 import Hero from '../components/Hero'
+import { useTranslation } from 'react-i18next'
 
 /** Landing page: hero, how it works, and feature cards. */
 function Home() {
+  const { t } = useTranslation()
   const steps = [
-    'Browse anonymous experiences',
-    'Compare costs, waiting times, and steps',
-    'Share your experience anonymously',
-    'Choose optional verification',
-    'Help the community identify trustworthy information',
+    t('homePage.step1'),
+    t('homePage.step2'),
+    t('homePage.step3'),
+    t('homePage.step4'),
+    t('homePage.step5'),
   ]
 
   const features = [
-    { title: 'Anonymous sharing', text: 'Share your journey without revealing your identity.' },
-    { title: 'Public / private comparison', text: 'Compare public hospitals and private clinics.' },
-    { title: 'Optional verification', text: 'Add evidence privately to raise confidence.' },
-    { title: 'Trust score', text: 'Community credibility signals — not medical accuracy.' },
-    { title: 'Abuse reporting', text: 'Flag privacy issues, medical-advice claims, or spam.' },
-    { title: 'Privacy-first design', text: 'Documents are never public; identifiers are blocked.' },
+    { title: t('homePage.f1Title'), text: t('homePage.f1Text') },
+    { title: t('homePage.f2Title'), text: t('homePage.f2Text') },
+    { title: t('homePage.f3Title'), text: t('homePage.f3Text') },
+    { title: t('homePage.f4Title'), text: t('homePage.f4Text') },
+    { title: t('homePage.f5Title'), text: t('homePage.f5Text') },
+    { title: t('homePage.f6Title'), text: t('homePage.f6Text') },
   ]
 
   return (
@@ -25,7 +27,7 @@ function Home() {
       <Hero />
 
       <section className="section">
-        <h2 className="section-title">How it works</h2>
+        <h2 className="section-title">{t('homePage.howItWorks')}</h2>
         <ol className="steps">
           {steps.map((s, i) => (
             <li key={i} className="step">
@@ -37,7 +39,7 @@ function Home() {
       </section>
 
       <section className="section">
-        <h2 className="section-title">Why HealthPath</h2>
+        <h2 className="section-title">{t('homePage.why')}</h2>
         <div className="feature-grid">
           {features.map((f) => (
             <div key={f.title} className="card feature">
@@ -47,7 +49,7 @@ function Home() {
           ))}
         </div>
         <div className="center">
-          <Link to="/search" className="btn btn-primary btn-lg">Browse Experiences</Link>
+          <Link to="/search" className="btn btn-primary btn-lg">{t('homePage.browseBtn')}</Link>
         </div>
       </section>
     </div>

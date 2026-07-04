@@ -4,6 +4,7 @@ import { voteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import TrustBadge from './TrustBadge'
 import ReportModal from './ReportModal'
+import { useTranslation } from 'react-i18next'
 
 // Human-readable labels for backend enums.
 export const INSTITUTION_LABELS = {
@@ -27,6 +28,7 @@ export const VERIFICATION_LABELS = {
 function ExperienceCard({ experience, onChanged, onRequireAuth }) {
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [exp, setExp] = useState(experience)
   const [showReport, setShowReport] = useState(false)
   const [error, setError] = useState(null)
@@ -62,9 +64,9 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
   return (
     <article className="card exp-card">
       <div className="exp-top">
-        <span className="exp-category">{exp.category}</span>
+        <span className="exp-category">{t(`categories.${exp.category}`) || exp.category}</span>
         <span className={`chip chip--${exp.institutionType === 'PUBLIC_HOSPITAL' ? 'public' : 'private'}`}>
-          {INSTITUTION_LABELS[exp.institutionType]}
+          {t(`institutions.${exp.institutionType}`)}
         </span>
       </div>
 
@@ -79,22 +81,22 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
       {exp.summary && <p className="exp-summary">{exp.summary}</p>}
 
       <div className="exp-field">
-        <span className="exp-field-label">Steps</span>
+        <span className="exp-field-label">{t('experienceCard.steps')}</span>
         <span className="exp-field-value">{stepsPreview}</span>
       </div>
       <div className="exp-field">
-        <span className="exp-field-label">Tests</span>
+        <span className="exp-field-label">{t('experienceCard.tests')}</span>
         <span className="exp-field-value">{testsPreview}</span>
       </div>
 
       <div className="exp-metrics">
-        <div><span className="m-label">Cost</span><span className="m-value">{exp.approximateCost != null ? `${exp.approximateCost} €` : '—'}</span></div>
-        <div><span className="m-label">Wait</span><span className="m-value">{exp.waitingTime || '—'}</span></div>
-        <div><span className="m-label">Result</span><span className="m-value">{exp.resultTime || '—'}</span></div>
+        <div><span className="m-label">{t('experienceCard.cost')}</span><span className="m-value">{exp.approximateCost != null ? `${exp.approximateCost} €` : '—'}</span></div>
+        <div><span className="m-label">{t('experienceCard.wait')}</span><span className="m-value">{exp.waitingTime || '—'}</span></div>
+        <div><span className="m-label">{t('experienceCard.result')}</span><span className="m-value">{exp.resultTime || '—'}</span></div>
       </div>
 
       <div className="exp-badges">
-        <span className={`vbadge vbadge--${exp.verificationLevel}`}>{VERIFICATION_LABELS[exp.verificationLevel]}</span>
+        <span className={`vbadge vbadge--${exp.verificationLevel}`}>{t(`verifications.${exp.verificationLevel}`)}</span>
         {exp.authorTrustScore != null && (
           <TrustBadge score={exp.authorTrustScore} label={exp.authorTrustLabel} />
         )}
@@ -110,10 +112,10 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
           <span aria-hidden="true">👎</span> {exp.dislikes ?? 0}
         </button>
         <button className="icon-btn" onClick={handleReport} aria-label="Report">
-          <span aria-hidden="true">⚑</span> Report
+          <span aria-hidden="true">⚑</span> {t('experienceCard.report')}
         </button>
         <button className="btn btn-secondary btn-sm exp-view" onClick={() => navigate(`/experiences/${exp.id}`)}>
-          View Details
+          {t('experienceCard.viewDetails')}
         </button>
       </div>
 

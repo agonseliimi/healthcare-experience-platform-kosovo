@@ -1,37 +1,39 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 /** Global footer with the required medical disclaimer. */
 function Footer() {
+  const { t } = useTranslation()
+
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-disclaimer">
-          This platform does not provide medical diagnosis or medical advice. It only helps users
-          understand anonymous patient journeys.
+          {t('footer.disclaimer')}
         </div>
 
         <div className="footer-grid">
           <div>
             <span className="footer-brand">HealthPath Kosovo</span>
-            <p className="footer-tagline">Transparent, anonymous patient journeys — no advice, no names.</p>
-            <p className="footer-note">University MVP prototype. Not a production medical system.</p>
+            <p className="footer-tagline">{t('footer.tagline')}</p>
+            <p className="footer-note">{t('footer.note')}</p>
           </div>
           <div>
-            <h4 className="footer-heading">Explore</h4>
-            <Link to="/" className="footer-link">Home</Link>
-            <Link to="/search" className="footer-link">Search</Link>
-            <Link to="/privacy" className="footer-link">Privacy & Trust</Link>
+            <h4 className="footer-heading">{t('footer.explore')}</h4>
+            <Link to="/" className="footer-link">{t('footer.home')}</Link>
+            <Link to="/search" className="footer-link">{t('footer.search')}</Link>
+            <Link to="/privacy" className="footer-link">{t('footer.privacy_link')}</Link>
           </div>
           <div>
-            <h4 className="footer-heading">Privacy</h4>
-            <span className="footer-item">Anonymous by default</span>
-            <span className="footer-item">Documents are never public</span>
-            <span className="footer-item">No personal identifiers</span>
+            <h4 className="footer-heading">{t('footer.privacy_header')}</h4>
+            <span className="footer-item">{t('footer.privacy_item1')}</span>
+            <span className="footer-item">{t('footer.privacy_item2')}</span>
+            <span className="footer-item">{t('footer.privacy_item3')}</span>
           </div>
         </div>
 
         <div className="footer-bottom">
-          &copy; {new Date().getFullYear()} HealthPath Kosovo — Local demo only.
+          &copy; {new Date().getFullYear()} {t('footer.copyright')}
         </div>
       </div>
     </footer>

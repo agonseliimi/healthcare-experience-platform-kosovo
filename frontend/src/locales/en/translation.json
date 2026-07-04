@@ -1,0 +1,122 @@
+{
+  "navbar": {
+    "home": "Home",
+    "search": "Search",
+    "share": "Share Experience",
+    "privacy": "Privacy",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "greeting": "Hi"
+  },
+  "hero": {
+    "badge": "Anonymous & Privacy-First",
+    "title_line1": "Transparent healthcare",
+    "title_line2": "experiences for Kosovo",
+    "sub": "Read anonymous patient journeys, compare approximate costs, waiting times, and steps before visiting a healthcare institution.",
+    "disclaimer": "We do not give medical advice. We show real anonymous patient journeys.",
+    "cta_search": "Search Experiences",
+    "cta_submit": "Share Experience"
+  },
+  "footer": {
+    "disclaimer": "This platform does not provide medical diagnosis or medical advice. It only helps users understand anonymous patient journeys.",
+    "tagline": "Transparent, anonymous patient journeys — no advice, no names.",
+    "note": "University MVP prototype. Not a production medical system.",
+    "explore": "Explore",
+    "home": "Home",
+    "search": "Search",
+    "privacy_link": "Privacy & Trust",
+    "privacy_header": "Privacy",
+    "privacy_item1": "Anonymous by default",
+    "privacy_item2": "Documents are never public",
+    "privacy_item3": "No personal identifiers",
+    "copyright": "HealthPath Kosovo — Local demo only."
+  },
+  "filters": {
+    "title": "Filters",
+    "clearAll": "Clear all",
+    "city": "City",
+    "allCities": "All cities",
+    "category": "Category",
+    "allCategories": "All categories",
+    "institution": "Institution",
+    "all": "All",
+    "cost": "Approximate cost (€)",
+    "min": "Min",
+    "max": "Max",
+    "waitingTime": "Waiting time contains",
+    "waitingTimePlaceholder": "e.g. weeks, days",
+    "verification": "Verification level",
+    "allLevels": "All levels"
+  },
+  "categories": {
+    "Cardiology": "Cardiology",
+    "Dermatology": "Dermatology",
+    "Orthopaedics": "Orthopaedics",
+    "General Practice": "General Practice",
+    "Ophthalmology": "Ophthalmology",
+    "Gynaecology": "Gynaecology",
+    "Neurology": "Neurology",
+    "Gastroenterology": "Gastroenterology",
+    "Pulmonology": "Pulmonology",
+    "Endocrinology": "Endocrinology",
+    "Urology": "Urology",
+    "Paediatrics": "Paediatrics",
+    "Psychiatry / Mental Health": "Psychiatry / Mental Health",
+    "Dentistry": "Dentistry",
+    "Other": "Other"
+  },
+  "institutions": {
+    "PUBLIC_HOSPITAL": "Public Hospital",
+    "PRIVATE_CLINIC": "Private Clinic"
+  },
+  "verifications": {
+    "SELF_REPORTED": "Self-Reported",
+    "DOCUMENT_SUPPORTED": "Document-Supported",
+    "HIGH_CONFIDENCE": "High-Confidence"
+  },
+  "experienceCard": {
+    "steps": "Steps",
+    "tests": "Tests",
+    "cost": "Cost",
+    "wait": "Wait",
+    "result": "Result",
+    "report": "Report",
+    "viewDetails": "View Details"
+  },
+  "searchPage": {
+    "title": "Browse Experiences",
+    "sub": "Search anonymous patient journeys. No personal information is ever shown.",
+    "searchPlaceholder": "Search by symptom, category, or city...",
+    "searchBtn": "Search",
+    "loading": "Loading experiences...",
+    "noMatch": "No experiences match your filters.",
+    "clearFilters": "Clear filters",
+    "experienceCountSingle": "experience",
+    "experienceCountPlural": "experiences"
+  },
+  "homePage": {
+    "howItWorks": "How it works",
+    "step1": "Browse anonymous experiences",
+    "step2": "Compare costs, waiting times, and steps",
+    "step3": "Share your experience anonymously",
+    "step4": "Choose optional verification",
+    "step5": "Help the community identify trustworthy information",
+    "why": "Why HealthPath",
+    "f1Title": "Anonymous sharing",
+    "f1Text": "Share your journey without revealing your identity.",
+    "f2Title": "Public / private comparison",
+    "f2Text": "Compare public hospitals and private clinics.",
+    "f3Title": "Optional verification",
+    "f3Text": "Add evidence privately to raise confidence.",
+    "f4Title": "Trust score",
+    "f4Text": "Community credibility signals — not medical accuracy.",
+    "f5Title": "Abuse reporting",
+    "f5Text": "Flag privacy issues, medical-advice claims, or spam.",
+    "f6Title": "Privacy-first design",
+    "f6Text": "Documents are never public; identifiers are blocked.",
+    "browseBtn": "Browse Experiences"
+  }
+}

@@ -7,6 +7,7 @@ import GuestLimitBanner from '../components/GuestLimitBanner'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 import { hasReachedGuestLimit, incrementGuestUsage } from '../utils/guestUsage'
+import { useTranslation } from 'react-i18next'
 
 const emptyFilters = {
   city: '',
@@ -21,6 +22,7 @@ const emptyFilters = {
 /** Browse + search experiences, with client guest-limit gating. */
 function Search() {
   const { isAuthenticated } = useAuth()
+  const { t } = useTranslation()
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState(emptyFilters)
   const [experiences, setExperiences] = useState([])
@@ -83,21 +85,21 @@ function Search() {
   return (
     <div className="page">
       <header className="page-head">
-        <h1 className="page-title">Browse Experiences</h1>
+        <h1 className="page-title">{t('searchPage.title')}</h1>
         <p className="page-sub">
-          Search anonymous patient journeys. No personal information is ever shown.
+          {t('searchPage.sub')}
         </p>
 
         <form className="search-bar" onSubmit={handleSearchSubmit} role="search">
           <input
             type="search"
             className="form-input search-input"
-            placeholder="Search by symptom, category, or city..."
+            placeholder={t('searchPage.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             aria-label="Search experiences"
           />
-          <button type="submit" className="btn btn-primary">Search</button>
+          <button type="submit" className="btn btn-primary">{t('searchPage.searchBtn')}</button>
         </form>
       </header>
 
@@ -106,17 +108,17 @@ function Search() {
 
         <div className="search-results">
           {loading ? (
-            <LoadingState message="Loading experiences..." />
+            <LoadingState message={t('searchPage.loading')} />
           ) : error ? (
             <ErrorState message={error} onRetry={() => fetchData(searchInput, filters)} />
           ) : experiences.length === 0 ? (
             <div className="state-box">
-              <p className="state-text">No experiences match your filters.</p>
-              <button className="btn btn-secondary" onClick={handleReset}>Clear filters</button>
+              <p className="state-text">{t('searchPage.noMatch')}</p>
+              <button className="btn btn-secondary" onClick={handleReset}>{t('searchPage.clearFilters')}</button>
             </div>
           ) : (
             <>
-              <p className="results-count">{experiences.length} experience{experiences.length !== 1 ? 's' : ''}</p>
+              <p className="results-count">{experiences.length} {experiences.length !== 1 ? t('searchPage.experienceCountPlural') : t('searchPage.experienceCountSingle')}</p>
               <div className="cards-grid">
                 {experiences.map((exp) => (
                   <ExperienceCard

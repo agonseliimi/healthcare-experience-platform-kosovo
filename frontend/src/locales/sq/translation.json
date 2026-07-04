@@ -1,0 +1,122 @@
+{
+  "navbar": {
+    "home": "Ballina",
+    "search": "Kërko",
+    "share": "Ndaj Përvojën",
+    "privacy": "Privatësia",
+    "dashboard": "Paneli",
+    "admin": "Admin",
+    "login": "Kyçu",
+    "register": "Regjistrohu",
+    "logout": "Shkyçu",
+    "greeting": "Përshëndetje"
+  },
+  "hero": {
+    "badge": "Anonimitet & Privatësi",
+    "title_line1": "Përvoja shëndetësore",
+    "title_line2": "transparente për Kosovën",
+    "sub": "Lexoni përvoja anonime, krahasoni kostot e përafërta, kohën e pritjes dhe hapat para se të vizitoni një institucion shëndetësor.",
+    "disclaimer": "Ne nuk japim këshilla mjekësore. Ne tregojmë përvoja reale anonime të pacientëve.",
+    "cta_search": "Kërko Përvojat",
+    "cta_submit": "Ndaj Përvojën"
+  },
+  "footer": {
+    "disclaimer": "Kjo platformë nuk ofron diagnozë mjekësore apo këshilla mjekësore. Ndihmon përdoruesit të kuptojnë përvojat anonime të pacientëve.",
+    "tagline": "Përvoja transparente dhe anonime — pa këshilla, pa emra.",
+    "note": "Prototip Universitar (MVP). Jo sistem mjekësor në prodhim.",
+    "explore": "Eksploro",
+    "home": "Ballina",
+    "search": "Kërko",
+    "privacy_link": "Privatësia & Besimi",
+    "privacy_header": "Privatësia",
+    "privacy_item1": "Anonim si parazgjedhje",
+    "privacy_item2": "Dokumentet nuk janë kurrë publike",
+    "privacy_item3": "Pa identifikues personal",
+    "copyright": "HealthPath Kosovo — Vetëm për demo lokale."
+  },
+  "filters": {
+    "title": "Filtruesit",
+    "clearAll": "Pastro të gjitha",
+    "city": "Qyteti",
+    "allCities": "Të gjitha qytetet",
+    "category": "Kategoria",
+    "allCategories": "Të gjitha kategoritë",
+    "institution": "Institucioni",
+    "all": "Të gjitha",
+    "cost": "Kostoja e përafërt (€)",
+    "min": "Min",
+    "max": "Max",
+    "waitingTime": "Koha e pritjes përmban",
+    "waitingTimePlaceholder": "p.sh. javë, ditë",
+    "verification": "Niveli i verifikimit",
+    "allLevels": "Të gjitha nivelet"
+  },
+  "categories": {
+    "Cardiology": "Kardiologji",
+    "Dermatology": "Dermatologji",
+    "Orthopaedics": "Ortopedi",
+    "General Practice": "Mjekësi e Përgjithshme",
+    "Ophthalmology": "Oftalmologji",
+    "Gynaecology": "Gjinekologji",
+    "Neurology": "Neurologji",
+    "Gastroenterology": "Gastroenterologji",
+    "Pulmonology": "Pulmologji",
+    "Endocrinology": "Endokrinologji",
+    "Urology": "Urologji",
+    "Paediatrics": "Pediatri",
+    "Psychiatry / Mental Health": "Psikiatri / Shëndet Mendor",
+    "Dentistry": "Stomatologji",
+    "Other": "Tjetër"
+  },
+  "institutions": {
+    "PUBLIC_HOSPITAL": "Spital Publik",
+    "PRIVATE_CLINIC": "Klinikë Private"
+  },
+  "verifications": {
+    "SELF_REPORTED": "Vetë-raportuar",
+    "DOCUMENT_SUPPORTED": "Me Dokumente",
+    "HIGH_CONFIDENCE": "Besueshmëri e Lartë"
+  },
+  "experienceCard": {
+    "steps": "Hapat",
+    "tests": "Testet",
+    "cost": "Kostoja",
+    "wait": "Pritja",
+    "result": "Rezultati",
+    "report": "Raporto",
+    "viewDetails": "Shiko Detajet"
+  },
+  "searchPage": {
+    "title": "Kërko Përvojat",
+    "sub": "Kërko përvoja anonime të pacientëve. Asnjë informacion personal nuk shfaqet.",
+    "searchPlaceholder": "Kërko sipas simptomës, kategorisë ose qytetit...",
+    "searchBtn": "Kërko",
+    "loading": "Duke ngarkuar përvojat...",
+    "noMatch": "Asnjë përvojë nuk përputhet me filtruesit.",
+    "clearFilters": "Pastro filtruesit",
+    "experienceCountSingle": "përvojë",
+    "experienceCountPlural": "përvoja"
+  },
+  "homePage": {
+    "howItWorks": "Si funksionon",
+    "step1": "Shfleto përvoja anonime",
+    "step2": "Krahaso kostot, kohën e pritjes dhe hapat",
+    "step3": "Ndaj përvojën tënde anonimisht",
+    "step4": "Zgjidh verifikim opsional",
+    "step5": "Ndihmo komunitetin të identifikojë informacione të besueshme",
+    "why": "Pse HealthPath",
+    "f1Title": "Ndarje anonime",
+    "f1Text": "Ndaj rrugëtimin tënd pa zbuluar identitetin.",
+    "f2Title": "Krahasim publik / privat",
+    "f2Text": "Krahaso spitalet publike dhe klinikat private.",
+    "f3Title": "Verifikim opsional",
+    "f3Text": "Shto dëshmi privatisht për të rritur besueshmërinë.",
+    "f4Title": "Rezultati i besimit",
+    "f4Text": "Sinjale kredibiliteti nga komuniteti — jo saktësi mjekësore.",
+    "f5Title": "Raportim abuzimi",
+    "f5Text": "Raporto çështje të privatësisë, pretendime mjekësore ose spam.",
+    "f6Title": "Dizajn me prioritet privatësinë",
+    "f6Text": "Dokumentet nuk janë kurrë publike; identifikuesit bllokohen.",
+    "browseBtn": "Shiko Përvojat"
+  }
+}
