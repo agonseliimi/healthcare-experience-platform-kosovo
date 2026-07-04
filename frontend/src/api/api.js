@@ -102,10 +102,63 @@ export const getReports = () => request('/reports')
 export const updateReportStatus = (id, status) => request(`/reports/${id}/status`, { method: 'PATCH', body: { status } })
 
 // ------------ Verification ------------
-export const createVerificationRequest = (data) => request('/verification/request', { method: 'POST', body: data })
+/**
+ * Create a verification request, optionally with a supporting document.
+ * Sent as multipart/form-data so the (private, never-public) file can be uploaded.
+ */
+export async function createVerificationRequest({ experienceId, documentNote, redactionConfirmed, file }) {
+  const form = new FormData()
+  form.append('experienceId', experienceId)
+  if (documentNote) form.append('documentNote', documentNote)
+  form.append('redactionConfirmed', redactionConfirmed ? 'true' : 'false')
+  if (file) form.append('file', file)
+
+  const headers = {}
+  const token = getToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  let response
+  try {
+    // NOTE: do not set Content-Type; the browser adds the multipart boundary.
+    response = await fetch(`${BASE_URL}/verification/request`, { method: 'POST', headers, body: form })
+  } catch {
+    throw new Error(
+      'Cannot reach the server. Please make sure the backend is running on http://localhost:5000.'
+    )
+  }
+
+  const text = await response.text()
+  let data = null
+  if (text) {
+    try { data = JSON.parse(text) } catch { data = text }
+  }
+  if (!response.ok) {
+    const message = (data && data.message) || (typeof data === 'string' && data) || `Request failed (${response.status})`
+    throw new Error(message)
+  }
+  return data
+}
+
 export const getMyVerificationRequests = () => request('/verification/my')
 export const getAllVerificationRequests = () => request('/verification/all')
 export const updateVerificationStatus = (id, data) => request(`/verification/${id}/status`, { method: 'PATCH', body: data })
+
+/**
+ * Admin-only: fetch a verification document as a blob URL for viewing/downloading.
+ * The caller is responsible for revoking the returned object URL when done.
+ */
+export async function fetchVerificationDocument(id) {
+  const headers = {}
+  const token = getToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  const response = await fetch(`${BASE_URL}/verification/${id}/document`, { headers })
+  if (!response.ok) {
+    throw new Error(`Could not load document (${response.status})`)
+  }
+  const blob = await response.blob()
+  return URL.createObjectURL(blob)
+}
 
 // ---------------- Admin ---------------
 export const getAdminDashboard = () => request('/admin/dashboard')

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getExperienceById, voteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
-import { INSTITUTION_LABELS, VERIFICATION_LABELS } from '../components/ExperienceCard'
 import TrustBadge from '../components/TrustBadge'
 import ReportModal from '../components/ReportModal'
 import GuestLimitBanner from '../components/GuestLimitBanner'
@@ -12,6 +12,7 @@ import { hasReachedGuestLimit, incrementGuestUsage } from '../utils/guestUsage'
 
 /** Full details for a single experience. */
 function ExperienceDetails() {
+  const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
@@ -65,14 +66,14 @@ function ExperienceDetails() {
 
   return (
     <div className="page detail">
-      <button className="link-btn back" onClick={() => navigate(-1)}>← Back</button>
+      <button className="link-btn back" onClick={() => navigate(-1)}>{t('details.back')}</button>
 
       <div className="detail-head">
-        <span className="exp-category">{exp.category}</span>
+        <span className="exp-category">{t(`categories.${exp.category}`)}</span>
         <span className={`chip chip--${exp.institutionType === 'PUBLIC_HOSPITAL' ? 'public' : 'private'}`}>
-          {INSTITUTION_LABELS[exp.institutionType]}
+          {t(`institutions.${exp.institutionType}`)}
         </span>
-        <span className={`vbadge vbadge--${exp.verificationLevel}`}>{VERIFICATION_LABELS[exp.verificationLevel]}</span>
+        <span className={`vbadge vbadge--${exp.verificationLevel}`}>{t(`verifications.${exp.verificationLevel}`)}</span>
       </div>
 
       <h1 className="detail-title">{exp.city}</h1>
@@ -81,22 +82,22 @@ function ExperienceDetails() {
       {exp.summary && <p className="detail-summary">{exp.summary}</p>}
 
       <div className="detail-grid">
-        <Detail label="Steps taken" value={exp.stepsTaken} />
-        <Detail label="Tests performed" value={exp.testsPerformed} />
-        <Detail label="Approximate cost" value={exp.approximateCost != null ? `${exp.approximateCost} €` : '—'} />
-        <Detail label="Waiting time" value={exp.waitingTime} />
-        <Detail label="Result time" value={exp.resultTime} />
-        <Detail label="Author" value={exp.authorDisplayName || 'Anonymous'} />
+        <Detail label={t('details.steps')} value={exp.stepsTaken} />
+        <Detail label={t('details.tests')} value={exp.testsPerformed} />
+        <Detail label={t('details.cost')} value={exp.approximateCost != null ? `${exp.approximateCost} €` : '—'} />
+        <Detail label={t('details.wait')} value={exp.waitingTime} />
+        <Detail label={t('details.result')} value={exp.resultTime} />
+        <Detail label={t('details.author')} value={exp.authorDisplayName || t('details.anonymous')} />
       </div>
 
       <div className="alert alert-warning">
-        This is one anonymous journey. It should not be used as medical advice.
+        {t('details.disclaimer')}
       </div>
 
       <div className="detail-actions">
         <button className="icon-btn" onClick={() => handleVote('LIKE')}>👍 {exp.likes ?? 0}</button>
         <button className="icon-btn" onClick={() => handleVote('DISLIKE')}>👎 {exp.dislikes ?? 0}</button>
-        <button className="icon-btn" onClick={() => (isAuthenticated ? setShowReport(true) : setShowGuestLimit(true))}>⚑ Report</button>
+        <button className="icon-btn" onClick={() => (isAuthenticated ? setShowReport(true) : setShowGuestLimit(true))}>{t('details.report')}</button>
       </div>
 
       {showReport && (

@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createReport } from '../api/api'
 
+// Report reasons; labels are translated at render time via the i18n key.
 const REASONS = [
-  { value: 'PERSONAL_INFO_EXPOSED', label: 'Personal information exposed' },
-  { value: 'MEDICAL_ADVICE', label: 'Medical advice or diagnosis claim' },
-  { value: 'OFFENSIVE_CONTENT', label: 'Offensive content' },
-  { value: 'FAKE_OR_MISLEADING', label: 'Fake or misleading experience' },
-  { value: 'SPAM', label: 'Spam' },
-  { value: 'OTHER', label: 'Other' },
+  { value: 'PERSONAL_INFO_EXPOSED', key: 'r_personal' },
+  { value: 'MEDICAL_ADVICE', key: 'r_medical' },
+  { value: 'OFFENSIVE_CONTENT', key: 'r_offensive' },
+  { value: 'FAKE_OR_MISLEADING', key: 'r_fake' },
+  { value: 'SPAM', key: 'r_spam' },
+  { value: 'OTHER', key: 'r_other' },
 ]
 
 /**
@@ -19,6 +21,7 @@ const REASONS = [
  *   onClose(success)- called when the modal closes; success=true after submit
  */
 function ReportModal({ experienceId, reportedUserId, onClose }) {
+  const { t } = useTranslation()
   const [reason, setReason] = useState('PERSONAL_INFO_EXPOSED')
   const [explanation, setExplanation] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -41,17 +44,14 @@ function ReportModal({ experienceId, reportedUserId, onClose }) {
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="report-title">
       <div className="modal">
-        <h2 id="report-title" className="modal-title">Report this experience</h2>
-        <p className="modal-text">
-          Reports are reviewed by moderators. Use this to flag privacy issues, medical-advice claims,
-          or misleading content.
-        </p>
+        <h2 id="report-title" className="modal-title">{t('report.title')}</h2>
+        <p className="modal-text">{t('report.text')}</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
         <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
-            <label className="form-label" htmlFor="report-reason">Reason</label>
+            <label className="form-label" htmlFor="report-reason">{t('report.reason')}</label>
             <select
               id="report-reason"
               className="form-select"
@@ -59,14 +59,14 @@ function ReportModal({ experienceId, reportedUserId, onClose }) {
               onChange={(e) => setReason(e.target.value)}
             >
               {REASONS.map((r) => (
-                <option key={r.value} value={r.value}>{r.label}</option>
+                <option key={r.value} value={r.value}>{t(`report.${r.key}`)}</option>
               ))}
             </select>
           </div>
 
           <div className="form-group">
             <label className="form-label" htmlFor="report-explanation">
-              Explanation <span className="form-optional">(optional)</span>
+              {t('report.explanation')} <span className="form-optional">{t('report.optional')}</span>
             </label>
             <textarea
               id="report-explanation"
@@ -74,16 +74,16 @@ function ReportModal({ experienceId, reportedUserId, onClose }) {
               rows={3}
               value={explanation}
               onChange={(e) => setExplanation(e.target.value)}
-              placeholder="Add any details that help moderators..."
+              placeholder={t('report.explanationPlaceholder')}
             />
           </div>
 
           <div className="modal-actions">
             <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit Report'}
+              {submitting ? t('report.submitting') : t('report.submit')}
             </button>
             <button type="button" className="btn btn-ghost" onClick={() => onClose(false)}>
-              Cancel
+              {t('report.cancel')}
             </button>
           </div>
         </form>

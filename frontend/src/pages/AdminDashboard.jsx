@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getAdminDashboard } from '../api/api'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 
 /** Admin overview with summary metric cards. */
 function AdminDashboard() {
+  const { t } = useTranslation()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -28,19 +30,19 @@ function AdminDashboard() {
   if (error) return <div className="page"><ErrorState message={error} onRetry={load} /></div>
 
   const cards = [
-    { label: 'Total users', value: stats.totalUsers },
-    { label: 'Total experiences', value: stats.totalExperiences },
-    { label: 'Pending reports', value: stats.pendingReports },
-    { label: 'Pending verifications', value: stats.pendingVerificationRequests },
-    { label: 'Hidden experiences', value: stats.hiddenExperiences },
-    { label: 'Average trust score', value: stats.averageTrustScore },
+    { label: t('adminDash.totalUsers'), value: stats.totalUsers },
+    { label: t('adminDash.totalExperiences'), value: stats.totalExperiences },
+    { label: t('adminDash.pendingReports'), value: stats.pendingReports },
+    { label: t('adminDash.pendingVerifications'), value: stats.pendingVerificationRequests },
+    { label: t('adminDash.hiddenExperiences'), value: stats.hiddenExperiences },
+    { label: t('adminDash.avgTrust'), value: stats.averageTrustScore },
   ]
 
   return (
     <div className="page">
       <header className="page-head">
-        <h1 className="page-title">Admin Dashboard</h1>
-        <p className="page-sub">Platform overview and moderation shortcuts.</p>
+        <h1 className="page-title">{t('adminDash.title')}</h1>
+        <p className="page-sub">{t('adminDash.sub')}</p>
       </header>
 
       <div className="admin-grid">
@@ -53,8 +55,8 @@ function AdminDashboard() {
       </div>
 
       <div className="admin-links">
-        <Link to="/admin/reports" className="btn btn-secondary">Review Reports</Link>
-        <Link to="/admin/verification" className="btn btn-secondary">Review Verifications</Link>
+        <Link to="/admin/reports" className="btn btn-secondary">{t('adminDash.reviewReports')}</Link>
+        <Link to="/admin/verification" className="btn btn-secondary">{t('adminDash.reviewVerifications')}</Link>
       </div>
     </div>
   )

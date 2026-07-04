@@ -2,7 +2,9 @@ package com.kosovo.healthcareexperience.service;
 
 import java.util.List;
 
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosovo.healthcareexperience.dto.verification.VerificationRequestDto;
 import com.kosovo.healthcareexperience.dto.verification.VerificationResponse;
@@ -30,24 +32,32 @@ public class VerificationService {
     private final ExperienceService experienceService;
     private final UserService userService;
     private final TrustScoreService trustScoreService;
+    private final FileStorageService fileStorageService;
 
     public VerificationService(VerificationRequestRepository verificationRepository,
                                ExperienceRepository experienceRepository,
                                ExperienceService experienceService,
                                UserService userService,
-                               TrustScoreService trustScoreService) {
+                               TrustScoreService trustScoreService,
+                               FileStorageService fileStorageService) {
         this.verificationRepository = verificationRepository;
         this.experienceRepository = experienceRepository;
         this.experienceService = experienceService;
         this.userService = userService;
         this.trustScoreService = trustScoreService;
+        this.fileStorageService = fileStorageService;
     }
 
-    public VerificationResponse create(VerificationRequestDto dto) {
+    /**
+     * Creates a verification request. The optional document is stored privately on
+     * disk (never public); only administrators can download it later.
+     */
+    public VerificationResponse create(Long experienceId, String documentNote,
+                                       Boolean redactionConfirmed, MultipartFile file) {
         User user = userService.getCurrentUser();
-        Experience experience = experienceService.getEntity(dto.getExperienceId());
+        Experience experience = experienceService.getEntity(experienceId);
 
-        if (!Boolean.TRUE.equals(dto.getRedactionConfirmed())) {
+        if (!Boolean.TRUE.equals(redactionConfirmed)) {
             throw new BadRequestException(
                     "Please confirm you removed personal identifiers before requesting verification.");
         }
@@ -55,13 +65,37 @@ public class VerificationService {
         VerificationRequest vr = new VerificationRequest();
         vr.setUser(user);
         vr.setExperience(experience);
-        vr.setDocumentNote(dto.getDocumentNote());
-        vr.setFileName(dto.getFileName()); // demo reference only, never public
-        vr.setRedactionConfirmed(dto.getRedactionConfirmed());
+        vr.setDocumentNote(documentNote);
+        vr.setRedactionConfirmed(redactionConfirmed);
         vr.setStatus(VerificationStatus.PENDING);
+
+        // Store the uploaded document privately (admin-only access).
+        if (file != null && !file.isEmpty()) {
+            String storedName = fileStorageService.store(file);
+            vr.setStoredFileName(storedName);
+            vr.setFileName(file.getOriginalFilename());
+            vr.setFileContentType(file.getContentType());
+        }
+
         verificationRepository.save(vr);
 
         return toResponse(vr);
+    }
+
+    /** Admin-only: load the private document resource for a verification request. */
+    public Resource loadDocument(Long id) {
+        VerificationRequest vr = verificationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Verification request not found: " + id));
+        if (vr.getStoredFileName() == null) {
+            throw new ResourceNotFoundException("No document attached to this verification request.");
+        }
+        return fileStorageService.loadAsResource(vr.getStoredFileName());
+    }
+
+    /** Admin-only: metadata for the stored document (content type, original name). */
+    public VerificationRequest getEntity(Long id) {
+        return verificationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Verification request not found: " + id));
     }
 
     public List<VerificationResponse> getMine() {
@@ -109,6 +143,7 @@ public class VerificationService {
         r.setId(vr.getId());
         r.setDocumentNote(vr.getDocumentNote());
         r.setFileName(vr.getFileName());
+        r.setHasDocument(vr.getStoredFileName() != null);
         r.setRedactionConfirmed(vr.getRedactionConfirmed());
         r.setStatus(vr.getStatus());
         r.setAdminNote(vr.getAdminNote());

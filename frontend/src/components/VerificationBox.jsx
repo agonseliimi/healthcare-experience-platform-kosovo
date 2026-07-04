@@ -1,26 +1,19 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { createVerificationRequest } from '../api/api'
 
-// The redaction checklist the user must confirm before requesting verification.
-const CHECKLIST = [
-  'I removed my name',
-  'I removed personal ID number',
-  'I removed phone number',
-  'I removed address',
-  'I removed doctor/patient identifiers',
-  'I understand documents are for verification only',
-]
+// Keys of the redaction checklist the user must confirm before requesting verification.
+const CHECKLIST_KEYS = ['check1', 'check2', 'check3', 'check4', 'check5', 'check6']
 
 /**
  * Optional, privacy-first verification request box.
  *
- * PRIVACY: No real file is uploaded in this MVP. Only a file name reference and
- * a note are stored, and documents are never shown publicly.
+ * PRIVACY: An uploaded document is stored privately on the server and is NEVER
+ * shown publicly. Only administrators can download it for review.
  *
  * FUTURE:
  *   - browser-based redaction before upload
- *   - secure encrypted file storage
- *   - admin-only file viewer
+ *   - encrypted file storage
  *   - automatic document deletion
  *   - privacy audit logs
  *
@@ -28,9 +21,10 @@ const CHECKLIST = [
  *   experienceId - the experience to verify
  */
 function VerificationBox({ experienceId }) {
+  const { t } = useTranslation()
   const [documentNote, setDocumentNote] = useState('')
-  const [fileName, setFileName] = useState('')
-  const [checked, setChecked] = useState(() => CHECKLIST.map(() => false))
+  const [file, setFile] = useState(null)
+  const [checked, setChecked] = useState(() => CHECKLIST_KEYS.map(() => false))
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState(null)
@@ -45,7 +39,7 @@ function VerificationBox({ experienceId }) {
     e.preventDefault()
     setError(null)
     if (!allConfirmed) {
-      setError('Please confirm all redaction items before requesting verification.')
+      setError(t('verify.confirmError'))
       return
     }
     setSubmitting(true)
@@ -53,8 +47,8 @@ function VerificationBox({ experienceId }) {
       await createVerificationRequest({
         experienceId,
         documentNote,
-        fileName: fileName || null,
         redactionConfirmed: true,
+        file,
       })
       setDone(true)
     } catch (err) {
@@ -67,62 +61,63 @@ function VerificationBox({ experienceId }) {
   if (done) {
     return (
       <div className="verify-box">
-        <div className="alert alert-success">
-          Verification requested. An administrator will review it. Your document is never shown publicly.
-        </div>
+        <div className="alert alert-success">{t('verify.successTitle')}</div>
       </div>
     )
   }
 
   return (
     <div className="verify-box">
-      <h3 className="verify-title">Request verification (optional)</h3>
-      <p className="verify-text">
-        Verification is optional. Documents you reference are <strong>never shown publicly</strong> and are
-        used only to raise the confidence level of your experience.
-      </p>
+      <h3 className="verify-title">{t('verify.title')}</h3>
+      <p className="verify-text">{t('verify.intro')}</p>
 
       {error && <div className="alert alert-error">{error}</div>}
 
       <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
-          <label className="form-label" htmlFor="doc-note">Document note</label>
+          <label className="form-label" htmlFor="doc-note">{t('verify.documentNote')}</label>
           <textarea
             id="doc-note"
             className="form-textarea"
             rows={2}
             value={documentNote}
             onChange={(e) => setDocumentNote(e.target.value)}
-            placeholder="e.g. Lab result supports the approximate cost and waiting time."
+            placeholder={t('verify.documentNotePlaceholder')}
           />
         </div>
 
         <div className="form-group">
-          <label className="form-label" htmlFor="file-name">
-            Document reference name <span className="form-optional">(demo only, no real upload)</span>
-          </label>
+          <label className="form-label" htmlFor="verify-file">{t('verify.uploadLabel')}</label>
           <input
-            id="file-name"
-            type="text"
+            id="verify-file"
+            type="file"
             className="form-input"
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-            placeholder="redacted-demo-file.pdf"
+            accept="application/pdf,image/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
           />
+          {file && (
+            <p className="form-hint">
+              {t('verify.fileSelected')} <strong>{file.name}</strong>{' '}
+              <button type="button" className="link link-danger" onClick={() => setFile(null)}>
+                {t('verify.removeFile')}
+              </button>
+            </p>
+          )}
+          <p className="form-hint">{t('verify.uploadHint')}</p>
         </div>
 
         <fieldset className="checklist">
-          <legend className="form-label">Redaction checklist</legend>
-          {CHECKLIST.map((item, i) => (
-            <label key={item} className="checklist-item">
+          <legend className="form-label">{t('verify.checklistTitle')}</legend>
+          {CHECKLIST_KEYS.map((key, i) => (
+            <label key={key} className="checklist-item">
               <input type="checkbox" checked={checked[i]} onChange={() => toggle(i)} />
-              <span>{item}</span>
+              <span>{t(`verify.${key}`)}</span>
             </label>
           ))}
         </fieldset>
 
         <button type="submit" className="btn btn-primary" disabled={submitting || !allConfirmed}>
-          {submitting ? 'Submitting...' : 'Request Verification'}
+          {submitting ? t('verify.submitting') : t('verify.submitBtn')}
         </button>
       </form>
     </div>

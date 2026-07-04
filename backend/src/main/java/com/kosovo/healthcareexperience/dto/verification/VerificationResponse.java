@@ -13,6 +13,7 @@ public class VerificationResponse {
     private String userDisplayName;
     private String documentNote;
     private String fileName;
+    private Boolean hasDocument;
     private Boolean redactionConfirmed;
     private VerificationStatus status;
     private String adminNote;
@@ -38,6 +39,9 @@ public class VerificationResponse {
 
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
+
+    public Boolean getHasDocument() { return hasDocument; }
+    public void setHasDocument(Boolean hasDocument) { this.hasDocument = hasDocument; }
 
     public Boolean getRedactionConfirmed() { return redactionConfirmed; }
     public void setRedactionConfirmed(Boolean redactionConfirmed) { this.redactionConfirmed = redactionConfirmed; }

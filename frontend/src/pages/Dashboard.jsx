@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getMyExperiences, getMyVerificationRequests, deleteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
-import { INSTITUTION_LABELS, VERIFICATION_LABELS } from '../components/ExperienceCard'
 import TrustBadge from '../components/TrustBadge'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 
 /** User dashboard: profile stats, own experiences, and verification requests. */
 function Dashboard() {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const [experiences, setExperiences] = useState([])
   const [verifications, setVerifications] = useState([])
@@ -36,7 +37,7 @@ function Dashboard() {
   // Soft-delete an experience the user owns (backend sets its status to HIDDEN).
   async function handleDelete(exp) {
     const ok = window.confirm(
-      `Delete your "${exp.category}" experience in ${exp.city}? It will be removed from public view.`
+      t('dashboard.deleteConfirm', { category: t(`categories.${exp.category}`), city: exp.city })
     )
     if (!ok) return
 
@@ -55,22 +56,22 @@ function Dashboard() {
   return (
     <div className="page">
       <header className="page-head">
-        <h1 className="page-title">Welcome, {user?.displayName}</h1>
-        <p className="page-sub">Your contributions and community standing.</p>
+        <h1 className="page-title">{t('dashboard.welcome', { name: user?.displayName })}</h1>
+        <p className="page-sub">{t('dashboard.sub')}</p>
       </header>
 
       <div className="stat-cards">
         <div className="card stat">
-          <span className="stat-label">Trust</span>
+          <span className="stat-label">{t('dashboard.trust')}</span>
           <TrustBadge score={user?.trustScore} label={user?.trustLabel} />
         </div>
-        <div className="card stat"><span className="stat-label">Likes received</span><span className="stat-num">{user?.likesReceived ?? 0}</span></div>
-        <div className="card stat"><span className="stat-label">Dislikes received</span><span className="stat-num">{user?.dislikesReceived ?? 0}</span></div>
-        <div className="card stat"><span className="stat-label">Reports received</span><span className="stat-num">{user?.reportsReceived ?? 0}</span></div>
+        <div className="card stat"><span className="stat-label">{t('dashboard.likesReceived')}</span><span className="stat-num">{user?.likesReceived ?? 0}</span></div>
+        <div className="card stat"><span className="stat-label">{t('dashboard.dislikesReceived')}</span><span className="stat-num">{user?.dislikesReceived ?? 0}</span></div>
+        <div className="card stat"><span className="stat-label">{t('dashboard.reportsReceived')}</span><span className="stat-num">{user?.reportsReceived ?? 0}</span></div>
       </div>
 
       <div className="center dash-cta">
-        <Link to="/submit" className="btn btn-primary">+ Submit New Experience</Link>
+        <Link to="/submit" className="btn btn-primary">{t('dashboard.submitNew')}</Link>
       </div>
 
       {loading ? (
@@ -80,29 +81,29 @@ function Dashboard() {
       ) : (
         <>
           <section className="section">
-            <h2 className="section-title">My experiences ({experiences.length})</h2>
+            <h2 className="section-title">{t('dashboard.myExperiences', { count: experiences.length })}</h2>
             {actionError && <div className="alert alert-error">{actionError}</div>}
             {experiences.length === 0 ? (
-              <p className="muted">You have not submitted any experiences yet.</p>
+              <p className="muted">{t('dashboard.noExperiences')}</p>
             ) : (
               <div className="table-wrap">
                 <table className="table">
                   <thead>
-                    <tr><th>Category</th><th>Institution</th><th>City</th><th>Status</th><th>Verification</th><th>Likes</th><th>Actions</th></tr>
+                    <tr><th>{t('dashboard.colCategory')}</th><th>{t('dashboard.colInstitution')}</th><th>{t('dashboard.colCity')}</th><th>{t('dashboard.colStatus')}</th><th>{t('dashboard.colVerification')}</th><th>{t('dashboard.colLikes')}</th><th>{t('dashboard.colActions')}</th></tr>
                   </thead>
                   <tbody>
                     {experiences.map((e) => (
                       <tr key={e.id}>
-                        <td>{e.category}</td>
-                        <td>{INSTITUTION_LABELS[e.institutionType]}</td>
+                        <td>{t(`categories.${e.category}`)}</td>
+                        <td>{t(`institutions.${e.institutionType}`)}</td>
                         <td>{e.city}</td>
-                        <td><span className={`status status--${e.status}`}>{e.status}</span></td>
-                        <td>{VERIFICATION_LABELS[e.verificationLevel]}</td>
+                        <td><span className={`status status--${e.status}`}>{t(`statuses.${e.status}`)}</span></td>
+                        <td>{t(`verifications.${e.verificationLevel}`)}</td>
                         <td>{e.likes}</td>
                         <td>
                           <div className="row-actions">
-                            <Link className="link" to={`/experiences/${e.id}`}>View</Link>
-                            <Link className="link" to={`/experiences/${e.id}/edit`}>Edit</Link>
+                            <Link className="link" to={`/experiences/${e.id}`}>{t('dashboard.view')}</Link>
+                            <Link className="link" to={`/experiences/${e.id}/edit`}>{t('dashboard.edit')}</Link>
                             {e.status !== 'HIDDEN' && (
                               <button
                                 type="button"
@@ -110,7 +111,7 @@ function Dashboard() {
                                 onClick={() => handleDelete(e)}
                                 disabled={deletingId === e.id}
                               >
-                                {deletingId === e.id ? 'Deleting…' : 'Delete'}
+                                {deletingId === e.id ? t('dashboard.deleting') : t('dashboard.delete')}
                               </button>
                             )}
                           </div>
@@ -124,21 +125,21 @@ function Dashboard() {
           </section>
 
           <section className="section">
-            <h2 className="section-title">My verification requests ({verifications.length})</h2>
+            <h2 className="section-title">{t('dashboard.myVerifications', { count: verifications.length })}</h2>
             {verifications.length === 0 ? (
-              <p className="muted">No verification requests yet.</p>
+              <p className="muted">{t('dashboard.noVerifications')}</p>
             ) : (
               <div className="table-wrap">
                 <table className="table">
                   <thead>
-                    <tr><th>Experience</th><th>Note</th><th>Status</th><th>Admin note</th></tr>
+                    <tr><th>{t('dashboard.colExperience')}</th><th>{t('dashboard.colNote')}</th><th>{t('dashboard.colStatus')}</th><th>{t('dashboard.colAdminNote')}</th></tr>
                   </thead>
                   <tbody>
                     {verifications.map((v) => (
                       <tr key={v.id}>
-                        <td>{v.experienceCategory || `#${v.experienceId}`}</td>
+                        <td>{v.experienceCategory ? t(`categories.${v.experienceCategory}`) : `#${v.experienceId}`}</td>
                         <td>{v.documentNote || '—'}</td>
-                        <td><span className={`status status--${v.status}`}>{v.status}</span></td>
+                        <td><span className={`status status--${v.status}`}>{t(`statuses.${v.status}`)}</span></td>
                         <td>{v.adminNote || '—'}</td>
                       </tr>
                     ))}

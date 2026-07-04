@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getExperienceForEdit } from '../api/api'
 import SubmitExperienceForm from '../components/SubmitExperienceForm'
 import LoadingState from '../components/LoadingState'
@@ -13,6 +14,7 @@ import ErrorState from '../components/ErrorState'
  * the owner (or an admin) may actually save changes.
  */
 function EditExperience() {
+  const { t } = useTranslation()
   const { id } = useParams()
   const [experience, setExperience] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -35,11 +37,8 @@ function EditExperience() {
   return (
     <div className="page narrow">
       <header className="page-head">
-        <h1 className="page-title">Edit Your Experience</h1>
-        <p className="page-sub">
-          Update the details below. Changes stay anonymous by default and never include
-          personal identifiers.
-        </p>
+        <h1 className="page-title">{t('submit.editTitle')}</h1>
+        <p className="page-sub">{t('submit.editSub')}</p>
       </header>
 
       {loading ? (

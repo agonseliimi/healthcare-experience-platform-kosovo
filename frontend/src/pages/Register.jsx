@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
 /** Registration page. */
 function Register() {
+  const { t } = useTranslation()
   const { register } = useAuth()
   const navigate = useNavigate()
 
@@ -19,11 +21,11 @@ function Register() {
     setError(null)
 
     if (password !== confirm) {
-      setError('Passwords do not match.')
+      setError(t('auth.passwordMismatch'))
       return
     }
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
+      setError(t('auth.passwordLength'))
       return
     }
 
@@ -40,42 +42,40 @@ function Register() {
   return (
     <div className="page auth-page">
       <div className="card auth-card">
-        <h1 className="auth-title">Create your account</h1>
-        <p className="auth-sub">Join to share anonymous experiences and help the community.</p>
+        <h1 className="auth-title">{t('auth.createAccount')}</h1>
+        <p className="auth-sub">{t('auth.registerSub')}</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-name">Display name</label>
+            <label className="form-label" htmlFor="reg-name">{t('auth.displayName')}</label>
             <input id="reg-name" type="text" className="form-input" value={displayName}
               onChange={(e) => setDisplayName(e.target.value)} required />
-            <p className="form-hint">
-              Use a display name that does not reveal your full identity if you want stronger privacy.
-            </p>
+            <p className="form-hint">{t('auth.displayNameHint')}</p>
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-email">Email</label>
+            <label className="form-label" htmlFor="reg-email">{t('auth.email')}</label>
             <input id="reg-email" type="email" className="form-input" value={email}
               onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-password">Password</label>
+            <label className="form-label" htmlFor="reg-password">{t('auth.password')}</label>
             <input id="reg-password" type="password" className="form-input" value={password}
               onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="reg-confirm">Confirm password</label>
+            <label className="form-label" htmlFor="reg-confirm">{t('auth.confirmPassword')}</label>
             <input id="reg-confirm" type="password" className="form-input" value={confirm}
               onChange={(e) => setConfirm(e.target.value)} required autoComplete="new-password" />
           </div>
           <button type="submit" className="btn btn-primary btn-lg btn-block" disabled={submitting}>
-            {submitting ? 'Creating account...' : 'Register'}
+            {submitting ? t('auth.creatingAccount') : t('auth.register')}
           </button>
         </form>
 
         <p className="auth-alt">
-          Already have an account? <Link to="/login" className="link">Log in</Link>
+          {t('auth.haveAccount')} <Link to="/login" className="link">{t('auth.login')}</Link>
         </p>
       </div>
     </div>

@@ -13,6 +13,9 @@ backend/data/*.db
 backend/data/*.db-journal
 backend/data/*.sqlite
 
+# ---- Uploaded verification documents (private, never commit) ----
+backend/data/uploads/
+
 # ---- Environment / secrets ----
 .env
 .env.local

@@ -47,8 +47,14 @@ public class VerificationRequest {
     @Column(length = 2000)
     private String documentNote;
 
-    // Demo-only reference. Not a public URL. Never expose the actual file.
+    // Original file name as shown to admins only (never a public URL).
     private String fileName;
+
+    // Random name of the actual file on disk (private folder, admin-only access).
+    private String storedFileName;
+
+    // MIME type of the uploaded document, used when an admin downloads it.
+    private String fileContentType;
 
     private Boolean redactionConfirmed = false;
 
@@ -89,6 +95,12 @@ public class VerificationRequest {
 
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
+
+    public String getStoredFileName() { return storedFileName; }
+    public void setStoredFileName(String storedFileName) { this.storedFileName = storedFileName; }
+
+    public String getFileContentType() { return fileContentType; }
+    public void setFileContentType(String fileContentType) { this.fileContentType = fileContentType; }
 
     public Boolean getRedactionConfirmed() { return redactionConfirmed; }
     public void setRedactionConfirmed(Boolean redactionConfirmed) { this.redactionConfirmed = redactionConfirmed; }

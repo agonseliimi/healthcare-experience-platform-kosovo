@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
 /** Login page. On success, saves the JWT and redirects. */
 function Login() {
+  const { t } = useTranslation()
   const { login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -30,33 +32,33 @@ function Login() {
   return (
     <div className="page auth-page">
       <div className="card auth-card">
-        <h1 className="auth-title">Welcome back</h1>
-        <p className="auth-sub">Log in to share experiences, vote, and request verification.</p>
+        <h1 className="auth-title">{t('auth.welcomeBack')}</h1>
+        <p className="auth-sub">{t('auth.loginSub')}</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="login-email">Email</label>
+            <label className="form-label" htmlFor="login-email">{t('auth.email')}</label>
             <input id="login-email" type="email" className="form-input" value={email}
               onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="login-password">Password</label>
+            <label className="form-label" htmlFor="login-password">{t('auth.password')}</label>
             <input id="login-password" type="password" className="form-input" value={password}
               onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
           </div>
           <button type="submit" className="btn btn-primary btn-lg btn-block" disabled={submitting}>
-            {submitting ? 'Logging in...' : 'Login'}
+            {submitting ? t('auth.loggingIn') : t('auth.login')}
           </button>
         </form>
 
         <p className="auth-alt">
-          No account? <Link to="/register" className="link">Create one</Link>
+          {t('auth.noAccount')} <Link to="/register" className="link">{t('auth.createOne')}</Link>
         </p>
 
         <div className="demo-note">
-          <strong>Demo accounts (local only):</strong>
+          <strong>{t('auth.demoAccounts')}</strong>
           <div>admin@healthcare-demo.local / Admin123!</div>
           <div>user1@healthcare-demo.local / User123!</div>
         </div>

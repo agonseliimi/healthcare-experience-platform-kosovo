@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { getAdminVerificationRequests, updateVerificationStatus } from '../api/api'
+import { useTranslation } from 'react-i18next'
+import { getAdminVerificationRequests, updateVerificationStatus, fetchVerificationDocument } from '../api/api'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 
 /** Admin verification review. Approving raises the experience verification level. */
 function AdminVerification() {
+  const { t } = useTranslation()
   const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -43,51 +45,72 @@ function AdminVerification() {
     }
   }
 
+  // Open the private document in a new tab (admin-only, authenticated fetch).
+  async function openDocument(id) {
+    setError(null)
+    try {
+      const url = await fetchVerificationDocument(id)
+      window.open(url, '_blank', 'noopener,noreferrer')
+      // Revoke later so the new tab has time to load it.
+      setTimeout(() => URL.revokeObjectURL(url), 60000)
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   if (loading) return <div className="page"><LoadingState /></div>
 
   return (
     <div className="page">
       <header className="page-head">
-        <h1 className="page-title">Verification Requests</h1>
-        <p className="page-sub">
-          Documents are never shown publicly. Approving raises the experience's verification level.
-        </p>
+        <h1 className="page-title">{t('adminVerify.title')}</h1>
+        <p className="page-sub">{t('adminVerify.sub')}</p>
       </header>
 
       {error && <ErrorState message={error} onRetry={load} />}
 
       {requests.length === 0 ? (
-        <p className="muted">No verification requests.</p>
+        <p className="muted">{t('adminVerify.none')}</p>
       ) : (
         <div className="verif-list">
           {requests.map((v) => (
             <div key={v.id} className="card verif-item">
               <div className="verif-head">
                 <div>
-                  <strong>{v.experienceCategory || `Experience #${v.experienceId}`}</strong>
-                  <span className="muted"> · by {v.userDisplayName}</span>
+                  <strong>{v.experienceCategory ? t(`categories.${v.experienceCategory}`) : `${t('adminVerify.experience')} #${v.experienceId}`}</strong>
+                  <span className="muted"> · {t('adminVerify.by')} {v.userDisplayName}</span>
                 </div>
-                <span className={`status status--${v.status}`}>{v.status}</span>
+                <span className={`status status--${v.status}`}>{t(`statuses.${v.status}`)}</span>
               </div>
 
               <div className="verif-body">
-                <p><span className="k">Document note:</span> {v.documentNote || '—'}</p>
-                <p><span className="k">File reference:</span> {v.fileName || '—'} <span className="muted">(never shown publicly)</span></p>
-                <p><span className="k">Redaction confirmed:</span> {v.redactionConfirmed ? 'Yes' : 'No'}</p>
-                {v.adminNote && <p><span className="k">Admin note:</span> {v.adminNote}</p>}
+                <p><span className="k">{t('adminVerify.documentNote')}</span> {v.documentNote || '—'}</p>
+                <p>
+                  <span className="k">{t('adminVerify.document')}</span>{' '}
+                  {v.hasDocument ? (
+                    <button type="button" className="link" onClick={() => openDocument(v.id)}>
+                      {v.fileName || t('adminVerify.download')}
+                    </button>
+                  ) : (
+                    <span className="muted">{t('adminVerify.noDocument')}</span>
+                  )}{' '}
+                  <span className="muted">{t('adminVerify.neverPublic')}</span>
+                </p>
+                <p><span className="k">{t('adminVerify.redactionConfirmed')}</span> {v.redactionConfirmed ? t('adminVerify.yes') : t('adminVerify.no')}</p>
+                {v.adminNote && <p><span className="k">{t('adminVerify.adminNote')}</span> {v.adminNote}</p>}
               </div>
 
               {v.status === 'PENDING' && (
                 <div className="verif-controls">
                   <select className="form-select" value={levels[v.id] || 'DOCUMENT_SUPPORTED'}
                     onChange={(e) => setLevels((p) => ({ ...p, [v.id]: e.target.value }))}>
-                    <option value="DOCUMENT_SUPPORTED">Document-Supported</option>
-                    <option value="HIGH_CONFIDENCE">High-Confidence</option>
+                    <option value="DOCUMENT_SUPPORTED">{t('adminVerify.docSupported')}</option>
+                    <option value="HIGH_CONFIDENCE">{t('adminVerify.highConfidence')}</option>
                   </select>
-                  <input type="text" className="form-input" placeholder="Admin note (optional)"
+                  <input type="text" className="form-input" placeholder={t('adminVerify.adminNotePlaceholder')}
                     value={notes[v.id] || ''} onChange={(e) => setNotes((p) => ({ ...p, [v.id]: e.target.value }))} />
-                  <button className="btn btn-primary btn-sm" disabled={busy === v.id} onClick={() => decide(v.id, 'APPROVED')}>Approve</button>
-                  <button className="btn btn-ghost btn-sm" disabled={busy === v.id} onClick={() => decide(v.id, 'REJECTED')}>Reject</button>
+                  <button className="btn btn-primary btn-sm" disabled={busy === v.id} onClick={() => decide(v.id, 'APPROVED')}>{t('adminVerify.approve')}</button>
+                  <button className="btn btn-ghost btn-sm" disabled={busy === v.id} onClick={() => decide(v.id, 'REJECTED')}>{t('adminVerify.reject')}</button>
                 </div>
               )}
             </div>

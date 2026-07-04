@@ -1,12 +1,14 @@
+import { useTranslation } from 'react-i18next'
 import PrivacySection from '../components/PrivacySection'
 
 /** Trust & Privacy page. */
 function Privacy() {
+  const { t } = useTranslation()
   return (
     <div className="page narrow">
       <header className="page-head">
-        <h1 className="page-title">Privacy &amp; Trust</h1>
-        <p className="page-sub">How your data is protected and how the platform stays trustworthy.</p>
+        <h1 className="page-title">{t('privacyPage.title')}</h1>
+        <p className="page-sub">{t('privacyPage.sub')}</p>
       </header>
       <PrivacySection />
     </div>
