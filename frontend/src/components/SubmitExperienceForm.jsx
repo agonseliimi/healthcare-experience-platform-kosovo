@@ -94,20 +94,16 @@ function SubmitExperienceForm({ experience }) {
         return
       }
 
-      // 1) Create the experience.
-      const created = await createExperience(payload)
+      // 1) Create the experience (with optional document).
+      const created = await createExperience(payload, documentFile)
 
-      // 2) Optionally request verification for it right away (with optional document).
-      if (form.requestVerification) {
-        // NOTE: redactionConfirmed is required by the backend; the user agrees by
-        // ticking the optional verification box, which shows the privacy note.
-        await createVerificationRequest({
-          experienceId: created.id,
-          documentNote: form.documentNote,
-          redactionConfirmed: true,
-          file: documentFile,
-        })
-      }
+      // Note: we no longer call createVerificationRequest here because the user
+      // wanted the document to be public, and verification hides the post (UNDER_REVIEW).
+      // The document is already uploaded as part of createExperience.
+
+      // Reset form so the user cannot accidentally re-submit.
+      setForm(emptyState)
+      setDocumentFile(null)
 
       navigate(`/experiences/${created.id}`)
     } catch (err) {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getExperienceById, voteExperience } from '../api/api'
+import { getExperienceById, voteExperience, getExperienceDocumentUrl } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import TrustBadge from '../components/TrustBadge'
 import ReportModal from '../components/ReportModal'
@@ -89,6 +89,19 @@ function ExperienceDetails() {
         <Detail label={t('details.result')} value={exp.resultTime} />
         <Detail label={t('details.author')} value={exp.authorDisplayName || t('details.anonymous')} />
       </div>
+
+      {exp.hasDocument && (
+        <div className="detail-document">
+          <a
+            href={getExperienceDocumentUrl(exp.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+          >
+            📄 {t('details.viewDocument')} {exp.documentName && <span>({exp.documentName})</span>}
+          </a>
+        </div>
+      )}
 
       <div className="alert alert-warning">
         {t('details.disclaimer')}

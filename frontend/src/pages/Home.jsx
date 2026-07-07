@@ -20,6 +20,8 @@ function Home() {
     { title: t('homePage.f4Title'), text: t('homePage.f4Text') },
     { title: t('homePage.f5Title'), text: t('homePage.f5Text') },
     { title: t('homePage.f6Title'), text: t('homePage.f6Text') },
+    { title: t('homePage.f7Title'), text: t('homePage.f7Text') },
+    { title: t('homePage.f8Title'), text: t('homePage.f8Text') },
   ]
 
   return (

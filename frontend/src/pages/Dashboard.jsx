@@ -23,7 +23,8 @@ function Dashboard() {
     setError(null)
     try {
       const [exps, verifs] = await Promise.all([getMyExperiences(), getMyVerificationRequests()])
-      setExperiences(exps)
+      // Filter out deleted (HIDDEN) experiences so they don't show up in the panel.
+      setExperiences(exps.filter((e) => e.status !== 'HIDDEN'))
       setVerifications(verifs)
     } catch (err) {
       setError(err.message)
@@ -45,7 +46,8 @@ function Dashboard() {
     setDeletingId(exp.id)
     try {
       await deleteExperience(exp.id)
-      await load()
+      // Remove the deleted experience from local state immediately.
+      setExperiences((prev) => prev.filter((e) => e.id !== exp.id))
     } catch (err) {
       setActionError(err.message)
     } finally {
@@ -89,7 +91,7 @@ function Dashboard() {
               <div className="table-wrap">
                 <table className="table">
                   <thead>
-                    <tr><th>{t('dashboard.colCategory')}</th><th>{t('dashboard.colInstitution')}</th><th>{t('dashboard.colCity')}</th><th>{t('dashboard.colStatus')}</th><th>{t('dashboard.colVerification')}</th><th>{t('dashboard.colLikes')}</th><th>{t('dashboard.colActions')}</th></tr>
+                    <tr><th>{t('dashboard.colCategory')}</th><th>{t('dashboard.colInstitution')}</th><th>{t('dashboard.colCity')}</th><th>{t('dashboard.colVerification')}</th><th>{t('dashboard.colLikes')}</th><th>{t('dashboard.colActions')}</th></tr>
                   </thead>
                   <tbody>
                     {experiences.map((e) => (
@@ -97,7 +99,6 @@ function Dashboard() {
                         <td>{t(`categories.${e.category}`)}</td>
                         <td>{t(`institutions.${e.institutionType}`)}</td>
                         <td>{e.city}</td>
-                        <td><span className={`status status--${e.status}`}>{t(`statuses.${e.status}`)}</span></td>
                         <td>{t(`verifications.${e.verificationLevel}`)}</td>
                         <td>{e.likes}</td>
                         <td>

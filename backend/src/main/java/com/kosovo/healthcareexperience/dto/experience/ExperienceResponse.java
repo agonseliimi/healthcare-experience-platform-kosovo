@@ -36,6 +36,10 @@ public class ExperienceResponse {
 
     private LocalDateTime createdAt;
 
+    // Document attachment metadata (the binary data is served separately)
+    private Boolean hasDocument;
+    private String documentName;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -95,4 +99,10 @@ public class ExperienceResponse {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public Boolean getHasDocument() { return hasDocument; }
+    public void setHasDocument(Boolean hasDocument) { this.hasDocument = hasDocument; }
+
+    public String getDocumentName() { return documentName; }
+    public void setDocumentName(String documentName) { this.documentName = documentName; }
 }

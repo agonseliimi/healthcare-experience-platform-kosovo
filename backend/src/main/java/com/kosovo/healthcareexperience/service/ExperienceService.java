@@ -1,11 +1,13 @@
 package com.kosovo.healthcareexperience.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosovo.healthcareexperience.dto.experience.ExperienceRequest;
 import com.kosovo.healthcareexperience.dto.experience.ExperienceResponse;
@@ -128,7 +130,7 @@ public class ExperienceService {
 
     // ---- Create ----
 
-    public ExperienceResponse create(ExperienceRequest request) {
+    public ExperienceResponse create(ExperienceRequest request, MultipartFile documentFile) {
         User author = userService.getCurrentUser();
 
         // Privacy guard: reject obvious personal identifiers before saving.
@@ -145,6 +147,18 @@ public class ExperienceService {
         e.setStatus(ExperienceStatus.PUBLISHED);
         e.setLikes(0);
         e.setDislikes(0);
+
+        // Store the uploaded document as BLOB in the database.
+        if (documentFile != null && !documentFile.isEmpty()) {
+            try {
+                e.setDocumentData(documentFile.getBytes());
+                e.setDocumentName(documentFile.getOriginalFilename());
+                e.setDocumentContentType(documentFile.getContentType());
+            } catch (IOException ex) {
+                throw new BadRequestException("Could not read the uploaded file.");
+            }
+        }
+
         experienceRepository.save(e);
         return toResponse(e);
     }
@@ -300,6 +314,10 @@ public class ExperienceService {
         r.setLikes(e.getLikes());
         r.setDislikes(e.getDislikes());
         r.setCreatedAt(e.getCreatedAt());
+
+        // Document metadata (the binary data is served via a separate endpoint).
+        r.setHasDocument(e.getDocumentData() != null && e.getDocumentData().length > 0);
+        r.setDocumentName(e.getDocumentName());
 
         User author = e.getAuthor();
         if (author != null) {

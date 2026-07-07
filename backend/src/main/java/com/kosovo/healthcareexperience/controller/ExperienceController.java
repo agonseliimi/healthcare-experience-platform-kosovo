@@ -3,6 +3,10 @@ package com.kosovo.healthcareexperience.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosovo.healthcareexperience.dto.experience.ExperienceRequest;
 import com.kosovo.healthcareexperience.dto.experience.ExperienceResponse;
+import com.kosovo.healthcareexperience.entity.Experience;
 import com.kosovo.healthcareexperience.enums.InstitutionType;
 import com.kosovo.healthcareexperience.enums.VerificationLevel;
 import com.kosovo.healthcareexperience.enums.VoteType;
 import com.kosovo.healthcareexperience.exception.BadRequestException;
+import com.kosovo.healthcareexperience.exception.ResourceNotFoundException;
 import com.kosovo.healthcareexperience.service.ExperienceService;
 
 import jakarta.validation.Valid;
@@ -65,11 +73,32 @@ public class ExperienceController {
         return ResponseEntity.ok(experienceService.getByIdAsResponse(id));
     }
 
-    // Logged-in user creates an experience.
+    // Logged-in user creates an experience (with optional document upload).
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ExperienceResponse> create(@Valid @RequestBody ExperienceRequest request) {
-        return ResponseEntity.ok(experienceService.create(request));
+    public ResponseEntity<ExperienceResponse> create(
+            @Valid @ModelAttribute ExperienceRequest request,
+            @RequestParam(required = false) MultipartFile documentFile) {
+
+        return ResponseEntity.ok(experienceService.create(request, documentFile));
+    }
+
+    // Public: download the document attached to an experience.
+    @GetMapping("/{id}/document")
+    public ResponseEntity<Resource> downloadDocument(@PathVariable Long id) {
+        Experience e = experienceService.getEntity(id);
+        if (e.getDocumentData() == null) {
+            throw new ResourceNotFoundException("No document attached to experience: " + id);
+        }
+        String contentType = e.getDocumentContentType() != null
+                ? e.getDocumentContentType()
+                : MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        String downloadName = e.getDocumentName() != null ? e.getDocumentName() : "document";
+        ByteArrayResource resource = new ByteArrayResource(e.getDocumentData());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + downloadName + "\"")
+                .body(resource);
     }
 
     // Owner or admin updates.

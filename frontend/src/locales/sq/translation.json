@@ -117,6 +117,10 @@
     "f5Text": "Raporto çështje të privatësisë, pretendime mjekësore ose spam.",
     "f6Title": "Dizajn me prioritet privatësinë",
     "f6Text": "Dokumentet nuk janë kurrë publike; identifikuesit bllokohen.",
+    "f7Title": "Transparenca e sistemit shendetësor",
+    "f7Text": "Zbuloni paraprakisht kostot e terapive, kohëzgjatjen e trajtimeve dhe hapat e nevojshëm para se të shkoni në spital.",
+    "f8Title": "Eksperiencat me stafin mjekësor",
+    "f8Text": "Ndaj vlerësimin tënd për mjekët dhe institucionet për të krijuar një pasqyrë të qartë të cilësisë së shërbimeve.",
     "browseBtn": "Shiko Përvojat"
   },
   "submit": {
@@ -143,12 +147,12 @@
     "summary": "Përmbledhja e përvojës",
     "summaryPlaceholder": "Një përmbledhje e shkurtër e rrugëtimit tënd",
     "anonymous": "Dërgo në mënyrë anonime (identiteti yt nuk shfaqet kurrë në përvojë)",
-    "requestVerification": "Kërko verifikim opsional (dokumentet nuk shfaqen kurrë publikisht)",
+    "requestVerification": "Shto dokument mbështetës (do të jetë i dukshëm për vizitorët)",
     "documentNote": "Shënim për verifikimin e dokumentit",
     "documentNotePlaceholder": "Përshkruaj (pa identifikues) çfarë dëshmie e mbështet këtë përvojë.",
-    "documentHint": "Duke kërkuar verifikim, ti konfirmon se ke hequr të gjithë identifikuesit personalë.",
+    "documentHint": "Duke kërkuar verifikim, ti konfirmon se ke hequr të gjithë identifikuesit personalë (Dokumenti do të jetë i dukshëm për vizitorët).",
     "uploadLabel": "Ngarko dokument mbështetës (opsional)",
-    "uploadHint": "Dokumenti nuk shfaqet kurrë publikisht. Vetëm administratorët mund ta shohin për verifikim. Hiq të gjithë identifikuesit personalë para ngarkimit. PDF ose imazhe, deri në 5MB.",
+    "uploadHint": "Dokumenti do të jetë i dukshëm për të gjithë vizitorët. PDF ose imazhe, deri në 5MB.",
     "fileSelected": "Skedari i zgjedhur:",
     "removeFile": "Hiq",
     "requiredError": "Ju lutem plotësoni kategorinë, llojin e institucionit, qytetin dhe hapat e ndërmarrë.",
@@ -156,7 +160,9 @@
     "saving": "Duke ruajtur...",
     "submitBtn": "Dërgo Përvojën",
     "saveBtn": "Ruaj Ndryshimet",
-    "cancel": "Anulo"
+    "cancel": "Anulo",
+    "uploadDocument": "Ngarko dokument (opsional)",
+    "uploadDocumentHint": "Dokumenti do të jetë i dukshëm për të gjithë vizitorët. PDF ose imazhe, deri në 5MB."
   },
   "verify": {
     "successTitle": "Verifikimi u kërkua. Një administrator do ta shqyrtojë. Dokumenti yt nuk shfaqet kurrë publikisht.",
@@ -238,7 +244,8 @@
     "author": "Autori",
     "anonymous": "Anonim",
     "disclaimer": "Ky është një rrugëtim anonim. Nuk duhet përdorur si këshillë mjekësore.",
-    "report": "⚑ Raporto"
+    "report": "⚑ Raporto",
+    "viewDocument": "Shiko Dokumentin"
   },
   "report": {
     "title": "Raporto këtë përvojë",

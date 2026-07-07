@@ -6,14 +6,17 @@ import com.kosovo.healthcareexperience.enums.ExperienceStatus;
 import com.kosovo.healthcareexperience.enums.InstitutionType;
 import com.kosovo.healthcareexperience.enums.VerificationLevel;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -73,6 +76,16 @@ public class Experience {
 
     private Integer likes = 0;
     private Integer dislikes = 0;
+
+    // ---- Document attachment (stored as BLOB in SQLite) ----
+    @Column(name = "document_data")
+    private byte[] documentData;
+
+    @Column(name = "document_name")
+    private String documentName;
+
+    @Column(name = "document_content_type")
+    private String documentContentType;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -143,4 +156,13 @@ public class Experience {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public byte[] getDocumentData() { return documentData; }
+    public void setDocumentData(byte[] documentData) { this.documentData = documentData; }
+
+    public String getDocumentName() { return documentName; }
+    public void setDocumentName(String documentName) { this.documentName = documentName; }
+
+    public String getDocumentContentType() { return documentContentType; }
+    public void setDocumentContentType(String documentContentType) { this.documentContentType = documentContentType; }
 }

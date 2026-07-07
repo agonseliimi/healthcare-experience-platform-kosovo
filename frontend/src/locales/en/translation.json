@@ -117,6 +117,10 @@
     "f5Text": "Flag privacy issues, medical-advice claims, or spam.",
     "f6Title": "Privacy-first design",
     "f6Text": "Documents are never public; identifiers are blocked.",
+    "f7Title": "Healthcare system transparency",
+    "f7Text": "Discover therapy costs, treatment durations, and necessary steps before visiting a hospital.",
+    "f8Title": "Experiences with medical staff",
+    "f8Text": "Share your assessment of doctors and institutions to create a clear overview of service quality.",
     "browseBtn": "Browse Experiences"
   },
   "submit": {
@@ -143,12 +147,12 @@
     "summary": "Experience summary",
     "summaryPlaceholder": "A short general summary of your journey",
     "anonymous": "Submit anonymously (your identity is never shown on the experience)",
-    "requestVerification": "Request optional verification (documents are never shown publicly)",
+    "requestVerification": "Add supporting document (will be visible to visitors)",
     "documentNote": "Document verification note",
     "documentNotePlaceholder": "Describe (without identifiers) what evidence supports this experience.",
-    "documentHint": "By requesting verification you confirm you removed all personal identifiers.",
+    "documentHint": "Make sure you have removed all personal identifiers before uploading.",
     "uploadLabel": "Upload supporting document (optional)",
-    "uploadHint": "The document is never shown publicly. Only administrators can view it for verification. Remove all personal identifiers before uploading. PDF or images, up to 5MB.",
+    "uploadHint": "The document will be visible to all visitors. PDF or images, up to 5MB.",
     "fileSelected": "Selected file:",
     "removeFile": "Remove",
     "requiredError": "Please fill in category, institution type, city, and steps taken.",
@@ -156,7 +160,9 @@
     "saving": "Saving...",
     "submitBtn": "Submit Experience",
     "saveBtn": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "uploadDocument": "Upload document (optional)",
+    "uploadDocumentHint": "The document will be visible to all visitors. PDF or images, up to 5MB."
   },
   "verify": {
     "successTitle": "Verification requested. An administrator will review it. Your document is never shown publicly.",
@@ -238,7 +244,8 @@
     "author": "Author",
     "anonymous": "Anonymous",
     "disclaimer": "This is one anonymous journey. It should not be used as medical advice.",
-    "report": "⚑ Report"
+    "report": "⚑ Report",
+    "viewDocument": "View Document"
   },
   "report": {
     "title": "Report this experience",

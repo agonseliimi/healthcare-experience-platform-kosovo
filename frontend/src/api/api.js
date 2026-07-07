@@ -39,6 +39,7 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
+      cache: 'no-store',
     })
   } catch (networkError) {
     // Backend not running / CORS / DNS, etc.
@@ -91,10 +92,54 @@ export const getMyExperiences = () => request('/experiences/mine')
 export const getExperienceById = (id) => request(`/experiences/${id}`, { auth: false })
 // Authenticated fetch — lets an owner load their own non-published (e.g. HIDDEN) post for editing.
 export const getExperienceForEdit = (id) => request(`/experiences/${id}`)
-export const createExperience = (data) => request('/experiences', { method: 'POST', body: data })
+
+/**
+ * Create an experience, optionally with a document attachment.
+ * Sent as multipart/form-data so the file can be uploaded alongside the form fields.
+ */
+export async function createExperience(data, documentFile) {
+  const form = new FormData()
+  form.append('category', data.category)
+  form.append('institutionType', data.institutionType)
+  form.append('city', data.city)
+  form.append('stepsTaken', data.stepsTaken)
+  if (data.testsPerformed) form.append('testsPerformed', data.testsPerformed)
+  if (data.approximateCost != null) form.append('approximateCost', data.approximateCost)
+  if (data.waitingTime) form.append('waitingTime', data.waitingTime)
+  if (data.resultTime) form.append('resultTime', data.resultTime)
+  if (data.summary) form.append('summary', data.summary)
+  form.append('isAnonymous', data.isAnonymous ? 'true' : 'false')
+  if (documentFile) form.append('documentFile', documentFile)
+
+  const headers = {}
+  const token = getToken()
+  if (token) headers.Authorization = `Bearer ${token}`
+
+  let response
+  try {
+    response = await fetch(`${BASE_URL}/experiences`, { method: 'POST', headers, body: form, cache: 'no-store' })
+  } catch {
+    throw new Error('Cannot reach the server. Please make sure the backend is running on http://localhost:5000.')
+  }
+
+  const text = await response.text()
+  let result = null
+  if (text) { try { result = JSON.parse(text) } catch { result = text } }
+  if (!response.ok) {
+    const message = (result && result.message) || (typeof result === 'string' && result) || `Request failed (${response.status})`
+    throw new Error(message)
+  }
+  return result
+}
+
 export const updateExperience = (id, data) => request(`/experiences/${id}`, { method: 'PUT', body: data })
 export const deleteExperience = (id) => request(`/experiences/${id}`, { method: 'DELETE' })
 export const voteExperience = (id, type) => request(`/experiences/${id}/vote`, { method: 'POST', body: { type } })
+
+/** Returns the URL to download/view a document attached to an experience. */
+export function getExperienceDocumentUrl(experienceId) {
+  return `${BASE_URL}/experiences/${experienceId}/document`
+}
 
 // --------------- Reports --------------
 export const createReport = (data) => request('/reports', { method: 'POST', body: data })
