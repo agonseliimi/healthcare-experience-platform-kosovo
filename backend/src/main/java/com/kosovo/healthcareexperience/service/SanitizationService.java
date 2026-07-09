@@ -34,6 +34,16 @@ public class SanitizationService {
     private static final Pattern ADDRESS =
             Pattern.compile("(?i)\\b(rr\\.|rruga|street|str\\.|avenue|ave\\.)\\s+\\w+");
 
+    // Best-effort keyword match for graphic / distressing medical content. Like the
+    // PII check above this is deliberately simple for an MVP and is NOT a substitute
+    // for human moderation. Word boundaries keep it from matching inside other words.
+    private static final Pattern SENSITIVE_KEYWORDS = Pattern.compile(
+            "(?i)\\b(blood|bloody|wound|wounds|surgery|surgical|amputation|amputated|"
+            + "tumou?r|autopsy|corpse|deceased|graphic|gore|gory|infection|infected|"
+            + "abscess|ulcer|rash|burn|burns|fracture|x-?ray|stitches|incision|"
+            + "biopsy|lesion|abus|trauma|self-harm|suicid|overdose|miscarriage|"
+            + "gjak|plag|operacion|tumor|kancer|djegie|infeksion)\\b");
+
     /**
      * @return true if the text appears to contain a personal identifier.
      */
@@ -46,6 +56,27 @@ public class SanitizationService {
             if (PHONE.matcher(text).find()) return true;
             if (LONG_ID.matcher(text).find()) return true;
             if (ADDRESS.matcher(text).find()) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Automatic "NSFW" detection. Content is treated as sensitive when an image is
+     * attached (medical photos are frequently graphic) or when the text mentions
+     * graphic/distressing keywords. When true, the frontend blurs the attached
+     * image behind a click-to-reveal overlay.
+     *
+     * @param contentType the attached file's MIME type (may be null)
+     * @param texts       free-text fields to scan for graphic keywords
+     */
+    public boolean isSensitive(String contentType, String... texts) {
+        if (contentType != null && contentType.toLowerCase().startsWith("image/")) {
+            return true;
+        }
+        for (String text : texts) {
+            if (text != null && !text.isBlank() && SENSITIVE_KEYWORDS.matcher(text).find()) {
+                return true;
+            }
         }
         return false;
     }

@@ -77,6 +77,13 @@ public class Experience {
     private Integer likes = 0;
     private Integer dislikes = 0;
 
+    // Reddit-style NSFW flag. Set automatically when an image is attached or when
+    // the text appears to describe graphic/sensitive content. When true, the
+    // frontend blurs the attached image behind a "click to reveal" overlay.
+    // Left nullable so ddl-auto=update can add the column to an existing SQLite DB;
+    // new rows default to false and reads coerce null -> false.
+    private Boolean sensitive = false;
+
     // ---- Document attachment (stored as BLOB in SQLite) ----
     @Column(name = "document_data")
     private byte[] documentData;
@@ -150,6 +157,9 @@ public class Experience {
 
     public Integer getDislikes() { return dislikes; }
     public void setDislikes(Integer dislikes) { this.dislikes = dislikes; }
+
+    public Boolean getSensitive() { return sensitive; }
+    public void setSensitive(Boolean sensitive) { this.sensitive = sensitive; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

@@ -159,6 +159,11 @@ public class ExperienceService {
             }
         }
 
+        // Automatically flag graphic/NSFW content so the image is blurred by default.
+        e.setSensitive(sanitizationService.isSensitive(
+                e.getDocumentContentType(),
+                request.getStepsTaken(), request.getTestsPerformed(), request.getSummary()));
+
         experienceRepository.save(e);
         return toResponse(e);
     }
@@ -177,6 +182,12 @@ public class ExperienceService {
         }
 
         applyRequest(e, request);
+
+        // Re-evaluate the NSFW flag against the edited text (attachment is unchanged).
+        e.setSensitive(sanitizationService.isSensitive(
+                e.getDocumentContentType(),
+                request.getStepsTaken(), request.getTestsPerformed(), request.getSummary()));
+
         experienceRepository.save(e);
         return toResponse(e);
     }
@@ -315,9 +326,12 @@ public class ExperienceService {
         r.setDislikes(e.getDislikes());
         r.setCreatedAt(e.getCreatedAt());
 
+        r.setSensitive(Boolean.TRUE.equals(e.getSensitive()));
+
         // Document metadata (the binary data is served via a separate endpoint).
         r.setHasDocument(e.getDocumentData() != null && e.getDocumentData().length > 0);
         r.setDocumentName(e.getDocumentName());
+        r.setDocumentContentType(e.getDocumentContentType());
 
         User author = e.getAuthor();
         if (author != null) {

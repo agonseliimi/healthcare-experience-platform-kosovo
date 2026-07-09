@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { getExperienceById, voteExperience, getExperienceDocumentUrl } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import TrustBadge from '../components/TrustBadge'
+import SensitiveImage from '../components/SensitiveImage'
 import ReportModal from '../components/ReportModal'
 import GuestLimitBanner from '../components/GuestLimitBanner'
 import LoadingState from '../components/LoadingState'
@@ -74,6 +75,7 @@ function ExperienceDetails() {
           {t(`institutions.${exp.institutionType}`)}
         </span>
         <span className={`vbadge vbadge--${exp.verificationLevel}`}>{t(`verifications.${exp.verificationLevel}`)}</span>
+        {exp.sensitive && <span className="chip chip--sensitive">🔞 {t('sensitive.badge')}</span>}
       </div>
 
       <h1 className="detail-title">{exp.city}</h1>
@@ -92,14 +94,23 @@ function ExperienceDetails() {
 
       {exp.hasDocument && (
         <div className="detail-document">
-          <a
-            href={getExperienceDocumentUrl(exp.id)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-secondary"
-          >
-            📄 {t('details.viewDocument')} {exp.documentName && <span>({exp.documentName})</span>}
-          </a>
+          {exp.documentContentType?.startsWith('image/') ? (
+            <SensitiveImage
+              experienceId={exp.id}
+              contentType={exp.documentContentType}
+              sensitive={exp.sensitive}
+              name={exp.documentName}
+            />
+          ) : (
+            <a
+              href={getExperienceDocumentUrl(exp.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+            >
+              📄 {t('details.viewDocument')} {exp.documentName && <span>({exp.documentName})</span>}
+            </a>
+          )}
         </div>
       )}
 

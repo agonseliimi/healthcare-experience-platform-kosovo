@@ -36,9 +36,13 @@ public class ExperienceResponse {
 
     private LocalDateTime createdAt;
 
+    // Reddit-style NSFW flag: when true the frontend blurs the attached image.
+    private Boolean sensitive;
+
     // Document attachment metadata (the binary data is served separately)
     private Boolean hasDocument;
     private String documentName;
+    private String documentContentType;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -100,9 +104,15 @@ public class ExperienceResponse {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
+    public Boolean getSensitive() { return sensitive; }
+    public void setSensitive(Boolean sensitive) { this.sensitive = sensitive; }
+
     public Boolean getHasDocument() { return hasDocument; }
     public void setHasDocument(Boolean hasDocument) { this.hasDocument = hasDocument; }
 
     public String getDocumentName() { return documentName; }
     public void setDocumentName(String documentName) { this.documentName = documentName; }
+
+    public String getDocumentContentType() { return documentContentType; }
+    public void setDocumentContentType(String documentContentType) { this.documentContentType = documentContentType; }
 }
