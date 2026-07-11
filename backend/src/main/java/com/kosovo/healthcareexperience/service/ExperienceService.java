@@ -318,6 +318,7 @@ public class ExperienceService {
         // Document metadata (the binary data is served via a separate endpoint).
         r.setHasDocument(e.getDocumentData() != null && e.getDocumentData().length > 0);
         r.setDocumentName(e.getDocumentName());
+        r.setDocumentContentType(e.getDocumentContentType());
 
         User author = e.getAuthor();
         if (author != null) {

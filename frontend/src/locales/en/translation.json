@@ -381,5 +381,16 @@
     "REVIEWED": "Reviewed",
     "DISMISSED": "Dismissed",
     "ACTION_TAKEN": "Action taken"
+  },
+  "blurTool": {
+    "title": "Blur Sensitive Areas",
+    "instruction": "Draw rectangles over areas you want to blur (faces, names, personal info). Click Confirm when done.",
+    "confirm": "Confirm & Upload",
+    "cancel": "Cancel",
+    "undo": "Undo Last",
+    "clearAll": "Clear All",
+    "loading": "Loading…",
+    "region": "region",
+    "regions": "regions"
   }
 }

@@ -39,6 +39,7 @@ public class ExperienceResponse {
     // Document attachment metadata (the binary data is served separately)
     private Boolean hasDocument;
     private String documentName;
+    private String documentContentType;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -105,4 +106,7 @@ public class ExperienceResponse {
 
     public String getDocumentName() { return documentName; }
     public void setDocumentName(String documentName) { this.documentName = documentName; }
+
+    public String getDocumentContentType() { return documentContentType; }
+    public void setDocumentContentType(String documentContentType) { this.documentContentType = documentContentType; }
 }
