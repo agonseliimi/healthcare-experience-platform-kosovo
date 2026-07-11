@@ -86,13 +86,6 @@
     "report": "Report",
     "viewDetails": "View Details"
   },
-  "sensitive": {
-    "badge": "Sensitive",
-    "title": "Sensitive content",
-    "reveal": "Click to view",
-    "hide": "Hide",
-    "imageAlt": "Attached image"
-  },
   "searchPage": {
     "title": "Browse Experiences",
     "sub": "Search anonymous patient journeys. No personal information is ever shown.",

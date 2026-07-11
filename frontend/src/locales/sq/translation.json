@@ -86,13 +86,6 @@
     "report": "Raporto",
     "viewDetails": "Shiko Detajet"
   },
-  "sensitive": {
-    "badge": "E ndjeshme",
-    "title": "Përmbajtje e ndjeshme",
-    "reveal": "Kliko për ta parë",
-    "hide": "Fshih",
-    "imageAlt": "Imazh i bashkangjitur"
-  },
   "searchPage": {
     "title": "Kërko Përvojat",
     "sub": "Kërko përvoja anonime të pacientëve. Asnjë informacion personal nuk shfaqet.",
