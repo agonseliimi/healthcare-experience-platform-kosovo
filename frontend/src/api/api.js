@@ -51,21 +51,16 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
   // 204 No Content
   if (response.status === 204) return null
 
-  let data = null
   const text = await response.text()
-  if (text) {
-    try {
-      data = JSON.parse(text)
-    } catch {
-      data = text
-    }
+  const contentType = response.headers.get('content-type') || ''
+  let data = null
+
+  if (text && contentType.includes('application/json')) {
+    data = JSON.parse(text)
   }
 
   if (!response.ok) {
-    const message =
-      (data && data.message) ||
-      (typeof data === 'string' && data) ||
-      `Request failed (${response.status})`
+    const message = (data && data.message) ? data.message : (text && !contentType.includes('application/json') ? text : `Request failed (${response.status})`)
     throw new Error(message)
   }
 
@@ -99,16 +94,13 @@ export const getExperienceForEdit = (id) => request(`/experiences/${id}`)
  */
 export async function createExperience(data, documentFile) {
   const form = new FormData()
-  form.append('category', data.category)
-  form.append('institutionType', data.institutionType)
-  form.append('city', data.city)
-  form.append('stepsTaken', data.stepsTaken)
-  if (data.testsPerformed) form.append('testsPerformed', data.testsPerformed)
-  if (data.approximateCost != null) form.append('approximateCost', data.approximateCost)
-  if (data.waitingTime) form.append('waitingTime', data.waitingTime)
-  if (data.resultTime) form.append('resultTime', data.resultTime)
-  if (data.summary) form.append('summary', data.summary)
-  form.append('isAnonymous', data.isAnonymous ? 'true' : 'false')
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      form.append(key, value)
+    }
+  })
+
   if (documentFile) form.append('documentFile', documentFile)
 
   const headers = {}
@@ -123,12 +115,18 @@ export async function createExperience(data, documentFile) {
   }
 
   const text = await response.text()
+  const contentType = response.headers.get('content-type') || ''
   let result = null
-  if (text) { try { result = JSON.parse(text) } catch { result = text } }
+  
+  if (text && contentType.includes('application/json')) {
+    result = JSON.parse(text)
+  }
+
   if (!response.ok) {
-    const message = (result && result.message) || (typeof result === 'string' && result) || `Request failed (${response.status})`
+    const message = (result && result.message) ? result.message : (text && !contentType.includes('application/json') ? text : `Request failed (${response.status})`)
     throw new Error(message)
   }
+  
   return result
 }
 
@@ -173,14 +171,18 @@ export async function createVerificationRequest({ experienceId, documentNote, re
   }
 
   const text = await response.text()
+  const contentType = response.headers.get('content-type') || ''
   let data = null
-  if (text) {
-    try { data = JSON.parse(text) } catch { data = text }
+  
+  if (text && contentType.includes('application/json')) {
+    data = JSON.parse(text)
   }
+
   if (!response.ok) {
-    const message = (data && data.message) || (typeof data === 'string' && data) || `Request failed (${response.status})`
+    const message = (data && data.message) ? data.message : (text && !contentType.includes('application/json') ? text : `Request failed (${response.status})`)
     throw new Error(message)
   }
+  
   return data
 }
 
