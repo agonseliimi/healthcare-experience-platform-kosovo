@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { voteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import TrustBadge from './TrustBadge'
-import SensitiveImage from './SensitiveImage'
 import ReportModal from './ReportModal'
 import { useTranslation } from 'react-i18next'
 
@@ -81,15 +80,6 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
 
       {exp.summary && <p className="exp-summary">{exp.summary}</p>}
 
-      {exp.hasDocument && exp.documentContentType?.startsWith('image/') && (
-        <SensitiveImage
-          experienceId={exp.id}
-          contentType={exp.documentContentType}
-          sensitive={exp.sensitive}
-          name={exp.documentName}
-        />
-      )}
-
       <div className="exp-field">
         <span className="exp-field-label">{t('experienceCard.steps')}</span>
         <span className="exp-field-value">{stepsPreview}</span>
@@ -107,7 +97,6 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
 
       <div className="exp-badges">
         <span className={`vbadge vbadge--${exp.verificationLevel}`}>{t(`verifications.${exp.verificationLevel}`)}</span>
-        {exp.sensitive && <span className="chip chip--sensitive">🔞 {t('sensitive.badge')}</span>}
         {exp.authorTrustScore != null && (
           <TrustBadge score={exp.authorTrustScore} label={exp.authorTrustLabel} />
         )}
