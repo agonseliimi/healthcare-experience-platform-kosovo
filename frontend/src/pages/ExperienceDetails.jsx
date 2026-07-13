@@ -92,14 +92,25 @@ function ExperienceDetails() {
 
       {exp.hasDocument && (
         <div className="detail-document">
-          <a
-            href={getExperienceDocumentUrl(exp.id)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-secondary"
-          >
-            📄 {t('details.viewDocument')} {exp.documentName && <span>({exp.documentName})</span>}
-          </a>
+          {exp.documentContentType && exp.documentContentType.startsWith('image/') ? (
+            <>
+              <img
+                src={getExperienceDocumentUrl(exp.id)}
+                alt={exp.documentName || t('details.viewDocument')}
+                className="detail-document-img"
+              />
+              {exp.documentName && <p className="form-hint">{exp.documentName}</p>}
+            </>
+          ) : (
+            <a
+              href={getExperienceDocumentUrl(exp.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+            >
+              📄 {t('details.viewDocument')} {exp.documentName && <span>({exp.documentName})</span>}
+            </a>
+          )}
         </div>
       )}
 

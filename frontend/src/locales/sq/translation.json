@@ -381,5 +381,16 @@
     "REVIEWED": "E shqyrtuar",
     "DISMISSED": "E hedhur poshtë",
     "ACTION_TAKEN": "U mor masë"
+  },
+  "blurTool": {
+    "title": "Turbullo Zonat e Ndjeshme",
+    "instruction": "Vizato drejtkëndësha mbi zonat që dëshiron t'i turbullosh (fytyra, emra, informacione personale). Kliko Konfirmo kur të mbarosh.",
+    "confirm": "Konfirmo & Ngarko",
+    "cancel": "Anulo",
+    "undo": "Zhbëj të Fundit",
+    "clearAll": "Pastro të Gjitha",
+    "loading": "Duke u ngarkuar…",
+    "region": "zonë",
+    "regions": "zona"
   }
 }

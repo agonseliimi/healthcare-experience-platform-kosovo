@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { createExperience, updateExperience, createVerificationRequest } from '../api/api'
 import { CATEGORIES, CITIES, INSTITUTION_TYPES } from '../utils/constants'
+import ImageBlurTool from './ImageBlurTool'
 
 /**
  * Form to submit or edit an anonymous experience.
@@ -55,6 +56,8 @@ function SubmitExperienceForm({ experience }) {
   const isEdit = Boolean(experience?.id)
   const [form, setForm] = useState(() => toFormState(experience))
   const [documentFile, setDocumentFile] = useState(null)
+  const [showBlurTool, setShowBlurTool] = useState(false)
+  const [rawImageFile, setRawImageFile] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -209,12 +212,22 @@ function SubmitExperienceForm({ experience }) {
                 type="file"
                 className="form-input"
                 accept="application/pdf,image/*"
-                onChange={(e) => setDocumentFile(e.target.files?.[0] || null)}
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null
+                  if (file && file.type.startsWith('image/')) {
+                    // Image selected → open blur tool before accepting
+                    setRawImageFile(file)
+                    setShowBlurTool(true)
+                  } else {
+                    // PDF or other → accept directly
+                    setDocumentFile(file)
+                  }
+                }}
               />
               {documentFile && (
                 <p className="form-hint">
                   {t('submit.fileSelected')} <strong>{documentFile.name}</strong>{' '}
-                  <button type="button" className="link link-danger" onClick={() => setDocumentFile(null)}>
+                  <button type="button" className="link link-danger" onClick={() => { setDocumentFile(null); setRawImageFile(null); }}>
                     {t('submit.removeFile')}
                   </button>
                 </p>
@@ -224,6 +237,22 @@ function SubmitExperienceForm({ experience }) {
             </div>
           )}
         </>
+      )}
+
+      {showBlurTool && rawImageFile && (
+        <ImageBlurTool
+          file={rawImageFile}
+          onConfirm={(blob, filename) => {
+            // Create a File from the blob so FormData sends the correct filename.
+            const processed = new File([blob], filename, { type: blob.type })
+            setDocumentFile(processed)
+            setShowBlurTool(false)
+          }}
+          onCancel={() => {
+            setShowBlurTool(false)
+            setRawImageFile(null)
+          }}
+        />
       )}
 
       <div className="form-actions">
