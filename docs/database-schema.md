@@ -41,6 +41,17 @@ File: `backend/data/healthcare_experience.db`.
 | dislikes          | Integer       |                                                   |
 | createdAt/updatedAt | LocalDateTime |                                                 |
 
+### `experience_symptoms`
+| Field         | Type       | Notes                                      |
+|---------------|------------|--------------------------------------------|
+| experience_id | FK → experiences | owning experience                   |
+| position      | Integer    | preserves user-entered order               |
+| symptom       | String(80) | trimmed symptom value; maximum 10 per post |
+
+This element-collection table is created non-destructively by Hibernate `ddl-auto=update`.
+Experiences created before the feature simply have no related rows and are returned through
+the API with an empty `symptoms` list.
+
 ### `votes`
 | Field         | Type        | Notes                                        |
 |---------------|-------------|----------------------------------------------|

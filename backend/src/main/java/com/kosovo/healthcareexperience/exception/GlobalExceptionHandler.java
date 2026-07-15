@@ -44,6 +44,18 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<Object> handleRateLimit(RateLimitExceededException ex) {
+        return new ResponseEntity<>(body(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage()),
+                HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    @ExceptionHandler(EmailDeliveryException.class)
+    public ResponseEntity<Object> handleEmailDelivery() {
+        return new ResponseEntity<>(body(HttpStatus.SERVICE_UNAVAILABLE,
+                "The message could not be sent. Please try again later."), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDenied(AccessDeniedException ex) {
         return new ResponseEntity<>(body(HttpStatus.FORBIDDEN, "You do not have permission to do that."),
@@ -61,7 +73,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneric(Exception ex) {
-        return new ResponseEntity<>(body(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()),
+        return new ResponseEntity<>(body(HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected server error occurred."),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

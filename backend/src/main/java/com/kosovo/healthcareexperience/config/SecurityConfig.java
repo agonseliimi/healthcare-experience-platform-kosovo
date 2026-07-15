@@ -59,6 +59,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/feedback").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/experiences", "/api/experiences/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/*/trust").permitAll()
                 // Swagger / OpenAPI

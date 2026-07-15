@@ -1,6 +1,8 @@
 package com.kosovo.healthcareexperience.dto.experience;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kosovo.healthcareexperience.enums.ExperienceStatus;
 import com.kosovo.healthcareexperience.enums.InstitutionType;
@@ -17,6 +19,7 @@ public class ExperienceResponse {
     private InstitutionType institutionType;
     private String city;
     private String stepsTaken;
+    private List<String> symptoms = new ArrayList<>();
     private String testsPerformed;
     private Double approximateCost;
     private String waitingTime;
@@ -55,6 +58,11 @@ public class ExperienceResponse {
 
     public String getStepsTaken() { return stepsTaken; }
     public void setStepsTaken(String stepsTaken) { this.stepsTaken = stepsTaken; }
+
+    public List<String> getSymptoms() { return symptoms; }
+    public void setSymptoms(List<String> symptoms) {
+        this.symptoms = symptoms == null ? new ArrayList<>() : new ArrayList<>(symptoms);
+    }
 
     public String getTestsPerformed() { return testsPerformed; }
     public void setTestsPerformed(String testsPerformed) { this.testsPerformed = testsPerformed; }

@@ -55,6 +55,7 @@ function Navbar() {
           <NavLink to="/search" className={linkClass}>{t('navbar.search')}</NavLink>
           {isAuthenticated && <NavLink to="/submit" className={linkClass}>{t('navbar.share')}</NavLink>}
           <NavLink to="/privacy" className={linkClass}>{t('navbar.privacy')}</NavLink>
+          <NavLink to="/contact" className={linkClass}>{t('navbar.contact')}</NavLink>
           {isAuthenticated && <NavLink to="/dashboard" className={linkClass}>{t('navbar.dashboard')}</NavLink>}
           {isAdmin && <NavLink to="/admin" className={linkClass}>{t('navbar.admin')}</NavLink>}
 

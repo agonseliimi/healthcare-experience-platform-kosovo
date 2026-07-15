@@ -52,6 +52,12 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!-- SMTP email delivery for the public feedback form. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- SQLite JDBC driver: lets Java talk to a SQLite .db file.
              No <version> is needed: the Spring Boot parent BOM manages
              sqlite-jdbc, keeping it aligned with the tested Hibernate version. -->

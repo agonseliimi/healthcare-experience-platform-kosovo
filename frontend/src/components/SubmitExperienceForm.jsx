@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { createExperience, updateExperience, createVerificationRequest } from '../api/api'
+import { createExperience, updateExperience } from '../api/api'
 import { CATEGORIES, CITIES, INSTITUTION_TYPES } from '../utils/constants'
 import ImageBlurTool from './ImageBlurTool'
 
@@ -23,6 +23,7 @@ const emptyState = {
   institutionType: '',
   city: '',
   stepsTaken: '',
+  symptoms: [],
   testsPerformed: '',
   approximateCost: '',
   waitingTime: '',
@@ -42,6 +43,7 @@ function toFormState(experience) {
     institutionType: experience.institutionType ?? '',
     city: experience.city ?? '',
     stepsTaken: experience.stepsTaken ?? '',
+    symptoms: Array.isArray(experience.symptoms) ? experience.symptoms : [],
     testsPerformed: experience.testsPerformed ?? '',
     approximateCost: experience.approximateCost == null ? '' : String(experience.approximateCost),
     waitingTime: experience.waitingTime ?? '',
@@ -60,10 +62,43 @@ function SubmitExperienceForm({ experience }) {
   const [rawImageFile, setRawImageFile] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [symptomInput, setSymptomInput] = useState('')
+  const [symptomError, setSymptomError] = useState(null)
   const navigate = useNavigate()
+  const translatedSuggestions = t('submit.symptomSuggestions', { returnObjects: true })
+  const symptomSuggestions = Array.isArray(translatedSuggestions) ? translatedSuggestions : []
 
   function set(key, value) {
     setForm((prev) => ({ ...prev, [key]: value }))
+  }
+
+  function symptomValidationMessage(value, selected = form.symptoms) {
+    const trimmed = value.trim()
+    if (trimmed.length < 2) return t('submit.symptomTooShort')
+    if (trimmed.length > 80) return t('submit.symptomTooLong')
+    if (selected.some((symptom) => symptom.toLocaleLowerCase() === trimmed.toLocaleLowerCase())) {
+      return t('submit.symptomDuplicate')
+    }
+    if (selected.length >= 10) return t('submit.symptomLimit')
+    return null
+  }
+
+  function addSymptom(value = symptomInput) {
+    const trimmed = value.trim()
+    const validationMessage = symptomValidationMessage(trimmed)
+    if (validationMessage) {
+      setSymptomError(validationMessage)
+      return false
+    }
+    set('symptoms', [...form.symptoms, trimmed])
+    setSymptomInput('')
+    setSymptomError(null)
+    return true
+  }
+
+  function removeSymptom(value) {
+    set('symptoms', form.symptoms.filter((symptom) => symptom !== value))
+    setSymptomError(null)
   }
 
   async function handleSubmit(e) {
@@ -75,11 +110,24 @@ function SubmitExperienceForm({ experience }) {
       return
     }
 
+    let symptoms = form.symptoms
+    if (symptomInput.trim()) {
+      const validationMessage = symptomValidationMessage(symptomInput, symptoms)
+      if (validationMessage) {
+        setSymptomError(validationMessage)
+        return
+      }
+      symptoms = [...symptoms, symptomInput.trim()]
+      set('symptoms', symptoms)
+      setSymptomInput('')
+    }
+
     const payload = {
       category: form.category,
       institutionType: form.institutionType,
       city: form.city,
       stepsTaken: form.stepsTaken,
+      symptoms,
       testsPerformed: form.testsPerformed,
       approximateCost: form.approximateCost === '' ? null : Number(form.approximateCost),
       waitingTime: form.waitingTime,
@@ -156,6 +204,58 @@ function SubmitExperienceForm({ experience }) {
           onChange={(e) => set('stepsTaken', e.target.value)}
           placeholder={t('submit.stepsPlaceholder')} />
       </div>
+
+      <fieldset className="symptoms-section">
+        <legend className="symptoms-title">{t('submit.symptoms')}</legend>
+        <p className="symptoms-helper">{t('submit.symptomsHelper')}</p>
+        <p className="form-hint">{t('submit.symptomsPrivacy')}</p>
+
+        <div className="symptom-suggestions" aria-label={t('submit.symptomSuggestionsLabel')}>
+          {symptomSuggestions.map((suggestion) => {
+            const selected = form.symptoms.some((symptom) => symptom.toLocaleLowerCase() === suggestion.toLocaleLowerCase())
+            return (
+              <button key={suggestion} type="button" className={`symptom-suggestion ${selected ? 'is-selected' : ''}`}
+                onClick={() => addSymptom(suggestion)} disabled={selected || (form.symptoms.length >= 10 && !selected)}>
+                {suggestion}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="symptom-input-row">
+          <label className="form-label" htmlFor="s-symptom">{t('submit.customSymptom')}</label>
+          <div className="symptom-input-controls">
+            <input id="s-symptom" type="text" className="form-input" value={symptomInput} maxLength={80}
+              onChange={(event) => { setSymptomInput(event.target.value); setSymptomError(null) }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  addSymptom()
+                }
+              }}
+              placeholder={t('submit.customSymptomPlaceholder')} aria-invalid={Boolean(symptomError)}
+              aria-describedby="symptom-error symptom-count" />
+            <button type="button" className="btn btn-secondary" onClick={() => addSymptom()} disabled={!symptomInput.trim()}>
+              {t('submit.addSymptom')}
+            </button>
+          </div>
+        </div>
+
+        {form.symptoms.length > 0 && (
+          <div className="symptom-chips" aria-label={t('submit.selectedSymptoms')}>
+            {form.symptoms.map((symptom) => (
+              <span className="symptom-chip" key={symptom}>
+                {symptom}
+                <button type="button" onClick={() => removeSymptom(symptom)} aria-label={t('submit.removeSymptom', { symptom })}>×</button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="field-meta">
+          <span id="symptom-error" className="field-error" aria-live="polite">{symptomError || ''}</span>
+          <span id="symptom-count" className="char-counter">{form.symptoms.length}/10</span>
+        </div>
+      </fieldset>
 
       <div className="form-group">
         <label className="form-label" htmlFor="s-tests">{t('submit.testsPerformed')}</label>

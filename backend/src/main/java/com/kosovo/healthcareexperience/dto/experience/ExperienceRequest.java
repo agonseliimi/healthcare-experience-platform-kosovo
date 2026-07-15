@@ -1,5 +1,8 @@
 package com.kosovo.healthcareexperience.dto.experience;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.kosovo.healthcareexperience.enums.InstitutionType;
 
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +25,11 @@ public class ExperienceRequest {
     @NotBlank(message = "Steps taken is required")
     @Size(max = 4000)
     private String stepsTaken;
+
+    @Size(max = 10, message = "A maximum of 10 symptoms is allowed")
+    private List<@NotBlank(message = "Symptoms cannot be blank")
+            @Size(min = 2, max = 80, message = "Each symptom must be between 2 and 80 characters") String>
+            symptoms = new ArrayList<>();
 
     @Size(max = 2000)
     private String testsPerformed;
@@ -48,6 +56,11 @@ public class ExperienceRequest {
 
     public String getStepsTaken() { return stepsTaken; }
     public void setStepsTaken(String stepsTaken) { this.stepsTaken = stepsTaken; }
+
+    public List<String> getSymptoms() { return symptoms; }
+    public void setSymptoms(List<String> symptoms) {
+        this.symptoms = symptoms == null ? new ArrayList<>() : symptoms;
+    }
 
     public String getTestsPerformed() { return testsPerformed; }
     public void setTestsPerformed(String testsPerformed) { this.testsPerformed = testsPerformed; }

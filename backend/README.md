@@ -12,6 +12,7 @@ role-based access control.
 
 - Java 17+ (built/tested on JDK 24; compiled to Java 17 bytecode)
 - Spring Boot 3.4 (Web, Data JPA, Security, Validation)
+- Spring Mail (`JavaMailSender`) for backend-only feedback delivery
 - SQLite via `org.xerial:sqlite-jdbc`
 - Hibernate community **SQLite dialect** (`hibernate-community-dialects`)
 - JWT via `io.jsonwebtoken:jjwt`
@@ -111,11 +112,25 @@ See [`../docs/api-routes.md`](../docs/api-routes.md) for the full list with requ
 examples. Summary:
 
 - `/api/auth` — register, login, me
+- `/api/feedback` — public feedback email submission (rate-limited)
 - `/api/experiences` — list/filter, get, create, update, delete, vote, mine
 - `/api/reports` — create, list (admin), update status (admin)
 - `/api/verification` — request, my, all (admin), update status (admin)
 - `/api/users` — list (admin), get, trust
 - `/api/admin` — dashboard, reports, verification-requests, experience status, user trust
+
+### SMTP configuration
+
+Feedback delivery requires `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, and `MAIL_PASSWORD`
+for a valid SMTP account/provider. Optional settings are `MAIL_SMTP_AUTH`, `MAIL_STARTTLS`,
+`MAIL_STARTTLS_REQUIRED`, `APP_FEEDBACK_FROM`, and `APP_FEEDBACK_RECIPIENT`. The recipient
+defaults to `aulon.miftari@student.uni-pr.edu`. See `application-example.properties` for
+placeholders. Do not commit real credentials.
+
+Automated tests mock `JavaMailSender` and never send real email. For a manual delivery test,
+set the environment variables, start the backend, and submit the Contact Us form. A `200`
+response confirms that the configured mail sender accepted the send call; confirm receipt
+with the configured mailbox/provider logs.
 
 ---
 

@@ -2,7 +2,9 @@ package com.kosovo.healthcareexperience.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -134,8 +136,7 @@ public class ExperienceService {
         User author = userService.getCurrentUser();
 
         // Privacy guard: reject obvious personal identifiers before saving.
-        if (sanitizationService.containsPersonalInfo(
-                request.getStepsTaken(), request.getTestsPerformed(), request.getSummary())) {
+        if (containsPersonalInfo(request)) {
             throw new BadRequestException(
                     "Your submission may contain personal information. Please remove identifiers before submitting.");
         }
@@ -170,8 +171,7 @@ public class ExperienceService {
         User current = userService.getCurrentUser();
         requireOwnerOrAdmin(e, current);
 
-        if (sanitizationService.containsPersonalInfo(
-                request.getStepsTaken(), request.getTestsPerformed(), request.getSummary())) {
+        if (containsPersonalInfo(request)) {
             throw new BadRequestException(
                     "Your submission may contain personal information. Please remove identifiers before submitting.");
         }
@@ -274,6 +274,7 @@ public class ExperienceService {
         e.setInstitutionType(r.getInstitutionType());
         e.setCity(r.getCity());
         e.setStepsTaken(r.getStepsTaken());
+        e.setSymptoms(normalizeSymptoms(r.getSymptoms()));
         e.setTestsPerformed(r.getTestsPerformed());
         e.setApproximateCost(r.getApproximateCost());
         e.setWaitingTime(r.getWaitingTime());
@@ -295,6 +296,37 @@ public class ExperienceService {
         return v == null ? 0 : v;
     }
 
+    private boolean containsPersonalInfo(ExperienceRequest request) {
+        List<String> texts = new ArrayList<>();
+        texts.add(request.getStepsTaken());
+        texts.add(request.getTestsPerformed());
+        texts.add(request.getSummary());
+        if (request.getSymptoms() != null) {
+            texts.addAll(request.getSymptoms());
+        }
+        return sanitizationService.containsPersonalInfo(texts.toArray(new String[0]));
+    }
+
+    /** Trims symptoms and removes case-insensitive duplicates while preserving order. */
+    private List<String> normalizeSymptoms(List<String> symptoms) {
+        if (symptoms == null || symptoms.isEmpty()) {
+            return List.of();
+        }
+
+        LinkedHashMap<String, String> unique = new LinkedHashMap<>();
+        for (String symptom : symptoms) {
+            String trimmed = symptom == null ? "" : symptom.trim();
+            if (trimmed.length() < 2 || trimmed.length() > 80) {
+                throw new BadRequestException("Each symptom must be between 2 and 80 characters.");
+            }
+            unique.putIfAbsent(trimmed.toLowerCase(Locale.ROOT), trimmed);
+        }
+        if (unique.size() > 10) {
+            throw new BadRequestException("A maximum of 10 symptoms is allowed.");
+        }
+        return new ArrayList<>(unique.values());
+    }
+
     /** Map an entity to its public response, hiding author identity if anonymous. */
     public ExperienceResponse toResponse(Experience e) {
         ExperienceResponse r = new ExperienceResponse();
@@ -303,6 +335,7 @@ public class ExperienceService {
         r.setInstitutionType(e.getInstitutionType());
         r.setCity(e.getCity());
         r.setStepsTaken(e.getStepsTaken());
+        r.setSymptoms(e.getSymptoms());
         r.setTestsPerformed(e.getTestsPerformed());
         r.setApproximateCost(e.getApproximateCost());
         r.setWaitingTime(e.getWaitingTime());

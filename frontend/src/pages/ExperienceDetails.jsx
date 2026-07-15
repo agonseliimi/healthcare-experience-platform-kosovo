@@ -81,6 +81,16 @@ function ExperienceDetails() {
 
       {exp.summary && <p className="detail-summary">{exp.summary}</p>}
 
+      {Array.isArray(exp.symptoms) && exp.symptoms.length > 0 && (
+        <section className="reported-symptoms card" aria-labelledby="reported-symptoms-title">
+          <h2 id="reported-symptoms-title">{t('details.reportedSymptoms')}</h2>
+          <div className="symptom-chips">
+            {exp.symptoms.map((symptom) => <span className="symptom-chip symptom-chip--static" key={symptom}>{symptom}</span>)}
+          </div>
+          <p>{t('details.symptomsDisclaimer')}</p>
+        </section>
+      )}
+
       <div className="detail-grid">
         <Detail label={t('details.steps')} value={exp.stepsTaken} />
         <Detail label={t('details.tests')} value={exp.testsPerformed} />

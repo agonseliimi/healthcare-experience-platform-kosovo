@@ -23,6 +23,7 @@ function Footer() {
             <Link to="/" className="footer-link">{t('footer.home')}</Link>
             <Link to="/search" className="footer-link">{t('footer.search')}</Link>
             <Link to="/privacy" className="footer-link">{t('footer.privacy_link')}</Link>
+            <Link to="/contact" className="footer-link">{t('footer.contact')}</Link>
           </div>
           <div>
             <h4 className="footer-heading">{t('footer.privacy_header')}</h4>

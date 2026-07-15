@@ -33,6 +33,23 @@ Response: same shape as register.
 
 ---
 
+## Feedback
+
+### POST `/feedback` — Public
+
+Rate limited to approximately five submissions per client in ten minutes.
+
+```json
+{ "name": "Optional user name", "email": "optional@example.com",
+  "message": "Feedback between 10 and 3000 characters." }
+```
+
+The backend sends a plain-text email to the server-configured recipient. It returns **400**
+for validation errors, **429** when rate limited, or **503** when delivery fails. SMTP
+credentials and the recipient are never accepted from the client.
+
+---
+
 ## Experiences
 
 ### GET `/experiences` — Public
@@ -46,7 +63,8 @@ Response (array):
 ```json
 [{
   "id": 1, "category": "Cardiology", "institutionType": "PUBLIC_HOSPITAL", "city": "Prishtina",
-  "stepsTaken": "GP referral -> ...", "testsPerformed": "ECG, ...", "approximateCost": 0.0,
+  "stepsTaken": "GP referral -> ...", "symptoms": ["Chest pain", "Fatigue"],
+  "testsPerformed": "ECG, ...", "approximateCost": 0.0,
   "waitingTime": "3 weeks", "resultTime": "2-5 days", "summary": "...",
   "verificationLevel": "DOCUMENT_SUPPORTED", "status": "PUBLISHED", "isAnonymous": true,
   "likes": 14, "dislikes": 1, "authorId": null, "authorDisplayName": "Anonymous",
@@ -63,11 +81,14 @@ All experiences authored by the current user (any status).
 ### POST `/experiences` — User
 ```json
 { "category": "Neurology", "institutionType": "PUBLIC_HOSPITAL", "city": "Peja",
-  "stepsTaken": "GP visit -> referral -> MRI", "testsPerformed": "MRI",
+  "stepsTaken": "GP visit -> referral -> MRI", "symptoms": ["Headache", "Dizziness"],
+  "testsPerformed": "MRI",
   "approximateCost": 0, "waitingTime": "2 weeks", "resultTime": "1 week",
   "summary": "Public neurology pathway", "isAnonymous": true }
 ```
 Rejected with **400** if the text appears to contain personal identifiers.
+Symptoms are optional; at most 10 are accepted, each 2–80 characters. Values are trimmed
+and case-insensitive duplicates are removed while preserving the first spelling.
 
 ### PUT `/experiences/{id}` — Owner or Admin
 Same body as create.

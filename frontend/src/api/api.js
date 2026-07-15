@@ -72,6 +72,9 @@ export const registerUser = (data) => request('/auth/register', { method: 'POST'
 export const loginUser = (data) => request('/auth/login', { method: 'POST', body: data, auth: false })
 export const getMe = () => request('/auth/me')
 
+// -------------- Feedback --------------
+export const sendFeedback = (data) => request('/feedback', { method: 'POST', body: data, auth: false })
+
 // ------------- Experiences ------------
 export function getExperiences(filters = {}) {
   const params = new URLSearchParams()
@@ -97,7 +100,11 @@ export async function createExperience(data, documentFile) {
 
   Object.entries(data).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
-      form.append(key, value)
+      if (Array.isArray(value)) {
+        value.forEach((item) => form.append(key, item))
+      } else {
+        form.append(key, value)
+      }
     }
   })
 

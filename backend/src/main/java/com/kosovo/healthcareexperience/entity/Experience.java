@@ -1,6 +1,8 @@
 package com.kosovo.healthcareexperience.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kosovo.healthcareexperience.enums.ExperienceStatus;
 import com.kosovo.healthcareexperience.enums.InstitutionType;
@@ -8,6 +10,8 @@ import com.kosovo.healthcareexperience.enums.VerificationLevel;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +22,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -53,6 +58,12 @@ public class Experience {
 
     @Column(length = 4000)
     private String stepsTaken;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "experience_symptoms", joinColumns = @JoinColumn(name = "experience_id"))
+    @OrderColumn(name = "position")
+    @Column(name = "symptom", nullable = false, length = 80)
+    private List<String> symptoms = new ArrayList<>();
 
     @Column(length = 2000)
     private String testsPerformed;
@@ -120,6 +131,14 @@ public class Experience {
 
     public String getStepsTaken() { return stepsTaken; }
     public void setStepsTaken(String stepsTaken) { this.stepsTaken = stepsTaken; }
+
+    public List<String> getSymptoms() { return symptoms; }
+    public void setSymptoms(List<String> symptoms) {
+        this.symptoms.clear();
+        if (symptoms != null) {
+            this.symptoms.addAll(symptoms);
+        }
+    }
 
     public String getTestsPerformed() { return testsPerformed; }
     public void setTestsPerformed(String testsPerformed) { this.testsPerformed = testsPerformed; }

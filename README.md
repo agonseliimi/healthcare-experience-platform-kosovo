@@ -51,6 +51,8 @@ correctness.
 - Browse & filter anonymous experiences (city, category, institution, cost, waiting, verification)
 - Register / login with JWT; roles: **guest**, **user**, **admin**
 - Submit experiences (with server-side privacy sanitization)
+- Add and display up to 10 reported symptoms per experience
+- Send privacy-conscious feedback through a backend SMTP integration
 - Like / dislike (one vote per user, changeable)
 - Report content for moderation
 - Optional, privacy-first verification workflow (documents never public)
@@ -109,6 +111,36 @@ Open <http://localhost:5173>.
 > The frontend expects the backend at `http://localhost:5000/api`. If the backend is not
 > running, the UI shows a friendly error instead of crashing.
 
+### Feedback email configuration
+
+The public **Contact Us / Na kontaktoni** page calls `POST /api/feedback`; the React app
+never receives SMTP credentials. Configure the backend with environment variables before
+starting it:
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `MAIL_HOST` | SMTP hostname | `localhost` |
+| `MAIL_PORT` | SMTP port | `587` |
+| `MAIL_USERNAME` | SMTP username | empty |
+| `MAIL_PASSWORD` | SMTP password | empty |
+| `MAIL_SMTP_AUTH` | Enable SMTP authentication | `true` |
+| `MAIL_STARTTLS` | Enable STARTTLS | `true` |
+| `MAIL_STARTTLS_REQUIRED` | Require STARTTLS | `false` |
+| `APP_FEEDBACK_FROM` | Sender address | `MAIL_USERNAME` or local placeholder |
+| `APP_FEEDBACK_RECIPIENT` | Feedback destination | `aulon.miftari@student.uni-pr.edu` |
+
+Example PowerShell setup with fake values:
+
+```powershell
+$env:MAIL_HOST = "smtp.example.test"
+$env:MAIL_USERNAME = "smtp-user@example.test"
+$env:MAIL_PASSWORD = "replace-with-a-local-secret"
+$env:APP_FEEDBACK_FROM = "noreply@example.test"
+```
+
+Use valid SMTP credentials or an approved transactional email provider to test delivery.
+Never commit secrets to properties files, `.env` files, frontend variables, or source code.
+
 ---
 
 ## SQLite database
@@ -117,6 +149,8 @@ Open <http://localhost:5173>.
 - It is created automatically at startup; the `backend/data/` folder is created if missing.
 - Managed by Spring Data JPA / Hibernate using the community **SQLite dialect**.
 - `spring.jpa.hibernate.ddl-auto=update` keeps the schema in sync during development.
+- Symptoms are stored in the `experience_symptoms` table and linked to `experiences`.
+- Existing rows without symptoms remain valid and are returned with `symptoms: []`.
 - The `.db` file is **git-ignored** — delete it any time to get a fresh seeded database.
 
 ---
