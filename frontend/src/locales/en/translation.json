@@ -1,4 +1,24 @@
 {
+  "accessibility": {
+    "title": "Accessibility",
+    "openSettings": "Open accessibility settings",
+    "close": "Close accessibility settings",
+    "skipToContent": "Skip to main content",
+    "primaryNavigation": "Primary navigation",
+    "toggleMenu": "Open or close navigation menu",
+    "toggleLanguage": "Change language",
+    "fontSize": "Text size",
+    "fontDefault": "Default",
+    "fontLarge": "Large",
+    "fontExtraLarge": "Extra large",
+    "darkMode": "Dark mode",
+    "darkModeHint": "Reduce brightness and glare",
+    "highContrast": "High contrast",
+    "highContrastHint": "Strengthen text, borders, and focus",
+    "reduceMotion": "Reduce motion",
+    "reduceMotionHint": "Minimize animations and transitions",
+    "reset": "Reset accessibility settings"
+  },
   "navbar": {
     "home": "Home",
     "search": "Search",

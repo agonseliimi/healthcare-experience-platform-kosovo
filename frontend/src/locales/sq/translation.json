@@ -1,4 +1,24 @@
 {
+  "accessibility": {
+    "title": "Qasshmëria",
+    "openSettings": "Hap cilësimet e qasshmërisë",
+    "close": "Mbyll cilësimet e qasshmërisë",
+    "skipToContent": "Kalo te përmbajtja kryesore",
+    "primaryNavigation": "Navigimi kryesor",
+    "toggleMenu": "Hap ose mbyll menynë e navigimit",
+    "toggleLanguage": "Ndrysho gjuhën",
+    "fontSize": "Madhësia e tekstit",
+    "fontDefault": "Standarde",
+    "fontLarge": "E madhe",
+    "fontExtraLarge": "Shumë e madhe",
+    "darkMode": "Modaliteti i errët",
+    "darkModeHint": "Zvogëlon ndriçimin dhe shkëlqimin",
+    "highContrast": "Kontrast i lartë",
+    "highContrastHint": "Forcon tekstin, kufijtë dhe fokusin",
+    "reduceMotion": "Redukto lëvizjet",
+    "reduceMotionHint": "Minimizon animacionet dhe kalimet",
+    "reset": "Rivendos cilësimet e qasshmërisë"
+  },
   "navbar": {
     "home": "Ballina",
     "search": "Kërko",

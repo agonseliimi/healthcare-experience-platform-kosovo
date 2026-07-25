@@ -17,6 +17,7 @@ import Dashboard from './pages/Dashboard'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminReports from './pages/AdminReports'
 import AdminVerification from './pages/AdminVerification'
+import { useTranslation } from 'react-i18next'
 
 /**
  * App shell + route table.
@@ -26,10 +27,25 @@ import AdminVerification from './pages/AdminVerification'
  * Admin only: /admin, /admin/reports, /admin/verification
  */
 function App() {
+  const { t } = useTranslation()
+
+  function skipToMainContent(event) {
+    event.preventDefault()
+    const main = document.getElementById('main-content')
+    if (!main) return
+
+    main.focus({ preventScroll: true })
+    main.scrollIntoView({ block: 'start' })
+    window.history.replaceState(null, '', '#main-content')
+  }
+
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content" onClick={skipToMainContent}>
+        {t('accessibility.skipToContent')}
+      </a>
       <Navbar />
-      <main className="main">
+      <main id="main-content" className="main" tabIndex="-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />

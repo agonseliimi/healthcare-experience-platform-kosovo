@@ -1,10 +1,11 @@
 // Central API client for the Spring Boot backend.
 //
-// All functions talk to http://localhost:5000/api and automatically attach the
-// JWT token (if present) from localStorage. Every call is wrapped so callers get
-// a clean Error with a readable message, even when the backend is offline.
+// In development, /api is proxied to the Spring Boot backend by Vite. Deployments
+// can provide VITE_API_BASE_URL when the API is hosted on a separate origin.
+// Every call automatically attaches the JWT token (if present) from localStorage.
 
-const BASE_URL = 'http://localhost:5000/api'
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
+const NETWORK_ERROR = 'Cannot reach the server. Please make sure the backend is running.'
 
 const TOKEN_KEY = 'healthcare_token'
 
@@ -43,9 +44,7 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
     })
   } catch (networkError) {
     // Backend not running / CORS / DNS, etc.
-    throw new Error(
-      'Cannot reach the server. Please make sure the backend is running on http://localhost:5000.'
-    )
+    throw new Error(NETWORK_ERROR)
   }
 
   // 204 No Content
@@ -118,7 +117,7 @@ export async function createExperience(data, documentFile) {
   try {
     response = await fetch(`${BASE_URL}/experiences`, { method: 'POST', headers, body: form, cache: 'no-store' })
   } catch {
-    throw new Error('Cannot reach the server. Please make sure the backend is running on http://localhost:5000.')
+    throw new Error(NETWORK_ERROR)
   }
 
   const text = await response.text()
@@ -172,9 +171,7 @@ export async function createVerificationRequest({ experienceId, documentNote, re
     // NOTE: do not set Content-Type; the browser adds the multipart boundary.
     response = await fetch(`${BASE_URL}/verification/request`, { method: 'POST', headers, body: form })
   } catch {
-    throw new Error(
-      'Cannot reach the server. Please make sure the backend is running on http://localhost:5000.'
-    )
+    throw new Error(NETWORK_ERROR)
   }
 
   const text = await response.text()

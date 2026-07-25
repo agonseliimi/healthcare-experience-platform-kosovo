@@ -78,6 +78,20 @@ healthcare-experience-platform-kosovo/
 
 The frontend and backend run in **two separate terminals**.
 
+### Windows: one-command launcher (recommended)
+
+From the repository root, double-click `run-app.cmd` or run:
+
+```bat
+run-app.cmd
+```
+
+The launcher checks Java, Node.js, npm, and the required ports; installs frontend
+dependencies when they are missing; then opens the backend and frontend in separate
+terminals. It calls `npm.cmd` directly, so it also works when Windows PowerShell blocks
+the `npm.ps1` script. Running the launcher again is safe because it does not start a
+second process when ports 5000 or 5173 are already active.
+
 ### 1. Backend (Spring Boot, port 5000)
 
 ```bash
