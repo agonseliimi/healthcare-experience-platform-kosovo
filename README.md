@@ -196,6 +196,7 @@ Never commit secrets to properties files, `.env` files, frontend variables, or s
 
 ## Documentation
 
+- [`docs/permbledhje-projekti-sq.md`](docs/permbledhje-projekti-sq.md) — përmbledhja funksionale, e përmbajtjes dhe e strukturës në shqip
 - [`docs/final-project-summary.md`](docs/final-project-summary.md)
 - [`docs/database-schema.md`](docs/database-schema.md)
 - [`docs/api-routes.md`](docs/api-routes.md)
