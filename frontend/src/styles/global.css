@@ -694,7 +694,18 @@ img, svg { display: block; max-width: 100%; }
 .side-verdict--doc { color: var(--primary-mid); }
 .side-verdict--self { color: var(--warning); }
 .side-actions { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; }
-.side-links { display: flex; gap: 16px; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border-light); }
+.side-links { display: flex; gap: 16px; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border-light); flex-wrap: wrap; }
+.side-links .is-saved { color: var(--primary-mid); }
+.side-trust { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--border-light); }
+
+/* Similar journeys — matched on shared symptoms, then speciality and city. */
+.similar-list { display: flex; flex-direction: column; margin-top: 8px; }
+.similar-item { display: block; width: 100%; text-align: left; padding: 9px 0;
+  border-bottom: 1px solid var(--border-light); }
+.similar-item:last-child { border-bottom: none; }
+.similar-title { display: block; font-size: 0.86rem; font-weight: 600; color: var(--text); }
+.similar-item:hover .similar-title { color: var(--primary); }
+.similar-meta { display: block; font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
 .side-vote-summary { font-size: 0.76rem; line-height: 1.45; color: var(--text-muted); margin-top: 9px; }
 
 /* Uploaded evidence. Published deliberately, but blurred by the author first. */

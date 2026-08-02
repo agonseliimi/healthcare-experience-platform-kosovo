@@ -75,70 +75,70 @@ public class DataSeeder implements CommandLineRunner {
                 "ECG, Full blood panel, Echocardiogram",
                 0.0, "3 weeks for specialist appointment", "2-5 days for lab results",
                 "Public cardiology pathway. Longer wait but no direct cost.",
-                VerificationLevel.DOCUMENT_SUPPORTED, 14, 1);
+                VerificationLevel.DOCUMENT_SUPPORTED, 14, 1, "Chest pain", "Shortness of breath", "Fatigue");
 
         Experience e2 = exp(user2, "Dermatology", InstitutionType.PRIVATE_CLINIC, "Prizren",
                 "Direct appointment (no referral) -> visual exam -> patch test -> prescription cream.",
                 "Visual dermatology exam, Patch allergy test",
                 45.0, "2 days for appointment", "Same day",
                 "Fast private dermatology visit, moderate cost.",
-                VerificationLevel.SELF_REPORTED, 6, 0);
+                VerificationLevel.SELF_REPORTED, 6, 0, "Rash", "Itching");
 
         Experience e3 = exp(user3, "Orthopaedics", InstitutionType.PUBLIC_HOSPITAL, "Peja",
                 "Emergency visit -> knee X-ray -> referred to specialist -> MRI recommended -> physiotherapy while waiting.",
                 "X-ray, MRI",
                 80.0, "6 weeks for MRI at public hospital; 3 days private", "1 week for MRI report",
                 "Mixed public/private path due to long MRI waiting time.",
-                VerificationLevel.HIGH_CONFIDENCE, 21, 2);
+                VerificationLevel.HIGH_CONFIDENCE, 21, 2, "Back pain", "Numbness");
 
         Experience e4 = exp(user1, "General Practice", InstitutionType.PUBLIC_HOSPITAL, "Ferizaj",
                 "Family doctor visit -> blood tests (thyroid, iron, vitamin D) -> iron supplementation -> follow-up after 6 weeks.",
                 "Thyroid panel, CBC, Ferritin, Vitamin D",
                 5.0, "1 day for appointment", "3-4 days for blood results",
                 "Routine GP workup for fatigue, low cost.",
-                VerificationLevel.SELF_REPORTED, 9, 0);
+                VerificationLevel.SELF_REPORTED, 9, 0, "Fatigue", "Dizziness");
 
         Experience e5 = exp(user2, "Ophthalmology", InstitutionType.PRIVATE_CLINIC, "Prishtina",
                 "Walk-in appointment -> full eye examination -> prescription for glasses.",
                 "Visual acuity test, Refraction test, Fundus examination",
                 30.0, "Same day / next day", "Immediate",
                 "Quick private eye check, glasses prescription issued.",
-                VerificationLevel.SELF_REPORTED, 4, 0);
+                VerificationLevel.SELF_REPORTED, 4, 0, "Blurred vision", "Headache");
 
         Experience e6 = exp(user3, "Gynaecology", InstitutionType.PUBLIC_HOSPITAL, "Gjilan",
                 "GP referral -> routine gynaecological exam -> Pap smear -> results after 3 weeks.",
                 "Pap smear, Pelvic ultrasound",
                 0.0, "4-6 weeks for routine appointment", "3 weeks for Pap result",
                 "Routine public gynaecology check-up.",
-                VerificationLevel.DOCUMENT_SUPPORTED, 11, 1);
+                VerificationLevel.DOCUMENT_SUPPORTED, 11, 1, "Abdominal pain", "Irregular periods");
 
         Experience e7 = exp(user1, "Gastroenterology", InstitutionType.PRIVATE_CLINIC, "Gjakova",
                 "Private consultation -> ultrasound of abdomen -> dietary advice -> follow-up in 1 month.",
                 "Abdominal ultrasound, Blood tests",
                 60.0, "3 days", "Same day for ultrasound",
                 "Private GI consultation for recurring stomach discomfort.",
-                VerificationLevel.SELF_REPORTED, 5, 0);
+                VerificationLevel.SELF_REPORTED, 5, 0, "Abdominal pain", "Nausea");
 
         Experience e8 = exp(user2, "Pulmonology", InstitutionType.PUBLIC_HOSPITAL, "Mitrovica",
                 "GP referral -> chest X-ray -> spirometry -> inhaler prescribed -> review after 2 months.",
                 "Chest X-ray, Spirometry",
                 0.0, "2 weeks", "2 days for X-ray report",
                 "Public pulmonology pathway for persistent cough.",
-                VerificationLevel.SELF_REPORTED, 7, 1);
+                VerificationLevel.SELF_REPORTED, 7, 1, "Cough", "Shortness of breath", "Chest pain");
 
         Experience e9 = exp(user3, "Endocrinology", InstitutionType.PRIVATE_CLINIC, "Prishtina",
                 "Private endocrinologist -> thyroid ultrasound -> blood hormone panel -> medication started.",
                 "Thyroid ultrasound, Hormone panel",
                 75.0, "4 days", "3 days for hormone results",
                 "Private endocrinology visit for thyroid concern.",
-                VerificationLevel.HIGH_CONFIDENCE, 16, 0);
+                VerificationLevel.HIGH_CONFIDENCE, 16, 0, "Fatigue", "Weight change");
 
         Experience e10 = exp(user1, "Dentistry", InstitutionType.PRIVATE_CLINIC, "Prizren",
                 "Private dental clinic -> panoramic X-ray -> filling -> cleaning appointment scheduled.",
                 "Panoramic dental X-ray",
                 40.0, "Next day", "Immediate",
                 "Routine private dental treatment.",
-                VerificationLevel.SELF_REPORTED, 3, 0);
+                VerificationLevel.SELF_REPORTED, 3, 0, "Toothache", "Swollen gum");
 
         experienceRepository.saveAll(List.of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
 
@@ -199,13 +199,16 @@ public class DataSeeder implements CommandLineRunner {
 
     private Experience exp(User author, String category, InstitutionType type, String city,
                            String steps, String tests, Double cost, String waiting, String resultTime,
-                           String summary, VerificationLevel level, int likes, int dislikes) {
+                           String summary, VerificationLevel level, int likes, int dislikes,
+                           String... symptoms) {
         Experience e = new Experience();
         e.setAuthor(author);
         e.setCategory(category);
         e.setInstitutionType(type);
         e.setCity(city);
         e.setStepsTaken(steps);
+        // Symptoms are how most readers find a journey, so the demo data needs them.
+        e.setSymptoms(java.util.Arrays.asList(symptoms));
         e.setTestsPerformed(tests);
         e.setApproximateCost(cost);
         e.setWaitingTime(waiting);

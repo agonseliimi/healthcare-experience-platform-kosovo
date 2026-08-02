@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getExperienceById, voteExperience, getExperienceDocumentUrl } from '../api/api'
+import { getExperienceById, getExperiences, voteExperience, getExperienceDocumentUrl } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import TrustBadge from '../components/TrustBadge'
 import VerificationLabel, { isDocumented } from '../components/VerificationLabel'
@@ -10,6 +10,8 @@ import GuestLimitBanner from '../components/GuestLimitBanner'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 import { parseJourneySteps } from '../utils/journeySteps'
+import { findSimilarJourneys } from '../utils/similarJourneys'
+import { isSaved, toggleSaved } from '../utils/savedJourneys'
 import { hasReachedGuestLimit, incrementGuestUsage } from '../utils/guestUsage'
 
 /** Full details for a single experience. */
@@ -23,6 +25,8 @@ function ExperienceDetails() {
   const [error, setError] = useState(null)
   const [showReport, setShowReport] = useState(false)
   const [showGuestLimit, setShowGuestLimit] = useState(false)
+  const [similar, setSimilar] = useState([])
+  const [saved, setSaved] = useState(false)
   // Guard so a single view counts once, even with React StrictMode's double effect.
   const countedIdRef = useRef(null)
 
@@ -39,8 +43,19 @@ function ExperienceDetails() {
     async function load() {
       setLoading(true)
       setError(null)
+      setSaved(isSaved(id))
       try {
-        setExp(await getExperienceById(id))
+        const current = await getExperienceById(id)
+        setExp(current)
+
+        // Similar journeys are matched client-side from the full list; the list
+        // endpoint returns everything at once, so this needs no extra API.
+        try {
+          const all = await getExperiences({})
+          setSimilar(findSimilarJourneys(current, Array.isArray(all) ? all : []))
+        } catch {
+          setSimilar([])
+        }
       } catch (err) {
         setError(err.message)
       } finally {
@@ -189,11 +204,7 @@ function ExperienceDetails() {
             <p className="side-text">
               {documented ? t('details.verificationDocumented') : t('details.verificationSelfReported')}
             </p>
-          </div>
-
-          <div className="side-card">
-            <div className="eyebrow">{t('details.howReliable')}</div>
-            <div style={{ marginTop: 8 }}>
+            <div className="side-trust">
               <TrustBadge
                 likes={exp.likes}
                 dislikes={exp.dislikes}
@@ -202,7 +213,6 @@ function ExperienceDetails() {
                 authorTrustScore={exp.authorTrustScore}
               />
             </div>
-            <p className="side-text">{t('details.howReliableNote')}</p>
           </div>
 
           <div className="side-card">
@@ -220,6 +230,13 @@ function ExperienceDetails() {
             </p>
             <div className="side-links">
               <button
+                className={`link-btn ${saved ? 'is-saved' : ''}`}
+                aria-pressed={saved}
+                onClick={() => setSaved(toggleSaved(exp.id))}
+              >
+                {saved ? t('details.saved') : t('details.saveForLater')}
+              </button>
+              <button
                 className="link-btn link-danger"
                 onClick={() => (isAuthenticated ? setShowReport(true) : setShowGuestLimit(true))}
               >
@@ -227,6 +244,31 @@ function ExperienceDetails() {
               </button>
             </div>
           </div>
+
+          {similar.length > 0 && (
+            <div className="side-card">
+              <div className="eyebrow">{t('details.similarJourneys')}</div>
+              <div className="similar-list">
+                {similar.map((item) => (
+                  <button
+                    key={item.id}
+                    className="similar-item"
+                    onClick={() => navigate(`/experiences/${item.id}`)}
+                  >
+                    <span className="similar-title">{t(`categories.${item.category}`)}</span>
+                    <span className="similar-meta">
+                      {item.city}
+                      {' · '}
+                      {item.approximateCost == null
+                        ? '—'
+                        : item.approximateCost === 0 ? t('experienceCard.free') : `${item.approximateCost} €`}
+                      {item.waitingTime ? ` · ${item.waitingTime}` : ''}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </aside>
       </div>
 
