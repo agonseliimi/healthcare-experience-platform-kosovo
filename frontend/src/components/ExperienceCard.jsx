@@ -61,6 +61,23 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
     setShowReport(true)
   }
 
+  function open() {
+    navigate(`/experiences/${exp.id}`)
+  }
+
+  /**
+   * Clicking anywhere on the card opens it, which is what people expect from a
+   * grid of results. Two guards keep that from being annoying: clicks that land
+   * on a control are left alone, and a click that ends a text selection is
+   * treated as selecting, not navigating. Scrolling on touch never fires a
+   * click, so this is safe on phones.
+   */
+  function handleCardClick(event) {
+    if (event.target.closest('button, a, input, select, textarea, label')) return
+    if (window.getSelection()?.toString()) return
+    open()
+  }
+
   const steps = parseJourneySteps(exp.stepsTaken)
   const visibleSteps = steps.slice(0, MAX_VISIBLE_STEPS)
   const hiddenStepCount = steps.length - visibleSteps.length
@@ -74,7 +91,7 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
         : `${exp.approximateCost} €`
 
   return (
-    <article className="card exp-card">
+    <article className="card exp-card is-clickable" onClick={handleCardClick}>
       <div className="exp-top">
         <div>
           <div className="exp-category">{t(`categories.${exp.category}`) || exp.category}</div>
@@ -130,28 +147,16 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
         </div>
 
         <div className="exp-foot-right">
-          <button className="icon-btn" onClick={() => handleVote('LIKE')} aria-label={t('experienceCard.like')}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-              <path d="M7 22V11l5-9 1 1v6h6l-2 13H7z" />
-            </svg>
-            {exp.likes ?? 0}
+          <button className="icon-btn" onClick={() => handleVote('LIKE')}>
+            {t('experienceCard.helpful')} {exp.likes ?? 0}
           </button>
-          <button className="icon-btn" onClick={() => handleVote('DISLIKE')} aria-label={t('experienceCard.dislike')}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 strokeWidth="2" strokeLinejoin="round" aria-hidden="true"
-                 style={{ transform: 'rotate(180deg)' }}>
-              <path d="M7 22V11l5-9 1 1v6h6l-2 13H7z" />
-            </svg>
-            {exp.dislikes ?? 0}
+          <button className="icon-btn" onClick={() => handleVote('DISLIKE')}>
+            {t('experienceCard.notHelpful')} {exp.dislikes ?? 0}
           </button>
-          <button className="icon-btn" onClick={handleReport} aria-label={t('experienceCard.report')}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 21V4M5 4h11l-1.5 4L16 12H5" />
-            </svg>
+          <button className="icon-btn" onClick={handleReport}>
+            {t('experienceCard.report')}
           </button>
-          <button className="exp-open" onClick={() => navigate(`/experiences/${exp.id}`)}>
+          <button className="exp-open" onClick={open}>
             {t('experienceCard.open')}
           </button>
         </div>

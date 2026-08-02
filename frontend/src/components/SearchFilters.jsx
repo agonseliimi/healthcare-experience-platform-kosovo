@@ -4,20 +4,22 @@ import { useTranslation } from 'react-i18next'
 /**
  * Filter row for the Search page (fully controlled by the parent).
  *
- * The redesign replaces the left sidebar with a single row so results start
- * roughly a screen higher. Every filter the sidebar had is still here:
- * search text, city, category, institution type, cost range, waiting time and
- * verification level — just laid out horizontally and wrapping on small screens.
+ * Deliberately short: search, city, specialty, where they went, and a sort.
+ * The old sidebar also offered a cost range, a waiting-time text match and a
+ * verification level; those were dropped because they crowded the row without
+ * being used much. The backend still accepts them — see emptyFilters in Search.
  *
  * Props:
- *   search     - current free-text query
- *   onSearch   - (value) => void, called as the query changes
- *   onSubmit   - () => void, called on Enter
- *   filters    - current filter values
- *   onChange   - (key, value) => void
- *   onReset    - () => void
+ *   search    - current free-text query
+ *   onSearch  - (value) => void
+ *   onSubmit  - () => void, called on Enter
+ *   filters   - current filter values
+ *   onChange  - (key, value) => void
+ *   sort      - current sort key
+ *   onSort    - (value) => void
+ *   onReset   - () => void
  */
-function SearchFilters({ search, onSearch, onSubmit, filters, onChange, onReset }) {
+function SearchFilters({ search, onSearch, onSubmit, filters, onChange, sort, onSort, onReset }) {
   const { t } = useTranslation()
 
   function handleKeyDown(event) {
@@ -84,43 +86,15 @@ function SearchFilters({ search, onSearch, onSubmit, filters, onChange, onReset 
         ))}
       </div>
 
-      <input
-        type="number"
-        min="0"
-        className="filter-select filter-num"
-        placeholder={t('filters.min')}
-        value={filters.minCost}
-        onChange={(e) => onChange('minCost', e.target.value)}
-        aria-label={`${t('filters.cost')} — ${t('filters.min')}`}
-      />
-      <input
-        type="number"
-        min="0"
-        className="filter-select filter-num"
-        placeholder={t('filters.max')}
-        value={filters.maxCost}
-        onChange={(e) => onChange('maxCost', e.target.value)}
-        aria-label={`${t('filters.cost')} — ${t('filters.max')}`}
-      />
-
-      <input
-        type="text"
-        className="filter-select filter-num"
-        placeholder={t('filters.waitingTimePlaceholder')}
-        value={filters.waitingTime}
-        onChange={(e) => onChange('waitingTime', e.target.value)}
-        aria-label={t('filters.waitingTime')}
-      />
-
       <select
         className="filter-select"
-        value={filters.verificationLevel}
-        onChange={(e) => onChange('verificationLevel', e.target.value)}
-        aria-label={t('filters.verification')}
+        value={sort}
+        onChange={(e) => onSort(e.target.value)}
+        aria-label={t('filters.sort')}
       >
-        <option value="">{t('filters.allLevels')}</option>
-        <option value="SELF_REPORTED">{t('verifications.SELF_REPORTED')}</option>
-        <option value="DOCUMENT_SUPPORTED">{t('verifications.DOCUMENT_SUPPORTED')}</option>
+        <option value="helpful">{t('filters.sortHelpful')}</option>
+        <option value="recent">{t('filters.sortRecent')}</option>
+        <option value="cheapest">{t('filters.sortCheapest')}</option>
       </select>
 
       <button type="button" className="filter-clear" onClick={onReset}>

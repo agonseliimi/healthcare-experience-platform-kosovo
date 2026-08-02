@@ -10,6 +10,8 @@ import ErrorState from '../components/ErrorState'
 import { hasReachedGuestLimit, incrementGuestUsage } from '../utils/guestUsage'
 import { useTranslation } from 'react-i18next'
 
+// The row only exposes city, category and institution type. The remaining keys
+// are still sent (empty) so the backend query contract is unchanged.
 const emptyFilters = {
   city: '',
   category: '',
@@ -18,6 +20,21 @@ const emptyFilters = {
   maxCost: '',
   waitingTime: '',
   verificationLevel: '',
+}
+
+/** Sorting is done client-side; the list endpoint returns everything at once. */
+function sortExperiences(list, sort) {
+  const sorted = [...list]
+  if (sort === 'recent') return sorted.sort((a, b) => (b.id ?? 0) - (a.id ?? 0))
+  if (sort === 'cheapest') {
+    return sorted.sort((a, b) => {
+      // Journeys with no cost recorded sink to the bottom rather than beating free care.
+      const av = a.approximateCost ?? Number.POSITIVE_INFINITY
+      const bv = b.approximateCost ?? Number.POSITIVE_INFINITY
+      return av - bv
+    })
+  }
+  return sorted.sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0))
 }
 
 /** Browse + search experiences, with client guest-limit gating. */
@@ -34,6 +51,7 @@ function Search() {
   const [error, setError] = useState(null)
   const [showGuestLimit, setShowGuestLimit] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
+  const [sort, setSort] = useState('helpful')
 
   const fetchData = useCallback(async (appliedSearch, appliedFilters) => {
     setLoading(true)
@@ -84,8 +102,11 @@ function Search() {
   function handleReset() {
     setFilters(emptyFilters)
     setSearchInput('')
+    setSort('helpful')
     fetchData('', emptyFilters)
   }
+
+  const visible = sortExperiences(experiences, sort)
 
   const countLabel = `${experiences.length} ${
     experiences.length !== 1 ? t('searchPage.experienceCountPlural') : t('searchPage.experienceCountSingle')
@@ -106,6 +127,8 @@ function Search() {
           onSubmit={handleSearchSubmit}
           filters={filters}
           onChange={handleFilterChange}
+          sort={sort}
+          onSort={setSort}
           onReset={handleReset}
         />
       </header>
@@ -122,7 +145,7 @@ function Search() {
           </div>
         ) : (
           <div className="cards-grid">
-            {experiences.map((exp) => (
+            {visible.map((exp) => (
               <ExperienceCard
                 key={exp.id}
                 experience={exp}

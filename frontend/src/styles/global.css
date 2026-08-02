@@ -78,8 +78,12 @@ html[data-theme='dark'] {
   --shadow-lg: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 34px -18px rgb(0 0 0 / 0.8);
 }
 
-html[data-font-size='large'] { font-size: 112.5%; }
-html[data-font-size='xlarge'] { font-size: 125%; }
+/* The scale was shifted up one step: the old "A+" is now the default "A", and a
+   larger step was added on top. Option keys are unchanged so saved preferences
+   keep working. */
+html { font-size: 112.5%; }
+html[data-font-size='large'] { font-size: 125%; }
+html[data-font-size='xlarge'] { font-size: 137.5%; }
 
 html[data-contrast='high'] {
   --text-muted: var(--text);
@@ -377,6 +381,9 @@ img, svg { display: block; max-width: 100%; }
 .exp-card { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 12px;
   transition: border-color 0.15s, box-shadow 0.15s; }
 .exp-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+/* The whole card opens the journey; text stays selectable and controls still win. */
+.exp-card.is-clickable { cursor: pointer; }
+.exp-card.is-clickable button { cursor: pointer; }
 .exp-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .exp-category { font-size: 0.94rem; font-weight: 600; letter-spacing: -0.005em; }
 .exp-place { font-size: 0.79rem; color: var(--text-muted); margin-top: 2px; }
@@ -676,21 +683,15 @@ img, svg { display: block; max-width: 100%; }
 .level p { font-size: 0.9rem; }
 
 /* ---------- Footer ---------- */
-/* Light footer, matching the redesign. Privacy and Contact live here now that the
+/* One quiet row, as in the redesign. Privacy and Contact live here now that the
    primary navigation is down to three items. */
 .footer { background: var(--surface-2); color: var(--text-muted); margin-top: auto; border-top: 1px solid var(--border); }
-.footer-inner { max-width: var(--max); margin: 0 auto; padding: 32px 28px 20px; }
-.footer-disclaimer { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-  padding: 13px 16px; border-radius: var(--radius); font-size: 0.83rem; line-height: 1.5; margin-bottom: 26px; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; margin-bottom: 22px; }
-.footer-brand { font-weight: 700; color: var(--text); font-size: 0.97rem; display: block; margin-bottom: 8px; letter-spacing: -0.01em; }
-.footer-tagline { font-size: 0.84rem; margin-bottom: 8px; }
-.footer-note { font-size: 0.76rem; color: var(--text-light); }
-.footer-heading { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--text-muted); margin-bottom: 11px; }
-.footer-link, .footer-item { display: block; font-size: 0.84rem; margin-bottom: 6px; }
-.footer-link { color: var(--primary); font-weight: 600; }
-.footer-link:hover { text-decoration: underline; text-underline-offset: 0.2em; }
-.footer-bottom { border-top: 1px solid var(--border); padding-top: 15px; font-size: 0.78rem; color: var(--text-light); }
+.footer-inner { max-width: var(--max); margin: 0 auto; padding: 15px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.footer-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.footer-link { border-radius: var(--radius-sm); padding: 6px 10px; font-size: 0.8rem; font-weight: 600; color: var(--primary); }
+.footer-link:hover { background: var(--primary-light); text-decoration: underline; text-underline-offset: 0.2em; }
+.footer-tagline { font-size: 0.78rem; color: var(--text-muted); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 940px) {
