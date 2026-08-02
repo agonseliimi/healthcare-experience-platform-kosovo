@@ -359,14 +359,19 @@
     "documentTitle": "Attached document",
     "documentNote": "Uploaded by the person who shared this journey. Images are blurred with the built-in tool before upload; PDFs are published as sent.",
     "verification": "Verification",
-    "verificationDocumented": "A document is attached and published with this journey. Nobody reviews uploads, so judge the document for yourself.",
-    "verificationSelfReported": "Written by a patient, with no document attached. Treat costs and waits as approximate.",
+    "verificationDocumented": "A document is attached. Nobody reviews uploads.",
+    "verificationSelfReported": "No document attached. Costs and waits are approximate.",
     "howReliable": "How reliable is this?",
     "howReliableNote": "Based on how helpful readers found it, whether a document backs it up, and the contributor’s standing.",
     "wasHelpful": "Was this journey helpful?",
     "helpfulYes": "Yes, helpful",
     "helpfulNo": "Not helpful",
-    "voteSummary": "{{likes}} found this helpful · {{dislikes}} did not"
+    "voteSummary": "{{likes}} found this helpful · {{dislikes}} did not",
+    "similarJourneys": "Similar journeys",
+    "noSimilar": "No similar journeys yet.",
+    "saveForLater": "Save for later",
+    "saved": "Saved",
+    "removeSaved": "Remove from saved"
   },
   "report": {
     "title": "Report this experience",

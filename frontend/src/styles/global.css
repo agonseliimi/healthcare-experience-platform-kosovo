@@ -66,13 +66,15 @@ html[data-theme='dark'] {
   --danger-button: #8C4632;
   --error: #E88E78;
   --error-light: #341913;
-  --bg: #101713;
-  --surface: #17201B;
-  --surface-2: #1A241E;
-  --tint: #1D2721;
-  --border: #2B372F;
-  --border-light: #232E27;
-  --border-strong: #3B4941;
+  /* Matches the dark rendering of the design: the page sits on the design's own
+     ink colour, with cards a step above it rather than a step below. */
+  --bg: #16211C;
+  --surface: #1D2822;
+  --surface-2: #212D26;
+  --tint: #212D26;
+  --border: #2E3A33;
+  --border-light: #26312A;
+  --border-strong: #3E4A43;
   --text: #E8EFE9;
   --text-muted: #A6B3AA;
   --text-light: #7E8C83;

@@ -359,14 +359,19 @@
     "documentTitle": "Dokumenti i bashkangjitur",
     "documentNote": "Ngarkuar nga personi që ndau këtë përvojë. Fotot turbullohen me mjetin e integruar para ngarkimit; PDF-të publikohen ashtu si dërgohen.",
     "verification": "Verifikimi",
-    "verificationDocumented": "Një dokument është bashkangjitur dhe publikohet me këtë përvojë. Askush nuk i shqyrton ngarkimet, prandaj gjykoje vetë dokumentin.",
-    "verificationSelfReported": "Shkruar nga një pacient, pa dokument të bashkangjitur. Kostot dhe pritjet janë të përafërta.",
+    "verificationDocumented": "Ka një dokument të bashkangjitur. Askush nuk i shqyrton ngarkimet.",
+    "verificationSelfReported": "Pa dokument. Kostot dhe pritjet janë të përafërta.",
     "howReliable": "Sa e besueshme është?",
     "howReliableNote": "Bazuar në sa u ndihmoi lexuesve, nëse ka dokument mbështetës dhe në përvojën e atij që e ndau.",
     "wasHelpful": "A të ndihmoi kjo përvojë?",
     "helpfulYes": "Po, ndihmoi",
     "helpfulNo": "Nuk ndihmoi",
-    "voteSummary": "{{likes}} thanë se ndihmoi · {{dislikes}} jo"
+    "voteSummary": "{{likes}} thanë se ndihmoi · {{dislikes}} jo",
+    "similarJourneys": "Përvoja të ngjashme",
+    "noSimilar": "Ende asnjë përvojë e ngjashme.",
+    "saveForLater": "Ruaj për më vonë",
+    "saved": "E ruajtur",
+    "removeSaved": "Hiq nga të ruajturat"
   },
   "report": {
     "title": "Raporto këtë përvojë",
