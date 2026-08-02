@@ -1,71 +1,132 @@
-import { CATEGORIES, CITIES, INSTITUTION_TYPES, VERIFICATION_LEVELS } from '../utils/constants'
+import { CATEGORIES, CITIES, INSTITUTION_TYPES } from '../utils/constants'
 import { useTranslation } from 'react-i18next'
 
 /**
- * Sidebar filter panel for the Search page (fully controlled by the parent).
+ * Filter row for the Search page (fully controlled by the parent).
+ *
+ * The redesign replaces the left sidebar with a single row so results start
+ * roughly a screen higher. Every filter the sidebar had is still here:
+ * search text, city, category, institution type, cost range, waiting time and
+ * verification level — just laid out horizontally and wrapping on small screens.
  *
  * Props:
- *   filters  - current filter values
- *   onChange - (key, value) => void
- *   onReset  - () => void
+ *   search     - current free-text query
+ *   onSearch   - (value) => void, called as the query changes
+ *   onSubmit   - () => void, called on Enter
+ *   filters    - current filter values
+ *   onChange   - (key, value) => void
+ *   onReset    - () => void
  */
-function SearchFilters({ filters, onChange, onReset }) {
+function SearchFilters({ search, onSearch, onSubmit, filters, onChange, onReset }) {
   const { t } = useTranslation()
 
+  function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onSubmit?.()
+    }
+  }
+
   return (
-    <aside className="filters card">
-      <div className="filters-head">
-        <h2 className="filters-title">{t('filters.title')}</h2>
-        <button className="link-btn" onClick={onReset}>{t('filters.clearAll')}</button>
+    <div className="filters" role="search">
+      <div className="filter-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             strokeWidth="2" strokeLinecap="round" aria-hidden="true" style={{ color: 'var(--text-light)' }}>
+          <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+        </svg>
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => onSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={t('searchPage.searchPlaceholder')}
+          aria-label={t('searchPage.searchBtn')}
+        />
       </div>
 
-      <div className="filter-group">
-        <label className="form-label" htmlFor="f-city">{t('filters.city')}</label>
-        <select id="f-city" className="form-select" value={filters.city} onChange={(e) => onChange('city', e.target.value)}>
-          <option value="">{t('filters.allCities')}</option>
-          {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
+      <select
+        className="filter-select"
+        value={filters.city}
+        onChange={(e) => onChange('city', e.target.value)}
+        aria-label={t('filters.city')}
+      >
+        <option value="">{t('filters.allCities')}</option>
+        {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+      </select>
 
-      <div className="filter-group">
-        <label className="form-label" htmlFor="f-cat">{t('filters.category')}</label>
-        <select id="f-cat" className="form-select" value={filters.category} onChange={(e) => onChange('category', e.target.value)}>
-          <option value="">{t('filters.allCategories')}</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
-        </select>
-      </div>
+      <select
+        className="filter-select"
+        value={filters.category}
+        onChange={(e) => onChange('category', e.target.value)}
+        aria-label={t('filters.category')}
+      >
+        <option value="">{t('filters.allCategories')}</option>
+        {CATEGORIES.map((c) => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
+      </select>
 
-      <div className="filter-group">
-        <span className="form-label">{t('filters.institution')}</span>
-        <label className="radio"><input type="radio" name="inst" checked={filters.institutionType === ''} onChange={() => onChange('institutionType', '')} /> {t('filters.all')}</label>
+      <div className="filter-seg" role="group" aria-label={t('filters.institution')}>
+        <button
+          type="button"
+          aria-pressed={filters.institutionType === ''}
+          onClick={() => onChange('institutionType', '')}
+        >
+          {t('filters.all')}
+        </button>
         {INSTITUTION_TYPES.map((type) => (
-          <label className="radio" key={type.value}>
-            <input type="radio" name="inst" checked={filters.institutionType === type.value} onChange={() => onChange('institutionType', type.value)} /> {t(`institutions.${type.value}`)}
-          </label>
+          <button
+            key={type.value}
+            type="button"
+            aria-pressed={filters.institutionType === type.value}
+            onClick={() => onChange('institutionType', type.value)}
+          >
+            {t(`institutions.${type.value}`)}
+          </button>
         ))}
       </div>
 
-      <div className="filter-group">
-        <span className="form-label">{t('filters.cost')}</span>
-        <div className="filter-row">
-          <input type="number" min="0" className="form-input" placeholder={t('filters.min')} value={filters.minCost} onChange={(e) => onChange('minCost', e.target.value)} />
-          <input type="number" min="0" className="form-input" placeholder={t('filters.max')} value={filters.maxCost} onChange={(e) => onChange('maxCost', e.target.value)} />
-        </div>
-      </div>
+      <input
+        type="number"
+        min="0"
+        className="filter-select filter-num"
+        placeholder={t('filters.min')}
+        value={filters.minCost}
+        onChange={(e) => onChange('minCost', e.target.value)}
+        aria-label={`${t('filters.cost')} — ${t('filters.min')}`}
+      />
+      <input
+        type="number"
+        min="0"
+        className="filter-select filter-num"
+        placeholder={t('filters.max')}
+        value={filters.maxCost}
+        onChange={(e) => onChange('maxCost', e.target.value)}
+        aria-label={`${t('filters.cost')} — ${t('filters.max')}`}
+      />
 
-      <div className="filter-group">
-        <label className="form-label" htmlFor="f-wait">{t('filters.waitingTime')}</label>
-        <input id="f-wait" type="text" className="form-input" placeholder={t('filters.waitingTimePlaceholder')} value={filters.waitingTime} onChange={(e) => onChange('waitingTime', e.target.value)} />
-      </div>
+      <input
+        type="text"
+        className="filter-select filter-num"
+        placeholder={t('filters.waitingTimePlaceholder')}
+        value={filters.waitingTime}
+        onChange={(e) => onChange('waitingTime', e.target.value)}
+        aria-label={t('filters.waitingTime')}
+      />
 
-      <div className="filter-group">
-        <label className="form-label" htmlFor="f-verif">{t('filters.verification')}</label>
-        <select id="f-verif" className="form-select" value={filters.verificationLevel} onChange={(e) => onChange('verificationLevel', e.target.value)}>
-          <option value="">{t('filters.allLevels')}</option>
-          {VERIFICATION_LEVELS.map((v) => <option key={v.value} value={v.value}>{t(`verifications.${v.value}`)}</option>)}
-        </select>
-      </div>
-    </aside>
+      <select
+        className="filter-select"
+        value={filters.verificationLevel}
+        onChange={(e) => onChange('verificationLevel', e.target.value)}
+        aria-label={t('filters.verification')}
+      >
+        <option value="">{t('filters.allLevels')}</option>
+        <option value="SELF_REPORTED">{t('verifications.SELF_REPORTED')}</option>
+        <option value="DOCUMENT_SUPPORTED">{t('verifications.DOCUMENT_SUPPORTED')}</option>
+      </select>
+
+      <button type="button" className="filter-clear" onClick={onReset}>
+        {t('filters.clearAll')}
+      </button>
+    </div>
   )
 }
 

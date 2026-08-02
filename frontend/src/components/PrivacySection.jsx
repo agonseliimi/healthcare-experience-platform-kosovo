@@ -2,73 +2,83 @@ import { useTranslation } from 'react-i18next'
 
 /**
  * Reusable privacy/trust explanation content used by the Privacy page.
+ *
+ * Two verification levels, matching what the rest of the UI now shows.
+ * The document policy here describes what the app actually does: uploaded
+ * evidence IS published, after the author blurs identifying areas with the
+ * built-in tool and a moderator reviews it.
  */
 function PrivacySection() {
   const { t } = useTranslation()
+  const neverPublished = [
+    t('privacyPage.notShare1'),
+    t('privacyPage.notShare2'),
+    t('privacyPage.notShare3'),
+    t('privacyPage.notShare4'),
+    t('privacyPage.notShare5'),
+    t('privacyPage.notShare6'),
+  ]
+
   return (
     <div className="privacy">
-      <div className="alert alert-warning privacy-banner">
-        <strong>{t('privacyPage.banner1')}</strong> {t('privacyPage.banner2')}
-      </div>
-
-      <section className="privacy-block card">
+      <section className="privacy-block">
         <h2>{t('privacyPage.anonModeTitle')}</h2>
         <p>{t('privacyPage.anonModeText')}</p>
       </section>
 
-      <section className="privacy-block card">
+      <section className="privacy-block">
         <h2>{t('privacyPage.notShareTitle')}</h2>
-        <ul className="bullet">
-          <li>{t('privacyPage.notShare1')}</li>
-          <li>{t('privacyPage.notShare2')}</li>
-          <li>{t('privacyPage.notShare3')}</li>
-          <li>{t('privacyPage.notShare4')}</li>
-          <li>{t('privacyPage.notShare5')}</li>
-          <li>{t('privacyPage.notShare6')}</li>
-        </ul>
-        <p>{t('privacyPage.notShareNote')}</p>
+        <div className="privacy-tags">
+          {neverPublished.map((item) => (
+            <span className="privacy-tag" key={item}>{item}</span>
+          ))}
+        </div>
+        <p style={{ marginTop: 11 }}>{t('privacyPage.notShareNote')}</p>
       </section>
 
-      <section className="privacy-block card">
-        <h2>{t('privacyPage.verifyTitle')}</h2>
-        <p>{t('privacyPage.verifyText')}</p>
+      <section className="privacy-block">
+        <h2>{t('privacyPage.documentsTitle')}</h2>
+        <p>{t('privacyPage.documentsText')}</p>
       </section>
 
-      <section className="privacy-block card">
+      <section className="privacy-block">
         <h2>{t('privacyPage.levelsTitle')}</h2>
-        <div className="levels">
-          <div className="level">
-            <span className="dot" style={{ background: '#F59E0B' }} />
-            <div><strong>{t('privacyPage.levelSelfTitle')}</strong><p>{t('privacyPage.levelSelfText')}</p></div>
+        <div className="privacy-levels">
+          <div className="privacy-level">
+            <span className="privacy-level-dot privacy-level-dot--self" />
+            <div>
+              <div className="privacy-level-t">{t('privacyPage.levelSelfTitle')}</div>
+              <p className="privacy-level-p">{t('privacyPage.levelSelfText')}</p>
+            </div>
           </div>
-          <div className="level">
-            <span className="dot" style={{ background: '#3B82F6' }} />
-            <div><strong>{t('privacyPage.levelDocTitle')}</strong><p>{t('privacyPage.levelDocText')}</p></div>
-          </div>
-          <div className="level">
-            <span className="dot" style={{ background: '#10B981' }} />
-            <div><strong>{t('privacyPage.levelHighTitle')}</strong><p>{t('privacyPage.levelHighText')}</p></div>
+          <div className="privacy-level">
+            <span className="privacy-level-dot privacy-level-dot--doc" />
+            <div>
+              <div className="privacy-level-t">{t('privacyPage.levelDocTitle')}</div>
+              <p className="privacy-level-p">{t('privacyPage.levelDocText')}</p>
+            </div>
           </div>
         </div>
+        <p style={{ marginTop: 13 }}>{t('privacyPage.trustText')}</p>
       </section>
 
-      <section className="privacy-block card">
-        <h2>{t('privacyPage.trustTitle')}</h2>
-        <p>{t('privacyPage.trustText')}</p>
-      </section>
-
-      <section className="privacy-block card">
+      <section className="privacy-block">
         <h2>{t('privacyPage.abuseTitle')}</h2>
         <p>{t('privacyPage.abuseText')}</p>
       </section>
 
-      <section className="privacy-block card">
+      <section className="privacy-block">
+        <h2>{t('privacyPage.removingTitle')}</h2>
+        <p>{t('privacyPage.removingText')}</p>
+      </section>
+
+      <section className="privacy-block">
         <h2>{t('privacyPage.limitsTitle')}</h2>
-        <ul className="bullet">
-          <li>{t('privacyPage.limit1')}</li>
-          <li>{t('privacyPage.limit2')}</li>
-          <li>{t('privacyPage.limit3')}</li>
-        </ul>
+        <div className="privacy-tags">
+          <span className="privacy-tag">{t('privacyPage.limit1')}</span>
+          <span className="privacy-tag">{t('privacyPage.limit2')}</span>
+          <span className="privacy-tag">{t('privacyPage.limit3')}</span>
+        </div>
       </section>
     </div>
   )

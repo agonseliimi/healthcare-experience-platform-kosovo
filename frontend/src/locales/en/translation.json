@@ -34,12 +34,13 @@
   },
   "hero": {
     "badge": "Anonymous & Privacy-First",
-    "title_line1": "Transparent healthcare",
-    "title_line2": "experiences for Kosovo",
-    "sub": "Read anonymous patient journeys, compare approximate costs, waiting times, and steps before visiting a healthcare institution.",
-    "disclaimer": "We do not give medical advice. We show real anonymous patient journeys.",
-    "cta_search": "Search Experiences",
-    "cta_submit": "Share Experience"
+    "title_line1": "Know what to expect",
+    "title_line2": "before you go.",
+    "sub": "Anonymous patient journeys from hospitals and clinics across Kosovo — the steps people took, what it cost, how long they waited.",
+    "disclaimer": "Patient stories, not medical advice. Always speak to a doctor.",
+    "cta_search": "Search",
+    "cta_submit": "Share Experience",
+    "searchPlaceholder": "Search a specialty, symptom or city"
   },
   "footer": {
     "disclaimer": "This platform does not provide medical diagnosis or medical advice. It only helps users understand anonymous patient journeys.",
@@ -52,7 +53,7 @@
     "contact": "Contact Us",
     "privacy_header": "Privacy",
     "privacy_item1": "Anonymous by default",
-    "privacy_item2": "Documents are never public",
+    "privacy_item2": "Documents are blurred before publishing",
     "privacy_item3": "No personal identifiers",
     "copyright": "HealthPath Kosovo — Local demo only."
   },
@@ -112,9 +113,9 @@
     "PRIVATE_CLINIC": "Private Clinic"
   },
   "verifications": {
-    "SELF_REPORTED": "Self-Reported",
-    "DOCUMENT_SUPPORTED": "Document-Supported",
-    "HIGH_CONFIDENCE": "High-Confidence"
+    "SELF_REPORTED": "Self-reported",
+    "DOCUMENT_SUPPORTED": "Documented",
+    "HIGH_CONFIDENCE": "Documented"
   },
   "experienceCard": {
     "steps": "Steps",
@@ -123,7 +124,12 @@
     "wait": "Wait",
     "result": "Result",
     "report": "Report",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "free": "Free",
+    "open": "Open",
+    "moreSteps": "+{{count}} more",
+    "like": "Mark as helpful",
+    "dislike": "Mark as not helpful"
   },
   "searchPage": {
     "title": "Browse Experiences",
@@ -149,18 +155,26 @@
     "f2Title": "Public / private comparison",
     "f2Text": "Compare public hospitals and private clinics.",
     "f3Title": "Optional verification",
-    "f3Text": "Add evidence privately to raise confidence.",
+    "f3Text": "Attach a blurred document to have your journey marked as documented.",
     "f4Title": "Trust score",
     "f4Text": "Community credibility signals — not medical accuracy.",
     "f5Title": "Abuse reporting",
     "f5Text": "Flag privacy issues, medical-advice claims, or spam.",
     "f6Title": "Privacy-first design",
-    "f6Text": "Documents are never public; identifiers are blocked.",
+    "f6Text": "Identifiers are blocked, and documents are blurred before they are published.",
     "f7Title": "Healthcare system transparency",
     "f7Text": "Discover therapy costs, treatment durations, and necessary steps before visiting a hospital.",
     "f8Title": "Experiences with medical staff",
     "f8Text": "Share your assessment of doctors and institutions to create a clear overview of service quality.",
-    "browseBtn": "Browse Experiences"
+    "browseBtn": "Browse Experiences",
+    "step1Title": "Search a specialty or city",
+    "step1Text": "No account needed to read anything.",
+    "step2Title": "Compare steps, cost and waiting",
+    "step2Text": "Public hospital and private clinic, side by side.",
+    "step3Title": "Add your own journey",
+    "step3Text": "Anonymous by default. Takes about two minutes.",
+    "recentlyShared": "Recently shared",
+    "allJourneys": "All {{count}} journeys →"
   },
   "submit": {
     "pageTitle": "Share Your Healthcare Journey",
@@ -180,7 +194,19 @@
     "symptomsHelper": "What symptoms did you have before or during the visit?",
     "symptomsPrivacy": "Do not enter names, personal numbers, or information that could identify you.",
     "symptomSuggestionsLabel": "Symptom suggestions",
-    "symptomSuggestions": ["Headache", "Fever", "Cough", "Fatigue", "Dizziness", "Nausea", "Abdominal pain", "Back pain", "Chest pain", "Difficulty breathing", "Rash"],
+    "symptomSuggestions": [
+      "Headache",
+      "Fever",
+      "Cough",
+      "Fatigue",
+      "Dizziness",
+      "Nausea",
+      "Abdominal pain",
+      "Back pain",
+      "Chest pain",
+      "Difficulty breathing",
+      "Rash"
+    ],
     "customSymptom": "Add another symptom",
     "customSymptomPlaceholder": "Type a symptom",
     "addSymptom": "Add",
@@ -215,12 +241,20 @@
     "saveBtn": "Save Changes",
     "cancel": "Cancel",
     "uploadDocument": "Upload document (optional)",
-    "uploadDocumentHint": "The document will be visible to all visitors. PDF or images, up to 5MB."
+    "uploadDocumentHint": "The document will be visible to all visitors. PDF or images, up to 5MB.",
+    "sectionVisit": "About the visit",
+    "sectionSteps": "The steps you took",
+    "sectionStepsAside": "This is what readers use most",
+    "sectionCost": "Cost and waiting",
+    "sectionCostAside": "Approximate is fine · optional",
+    "stepsHint": "Separate each step with an arrow (→) and we will show it as a numbered timeline.",
+    "optional": "optional",
+    "editAnytime": "You can edit or delete it at any time."
   },
   "verify": {
     "successTitle": "Verification requested. An administrator will review it. Your document is never shown publicly.",
     "title": "Request verification (optional)",
-    "intro": "Verification is optional. Documents you reference are never shown publicly and are used only to raise the confidence level of your experience.",
+    "intro": "Verification is optional. A document you attach is published with your journey after you blur identifying areas, and a moderator checks it.",
     "documentNote": "Document note",
     "documentNotePlaceholder": "e.g. Lab result supports the approximate cost and waiting time.",
     "uploadLabel": "Upload document (optional)",
@@ -261,7 +295,7 @@
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}",
-    "sub": "Your contributions and community standing.",
+    "sub": "Everything you have shared, and how much it has helped.",
     "trust": "Trust",
     "likesReceived": "Likes received",
     "dislikesReceived": "Dislikes received",
@@ -285,7 +319,16 @@
     "noVerifications": "No verification requests yet.",
     "colExperience": "Experience",
     "colNote": "Note",
-    "colAdminNote": "Admin note"
+    "colAdminNote": "Admin note",
+    "title": "Your journeys",
+    "shared": "Shared",
+    "foundHelpful": "Found helpful",
+    "times": "times",
+    "contributorStatus": "Contributor status",
+    "tier_new": "New contributor",
+    "tier_trusted": "Trusted",
+    "tier_verified": "Verified",
+    "helpfulCount": "{{count}} helpful"
   },
   "details": {
     "back": "← Back",
@@ -300,7 +343,18 @@
     "anonymous": "Anonymous",
     "disclaimer": "This is one anonymous journey. It should not be used as medical advice.",
     "report": "⚑ Report",
-    "viewDocument": "View Document"
+    "viewDocument": "View Document",
+    "documentTitle": "Attached document",
+    "documentNote": "Uploaded by the person who shared this journey, with identifying areas blurred out before publishing.",
+    "verification": "Verification",
+    "verificationDocumented": "A receipt or referral letter was uploaded and checked by a moderator. Identifying details were blurred out first.",
+    "verificationSelfReported": "Written by a patient, with no document attached. Treat costs and waits as approximate.",
+    "howReliable": "How reliable is this?",
+    "howReliableNote": "Based on how helpful readers found it, whether a document backs it up, and the contributor’s standing.",
+    "wasHelpful": "Was this journey helpful?",
+    "helpfulYes": "Yes, helpful",
+    "helpfulNo": "Not helpful",
+    "voteSummary": "{{likes}} found this helpful · {{dislikes}} did not"
   },
   "report": {
     "title": "Report this experience",
@@ -327,10 +381,10 @@
     "continue": "Continue Limited Preview"
   },
   "trust": {
-    "high": "High Trust",
-    "medium": "Medium Trust",
-    "low": "New / Low Trust",
-    "tooltip": "Community trust (not medical accuracy)"
+    "high": "Well supported",
+    "medium": "Some support",
+    "low": "Little support",
+    "tooltip": "How much support this journey has — community credibility, not medical accuracy."
   },
   "states": {
     "loading": "Loading...",
@@ -368,7 +422,11 @@
     "limitsTitle": "Platform limitations",
     "limit1": "This is a university MVP, not a production medical system.",
     "limit2": "It does not provide diagnosis, treatment, or emergency advice.",
-    "limit3": "It does not replace doctors or rate medical correctness."
+    "limit3": "It does not replace doctors or rate medical correctness.",
+    "documentsTitle": "Uploaded documents",
+    "documentsText": "If you attach a receipt or referral letter it is published with your journey, because readers asked to see the evidence. Before it is uploaded you blur out every identifying area using the built-in tool, and a moderator checks it afterwards. You can delete it at any time by deleting the journey.",
+    "removingTitle": "Removing something",
+    "removingText": "You can delete any journey you shared, at any time, from Your journeys. Deletion is immediate."
   },
   "adminVerify": {
     "title": "Verification Requests",

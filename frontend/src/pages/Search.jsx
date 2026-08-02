@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { getExperiences } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import ExperienceCard from '../components/ExperienceCard'
@@ -23,7 +24,10 @@ const emptyFilters = {
 function Search() {
   const { isAuthenticated } = useAuth()
   const { t } = useTranslation()
-  const [searchInput, setSearchInput] = useState('')
+  // The hero links here as /search?q=…, so seed the box from the URL.
+  const [searchParams] = useSearchParams()
+  const initialQuery = searchParams.get('q') ?? ''
+  const [searchInput, setSearchInput] = useState(initialQuery)
   const [filters, setFilters] = useState(emptyFilters)
   const [experiences, setExperiences] = useState([])
   const [loading, setLoading] = useState(true)
@@ -44,10 +48,12 @@ function Search() {
     }
   }, [])
 
-  // Initial browse (not counted against the guest limit).
+  // Initial browse (not counted against the guest limit). Re-runs when the hero
+  // sends a new ?q= while this page is already mounted.
   useEffect(() => {
-    fetchData('', emptyFilters)
-  }, [fetchData])
+    setSearchInput(initialQuery)
+    fetchData(initialQuery, emptyFilters)
+  }, [fetchData, initialQuery])
 
   // Returns true if the action is allowed; guests are limited.
   function guardGuestAction() {
@@ -63,8 +69,7 @@ function Search() {
     return true
   }
 
-  function handleSearchSubmit(e) {
-    e.preventDefault()
+  function handleSearchSubmit() {
     if (!guardGuestAction()) return
     fetchData(searchInput, filters)
   }
@@ -82,56 +87,51 @@ function Search() {
     fetchData('', emptyFilters)
   }
 
+  const countLabel = `${experiences.length} ${
+    experiences.length !== 1 ? t('searchPage.experienceCountPlural') : t('searchPage.experienceCountSingle')
+  }`
+
   return (
     <div className="page">
       <header className="page-head">
-        <h1 className="page-title">{t('searchPage.title')}</h1>
-        <p className="page-sub">
-          {t('searchPage.sub')}
-        </p>
+        <div className="search-head">
+          <h1 className="page-title">{t('searchPage.title')}</h1>
+          {!loading && !error && <span className="search-count">{countLabel}</span>}
+        </div>
+        <p className="page-sub">{t('searchPage.sub')}</p>
 
-        <form className="search-bar" onSubmit={handleSearchSubmit} role="search">
-          <input
-            type="search"
-            className="form-input search-input"
-            placeholder={t('searchPage.searchPlaceholder')}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            aria-label="Search experiences"
-          />
-          <button type="submit" className="btn btn-primary">{t('searchPage.searchBtn')}</button>
-        </form>
+        <SearchFilters
+          search={searchInput}
+          onSearch={setSearchInput}
+          onSubmit={handleSearchSubmit}
+          filters={filters}
+          onChange={handleFilterChange}
+          onReset={handleReset}
+        />
       </header>
 
-      <div className="search-layout">
-        <SearchFilters filters={filters} onChange={handleFilterChange} onReset={handleReset} />
-
-        <div className="search-results">
-          {loading ? (
-            <LoadingState message={t('searchPage.loading')} />
-          ) : error ? (
-            <ErrorState message={error} onRetry={() => fetchData(searchInput, filters)} />
-          ) : experiences.length === 0 ? (
-            <div className="state-box">
-              <p className="state-text">{t('searchPage.noMatch')}</p>
-              <button className="btn btn-secondary" onClick={handleReset}>{t('searchPage.clearFilters')}</button>
-            </div>
-          ) : (
-            <>
-              <p className="results-count">{experiences.length} {experiences.length !== 1 ? t('searchPage.experienceCountPlural') : t('searchPage.experienceCountSingle')}</p>
-              <div className="cards-grid">
-                {experiences.map((exp) => (
-                  <ExperienceCard
-                    key={exp.id}
-                    experience={exp}
-                    onRequireAuth={() => setShowGuestLimit(true)}
-                    onChanged={() => fetchData(searchInput, filters)}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+      <div className="search-results">
+        {loading ? (
+          <LoadingState message={t('searchPage.loading')} />
+        ) : error ? (
+          <ErrorState message={error} onRetry={() => fetchData(searchInput, filters)} />
+        ) : experiences.length === 0 ? (
+          <div className="state-box">
+            <p className="state-text">{t('searchPage.noMatch')}</p>
+            <button className="btn btn-secondary" onClick={handleReset}>{t('searchPage.clearFilters')}</button>
+          </div>
+        ) : (
+          <div className="cards-grid">
+            {experiences.map((exp) => (
+              <ExperienceCard
+                key={exp.id}
+                experience={exp}
+                onRequireAuth={() => setShowGuestLimit(true)}
+                onChanged={() => fetchData(searchInput, filters)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {showGuestLimit && (

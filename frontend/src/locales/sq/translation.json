@@ -34,12 +34,13 @@
   },
   "hero": {
     "badge": "Anonimitet & Privatësi",
-    "title_line1": "Përvoja shëndetësore",
-    "title_line2": "transparente për Kosovën",
-    "sub": "Lexoni përvoja anonime, krahasoni kostot e përafërta, kohën e pritjes dhe hapat para se të vizitoni një institucion shëndetësor.",
-    "disclaimer": "Ne nuk japim këshilla mjekësore. Ne tregojmë përvoja reale anonime të pacientëve.",
-    "cta_search": "Kërko Përvojat",
-    "cta_submit": "Ndaj Përvojën"
+    "title_line1": "Dije çfarë të presësh",
+    "title_line2": "para se të shkosh.",
+    "sub": "Përvoja anonime pacientësh nga spitalet dhe klinikat në Kosovë — hapat që ndoqën, sa kushtoi dhe sa pritën.",
+    "disclaimer": "Përvoja pacientësh, jo këshillë mjekësore. Gjithmonë flisni me një mjek.",
+    "cta_search": "Kërko",
+    "cta_submit": "Ndaj Përvojën",
+    "searchPlaceholder": "Kërko specialitet, simptomë ose qytet"
   },
   "footer": {
     "disclaimer": "Kjo platformë nuk ofron diagnozë mjekësore apo këshilla mjekësore. Ndihmon përdoruesit të kuptojnë përvojat anonime të pacientëve.",
@@ -52,7 +53,7 @@
     "contact": "Na kontaktoni",
     "privacy_header": "Privatësia",
     "privacy_item1": "Anonim si parazgjedhje",
-    "privacy_item2": "Dokumentet nuk janë kurrë publike",
+    "privacy_item2": "Dokumentet turbullohen para publikimit",
     "privacy_item3": "Pa identifikues personal",
     "copyright": "HealthPath Kosovo — Vetëm për demo lokale."
   },
@@ -113,8 +114,8 @@
   },
   "verifications": {
     "SELF_REPORTED": "Vetë-raportuar",
-    "DOCUMENT_SUPPORTED": "Me Dokumente",
-    "HIGH_CONFIDENCE": "Besueshmëri e Lartë"
+    "DOCUMENT_SUPPORTED": "Me dokument",
+    "HIGH_CONFIDENCE": "Me dokument"
   },
   "experienceCard": {
     "steps": "Hapat",
@@ -123,7 +124,12 @@
     "wait": "Pritja",
     "result": "Rezultati",
     "report": "Raporto",
-    "viewDetails": "Shiko Detajet"
+    "viewDetails": "Shiko Detajet",
+    "free": "Falas",
+    "open": "Hap",
+    "moreSteps": "+{{count}} të tjera",
+    "like": "Shëno si të dobishme",
+    "dislike": "Shëno si jo të dobishme"
   },
   "searchPage": {
     "title": "Kërko Përvojat",
@@ -149,18 +155,26 @@
     "f2Title": "Krahasim publik / privat",
     "f2Text": "Krahaso spitalet publike dhe klinikat private.",
     "f3Title": "Verifikim opsional",
-    "f3Text": "Shto dëshmi privatisht për të rritur besueshmërinë.",
+    "f3Text": "Bashkangjit një dokument të turbulluar që përvoja jote të shënohet me dokument.",
     "f4Title": "Rezultati i besimit",
     "f4Text": "Sinjale kredibiliteti nga komuniteti — jo saktësi mjekësore.",
     "f5Title": "Raportim abuzimi",
     "f5Text": "Raporto çështje të privatësisë, pretendime mjekësore ose spam.",
     "f6Title": "Dizajn me prioritet privatësinë",
-    "f6Text": "Dokumentet nuk janë kurrë publike; identifikuesit bllokohen.",
+    "f6Text": "Identifikuesit bllokohen dhe dokumentet turbullohen para se të publikohen.",
     "f7Title": "Transparenca e sistemit shendetësor",
     "f7Text": "Zbuloni paraprakisht kostot e terapive, kohëzgjatjen e trajtimeve dhe hapat e nevojshëm para se të shkoni në spital.",
     "f8Title": "Eksperiencat me stafin mjekësor",
     "f8Text": "Ndaj vlerësimin tënd për mjekët dhe institucionet për të krijuar një pasqyrë të qartë të cilësisë së shërbimeve.",
-    "browseBtn": "Shiko Përvojat"
+    "browseBtn": "Shiko Përvojat",
+    "step1Title": "Kërko një specialitet ose qytet",
+    "step1Text": "Nuk nevojitet llogari për të lexuar.",
+    "step2Title": "Krahaso hapat, koston dhe pritjen",
+    "step2Text": "Spitali publik dhe klinika private, krah për krah.",
+    "step3Title": "Shto përvojën tënde",
+    "step3Text": "Anonime si parazgjedhje. Zgjat rreth dy minuta.",
+    "recentlyShared": "Të ndara së fundi",
+    "allJourneys": "Të gjitha {{count}} përvojat →"
   },
   "submit": {
     "pageTitle": "Ndaj Rrugëtimin Tënd Shëndetësor",
@@ -180,7 +194,19 @@
     "symptomsHelper": "Cilat simptoma kishit para ose gjatë vizitës?",
     "symptomsPrivacy": "Mos shkruani emra, numra personalë ose të dhëna që mund t'ju identifikojnë.",
     "symptomSuggestionsLabel": "Sugjerime të simptomave",
-    "symptomSuggestions": ["Dhimbje koke", "Temperaturë", "Kollë", "Lodhje", "Marramendje", "Të përziera", "Dhimbje barku", "Dhimbje shpine", "Dhimbje gjoksi", "Vështirësi në frymëmarrje", "Skuqje"],
+    "symptomSuggestions": [
+      "Dhimbje koke",
+      "Temperaturë",
+      "Kollë",
+      "Lodhje",
+      "Marramendje",
+      "Të përziera",
+      "Dhimbje barku",
+      "Dhimbje shpine",
+      "Dhimbje gjoksi",
+      "Vështirësi në frymëmarrje",
+      "Skuqje"
+    ],
     "customSymptom": "Shto një simptomë tjetër",
     "customSymptomPlaceholder": "Shkruani simptomën",
     "addSymptom": "Shto",
@@ -215,12 +241,20 @@
     "saveBtn": "Ruaj Ndryshimet",
     "cancel": "Anulo",
     "uploadDocument": "Ngarko dokument (opsional)",
-    "uploadDocumentHint": "Dokumenti do të jetë i dukshëm për të gjithë vizitorët. PDF ose imazhe, deri në 5MB."
+    "uploadDocumentHint": "Dokumenti do të jetë i dukshëm për të gjithë vizitorët. PDF ose imazhe, deri në 5MB.",
+    "sectionVisit": "Rreth vizitës",
+    "sectionSteps": "Hapat që ndoqe",
+    "sectionStepsAside": "Kjo është ajo që lexuesit përdorin më shumë",
+    "sectionCost": "Kostoja dhe pritja",
+    "sectionCostAside": "E përafërt mjafton · opsionale",
+    "stepsHint": "Ndaj çdo hap me një shigjetë (→) dhe do ta shfaqim si kronologji të numëruar.",
+    "optional": "opsionale",
+    "editAnytime": "Mund ta ndryshosh ose fshish në çdo kohë."
   },
   "verify": {
     "successTitle": "Verifikimi u kërkua. Një administrator do ta shqyrtojë. Dokumenti yt nuk shfaqet kurrë publikisht.",
     "title": "Kërko verifikim (opsional)",
-    "intro": "Verifikimi është opsional. Dokumentet që referon nuk shfaqen kurrë publikisht dhe përdoren vetëm për të ngritur nivelin e besueshmërisë së përvojës sate.",
+    "intro": "Verifikimi është opsional. Dokumenti që bashkangjit publikohet bashkë me përvojën pasi ti turbullon pjesët identifikuese dhe një moderator e kontrollon.",
     "documentNote": "Shënim për dokumentin",
     "documentNotePlaceholder": "p.sh. Rezultati i laboratorit mbështet koston e përafërt dhe kohën e pritjes.",
     "uploadLabel": "Ngarko dokument (opsional)",
@@ -261,7 +295,7 @@
   },
   "dashboard": {
     "welcome": "Mirë se erdhe, {{name}}",
-    "sub": "Kontributet e tua dhe pozicioni në komunitet.",
+    "sub": "Gjithçka që ke ndarë dhe sa ka ndihmuar.",
     "trust": "Besimi",
     "likesReceived": "Pëlqime të marra",
     "dislikesReceived": "Mospëlqime të marra",
@@ -285,7 +319,16 @@
     "noVerifications": "Ende asnjë kërkesë verifikimi.",
     "colExperience": "Përvoja",
     "colNote": "Shënim",
-    "colAdminNote": "Shënimi i adminit"
+    "colAdminNote": "Shënimi i adminit",
+    "title": "Përvojat e tua",
+    "shared": "Të ndara",
+    "foundHelpful": "Të dobishme",
+    "times": "herë",
+    "contributorStatus": "Statusi i kontribuuesit",
+    "tier_new": "Kontribuues i ri",
+    "tier_trusted": "I besuar",
+    "tier_verified": "I verifikuar",
+    "helpfulCount": "{{count}} të dobishme"
   },
   "details": {
     "back": "← Kthehu",
@@ -300,7 +343,18 @@
     "anonymous": "Anonim",
     "disclaimer": "Ky është një rrugëtim anonim. Nuk duhet përdorur si këshillë mjekësore.",
     "report": "⚑ Raporto",
-    "viewDocument": "Shiko Dokumentin"
+    "viewDocument": "Shiko Dokumentin",
+    "documentTitle": "Dokumenti i bashkangjitur",
+    "documentNote": "Ngarkuar nga personi që ndau këtë përvojë, me pjesët identifikuese të turbulluara para publikimit.",
+    "verification": "Verifikimi",
+    "verificationDocumented": "Një faturë ose letër referimi u ngarkua dhe u kontrollua nga një moderator. Të dhënat identifikuese u turbulluan më parë.",
+    "verificationSelfReported": "Shkruar nga një pacient, pa dokument të bashkangjitur. Kostot dhe pritjet janë të përafërta.",
+    "howReliable": "Sa e besueshme është kjo?",
+    "howReliableNote": "Bazuar në sa e dobishme e panë lexuesit, nëse ka dokument mbështetës dhe në qëndrimin e kontribuuesit.",
+    "wasHelpful": "A ishte e dobishme kjo përvojë?",
+    "helpfulYes": "Po, e dobishme",
+    "helpfulNo": "Jo e dobishme",
+    "voteSummary": "{{likes}} e panë të dobishme · {{dislikes}} jo"
   },
   "report": {
     "title": "Raporto këtë përvojë",
@@ -327,10 +381,10 @@
     "continue": "Vazhdo me Pamje të Kufizuar"
   },
   "trust": {
-    "high": "Besim i Lartë",
-    "medium": "Besim Mesatar",
-    "low": "I ri / Besim i Ulët",
-    "tooltip": "Besim i komunitetit (jo saktësi mjekësore)"
+    "high": "Mbështetje e mirë",
+    "medium": "Njëfarë mbështetje",
+    "low": "Pak mbështetje",
+    "tooltip": "Sa mbështetje ka kjo përvojë — besueshmëri e komunitetit, jo saktësi mjekësore."
   },
   "states": {
     "loading": "Duke ngarkuar...",
@@ -368,7 +422,11 @@
     "limitsTitle": "Kufizimet e platformës",
     "limit1": "Ky është një prototip universitar (MVP), jo sistem mjekësor në prodhim.",
     "limit2": "Nuk ofron diagnozë, trajtim apo këshilla urgjence.",
-    "limit3": "Nuk zëvendëson mjekët dhe nuk vlerëson saktësinë mjekësore."
+    "limit3": "Nuk zëvendëson mjekët dhe nuk vlerëson saktësinë mjekësore.",
+    "documentsTitle": "Dokumentet e ngarkuara",
+    "documentsText": "Nëse bashkangjit një faturë ose letër referimi, ajo publikohet bashkë me përvojën tënde, sepse lexuesit kërkuan ta shohin provën. Para ngarkimit ti turbullon çdo pjesë identifikuese me mjetin e integruar dhe një moderator e kontrollon më pas. Mund ta fshish në çdo kohë duke fshirë përvojën.",
+    "removingTitle": "Heqja e diçkaje",
+    "removingText": "Mund të fshish çdo përvojë që ke ndarë, në çdo kohë, nga Përvojat e tua. Fshirja është e menjëhershme."
   },
   "adminVerify": {
     "title": "Kërkesat për Verifikim",

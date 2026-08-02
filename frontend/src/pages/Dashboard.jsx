@@ -3,11 +3,19 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getMyExperiences, getMyVerificationRequests, deleteExperience } from '../api/api'
 import { useAuth } from '../context/AuthContext'
-import TrustBadge from '../components/TrustBadge'
+import VerificationLabel from '../components/VerificationLabel'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
 
-/** User dashboard: profile stats, own experiences, and verification requests. */
+/** Contributor standing, derived from the (private) trust score. */
+function contributorTier(trustScore) {
+  const score = trustScore ?? 0
+  if (score >= 80) return { key: 'verified', filled: 3 }
+  if (score >= 40) return { key: 'trusted', filled: 2 }
+  return { key: 'new', filled: 1 }
+}
+
+/** "Your journeys": what you shared, how it landed, and verification requests. */
 function Dashboard() {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -55,25 +63,39 @@ function Dashboard() {
     }
   }
 
+  const tier = contributorTier(user?.trustScore)
+  const helpfulTotal = experiences.reduce((sum, e) => sum + (e.likes ?? 0), 0)
+
   return (
     <div className="page">
-      <header className="page-head">
-        <h1 className="page-title">{t('dashboard.welcome', { name: user?.displayName })}</h1>
-        <p className="page-sub">{t('dashboard.sub')}</p>
-      </header>
-
-      <div className="stat-cards">
-        <div className="card stat">
-          <span className="stat-label">{t('dashboard.trust')}</span>
-          <TrustBadge score={user?.trustScore} label={user?.trustLabel} />
+      <div className="mine-head">
+        <div>
+          <h1 className="page-title">{t('dashboard.title')}</h1>
+          <p className="page-sub">{t('dashboard.sub')}</p>
         </div>
-        <div className="card stat"><span className="stat-label">{t('dashboard.likesReceived')}</span><span className="stat-num">{user?.likesReceived ?? 0}</span></div>
-        <div className="card stat"><span className="stat-label">{t('dashboard.dislikesReceived')}</span><span className="stat-num">{user?.dislikesReceived ?? 0}</span></div>
-        <div className="card stat"><span className="stat-label">{t('dashboard.reportsReceived')}</span><span className="stat-num">{user?.reportsReceived ?? 0}</span></div>
+        <Link to="/submit" className="btn btn-primary">{t('dashboard.submitNew')}</Link>
       </div>
 
-      <div className="center dash-cta">
-        <Link to="/submit" className="btn btn-primary">{t('dashboard.submitNew')}</Link>
+      <div className="mine-stats">
+        <div className="mine-stat">
+          <div className="eyebrow">{t('dashboard.shared')}</div>
+          <div className="mine-stat-v">{experiences.length}</div>
+        </div>
+        <div className="mine-stat">
+          <div className="eyebrow">{t('dashboard.foundHelpful')}</div>
+          <div className="mine-stat-v">{helpfulTotal} <small>{t('dashboard.times')}</small></div>
+        </div>
+        <div className="mine-stat">
+          <div className="eyebrow">{t('dashboard.contributorStatus')}</div>
+          <div className="trust-badge" style={{ marginTop: 11 }}>
+            <span className="trust-bars" aria-hidden="true">
+              {[0, 1, 2].map((i) => (
+                <span className={`trust-bar ${i < tier.filled ? 'is-on' : ''}`} key={i} />
+              ))}
+            </span>
+            <span className="trust-label">{t(`dashboard.tier_${tier.key}`)}</span>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -82,48 +104,36 @@ function Dashboard() {
         <ErrorState message={error} onRetry={load} />
       ) : (
         <>
-          <section className="section">
-            <h2 className="section-title">{t('dashboard.myExperiences', { count: experiences.length })}</h2>
-            {actionError && <div className="alert alert-error">{actionError}</div>}
-            {experiences.length === 0 ? (
-              <p className="muted">{t('dashboard.noExperiences')}</p>
-            ) : (
-              <div className="table-wrap">
-                <table className="table">
-                  <thead>
-                    <tr><th>{t('dashboard.colCategory')}</th><th>{t('dashboard.colInstitution')}</th><th>{t('dashboard.colCity')}</th><th>{t('dashboard.colVerification')}</th><th>{t('dashboard.colLikes')}</th><th>{t('dashboard.colActions')}</th></tr>
-                  </thead>
-                  <tbody>
-                    {experiences.map((e) => (
-                      <tr key={e.id}>
-                        <td>{t(`categories.${e.category}`)}</td>
-                        <td>{t(`institutions.${e.institutionType}`)}</td>
-                        <td>{e.city}</td>
-                        <td>{t(`verifications.${e.verificationLevel}`)}</td>
-                        <td>{e.likes}</td>
-                        <td>
-                          <div className="row-actions">
-                            <Link className="link" to={`/experiences/${e.id}`}>{t('dashboard.view')}</Link>
-                            <Link className="link" to={`/experiences/${e.id}/edit`}>{t('dashboard.edit')}</Link>
-                            {e.status !== 'HIDDEN' && (
-                              <button
-                                type="button"
-                                className="link link-danger"
-                                onClick={() => handleDelete(e)}
-                                disabled={deletingId === e.id}
-                              >
-                                {deletingId === e.id ? t('dashboard.deleting') : t('dashboard.delete')}
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
+          {actionError && <div className="alert alert-error" style={{ marginTop: 16 }}>{actionError}</div>}
+
+          {experiences.length === 0 ? (
+            <p className="muted" style={{ marginTop: 20 }}>{t('dashboard.noExperiences')}</p>
+          ) : (
+            <div className="mine-list">
+              {experiences.map((e) => (
+                <div className="mine-row" key={e.id}>
+                  <div className="mine-row-main">
+                    <div className="mine-row-title">{t(`categories.${e.category}`)}</div>
+                    <div className="mine-row-sub">{t(`institutions.${e.institutionType}`)} · {e.city}</div>
+                  </div>
+                  <VerificationLabel verificationLevel={e.verificationLevel} />
+                  <span className="mine-row-helpful">{t('dashboard.helpfulCount', { count: e.likes ?? 0 })}</span>
+                  <div className="mine-row-actions">
+                    <Link className="link" to={`/experiences/${e.id}`}>{t('dashboard.view')}</Link>
+                    <Link className="link" to={`/experiences/${e.id}/edit`}>{t('dashboard.edit')}</Link>
+                    <button
+                      type="button"
+                      className="link link-danger"
+                      onClick={() => handleDelete(e)}
+                      disabled={deletingId === e.id}
+                    >
+                      {deletingId === e.id ? t('dashboard.deleting') : t('dashboard.delete')}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <section className="section">
             <h2 className="section-title">{t('dashboard.myVerifications', { count: verifications.length })}</h2>

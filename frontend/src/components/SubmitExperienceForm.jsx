@@ -164,49 +164,64 @@ function SubmitExperienceForm({ experience }) {
   }
 
   return (
-    <form className="form card form-card" onSubmit={handleSubmit}>
-      <div className="alert alert-warning">
-        <strong>{t('submit.privacyWarning')}</strong> {t('submit.privacyWarningText')}
+    <form className="form" onSubmit={handleSubmit}>
+      <div className="share-note">
+        <span className="share-note-mark" aria-hidden="true">✓</span>
+        <span><strong>{t('submit.privacyWarning')}</strong> {t('submit.privacyWarningText')}</span>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="s-cat">{t('submit.category')}</label>
-        <select id="s-cat" className="form-select" value={form.category} onChange={(e) => set('category', e.target.value)}>
-          <option value="">{t('submit.selectCategory')}</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
-        </select>
-      </div>
-
-      <div className="form-group">
-        <span className="form-label">{t('submit.institutionType')}</span>
-        <div className="radio-row">
-          {INSTITUTION_TYPES.map((type) => (
-            <label className="radio" key={type.value}>
-              <input type="radio" name="s-inst" checked={form.institutionType === type.value} onChange={() => set('institutionType', type.value)} /> {t(`institutions.${type.value}`)}
-            </label>
-          ))}
+      {/* 1 — About the visit */}
+      <section className="share-section">
+        <div className="share-head">
+          <span className="share-head-n">1</span>
+          <h2>{t('submit.sectionVisit')}</h2>
         </div>
-      </div>
+        <div className="share-body">
+          <div className="form-row-3">
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-cat">{t('submit.category')}</label>
+              <select id="s-cat" className="form-select" value={form.category} onChange={(e) => set('category', e.target.value)}>
+                <option value="">{t('submit.selectCategory')}</option>
+                {CATEGORIES.map((c) => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
+              </select>
+            </div>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="s-city">{t('submit.city')}</label>
-        <select id="s-city" className="form-select" value={form.city} onChange={(e) => set('city', e.target.value)}>
-          <option value="">{t('submit.selectCity')}</option>
-          {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-city">{t('submit.city')}</label>
+              <select id="s-city" className="form-select" value={form.city} onChange={(e) => set('city', e.target.value)}>
+                <option value="">{t('submit.selectCity')}</option>
+                {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="s-steps">{t('submit.stepsTaken')}</label>
-        <textarea id="s-steps" className="form-textarea" rows={4} value={form.stepsTaken}
-          onChange={(e) => set('stepsTaken', e.target.value)}
-          placeholder={t('submit.stepsPlaceholder')} />
-      </div>
+            <div className="form-group">
+              <span className="form-label">{t('submit.institutionType')}</span>
+              <div className="filter-seg" role="group" aria-label={t('submit.institutionType')}>
+                {INSTITUTION_TYPES.map((type) => (
+                  <button
+                    key={type.value}
+                    type="button"
+                    aria-pressed={form.institutionType === type.value}
+                    onClick={() => set('institutionType', type.value)}
+                  >
+                    {t(`institutions.${type.value}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <fieldset className="symptoms-section">
-        <legend className="symptoms-title">{t('submit.symptoms')}</legend>
+      {/* 2 — What you felt */}
+      <fieldset className="symptoms-section share-section">
+        <div className="share-head">
+          <span className="share-head-n">2</span>
+          <legend className="symptoms-title">{t('submit.symptoms')}</legend>
+          <span className="share-head-aside">{form.symptoms.length}/10 · {t('submit.optional')}</span>
+        </div>
         <p className="symptoms-helper">{t('submit.symptomsHelper')}</p>
         <p className="form-hint">{t('submit.symptomsPrivacy')}</p>
 
@@ -257,44 +272,71 @@ function SubmitExperienceForm({ experience }) {
         </div>
       </fieldset>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="s-tests">{t('submit.testsPerformed')}</label>
-        <input id="s-tests" type="text" className="form-input" value={form.testsPerformed}
-          onChange={(e) => set('testsPerformed', e.target.value)} placeholder={t('submit.testsPlaceholder')} />
-      </div>
-
-      <div className="form-row-3">
-        <div className="form-group">
-          <label className="form-label" htmlFor="s-cost">{t('submit.approxCost')}</label>
-          <input id="s-cost" type="number" min="0" className="form-input" value={form.approximateCost}
-            onChange={(e) => set('approximateCost', e.target.value)} placeholder="0" />
+      {/* 3 — The steps you took */}
+      <section className="share-section">
+        <div className="share-head">
+          <span className="share-head-n">3</span>
+          <h2>{t('submit.sectionSteps')}</h2>
+          <span className="share-head-aside">{t('submit.sectionStepsAside')}</span>
         </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor="s-wait">{t('submit.waitingTime')}</label>
-          <input id="s-wait" type="text" className="form-input" value={form.waitingTime}
-            onChange={(e) => set('waitingTime', e.target.value)} placeholder={t('submit.waitingPlaceholder')} />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor="s-result">{t('submit.resultTime')}</label>
-          <input id="s-result" type="text" className="form-input" value={form.resultTime}
-            onChange={(e) => set('resultTime', e.target.value)} placeholder={t('submit.resultPlaceholder')} />
-        </div>
-      </div>
+        <div className="share-body">
+          <div className="form-group">
+            <label className="form-label" htmlFor="s-steps">{t('submit.stepsTaken')}</label>
+            <textarea id="s-steps" className="form-textarea" rows={4} value={form.stepsTaken}
+              onChange={(e) => set('stepsTaken', e.target.value)}
+              placeholder={t('submit.stepsPlaceholder')} />
+            <p className="form-hint">{t('submit.stepsHint')}</p>
+          </div>
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="s-summary">{t('submit.summary')}</label>
-        <textarea id="s-summary" className="form-textarea" rows={3} value={form.summary}
-          onChange={(e) => set('summary', e.target.value)} placeholder={t('submit.summaryPlaceholder')} />
-      </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="s-tests">{t('submit.testsPerformed')}</label>
+            <input id="s-tests" type="text" className="form-input" value={form.testsPerformed}
+              onChange={(e) => set('testsPerformed', e.target.value)} placeholder={t('submit.testsPlaceholder')} />
+          </div>
 
-      <label className="checkbox-row">
-        <input type="checkbox" checked={form.isAnonymous} onChange={(e) => set('isAnonymous', e.target.checked)} />
-        <span>{t('submit.anonymous')}</span>
-      </label>
+          <div className="form-group">
+            <label className="form-label" htmlFor="s-summary">{t('submit.summary')}</label>
+            <textarea id="s-summary" className="form-textarea" rows={3} value={form.summary}
+              onChange={(e) => set('summary', e.target.value)} placeholder={t('submit.summaryPlaceholder')} />
+          </div>
+        </div>
+      </section>
+
+      {/* 4 — Cost and waiting */}
+      <section className="share-section">
+        <div className="share-head">
+          <span className="share-head-n">4</span>
+          <h2>{t('submit.sectionCost')}</h2>
+          <span className="share-head-aside">{t('submit.sectionCostAside')}</span>
+        </div>
+        <div className="share-body">
+          <div className="form-row-3">
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-cost">{t('submit.approxCost')}</label>
+              <input id="s-cost" type="number" min="0" className="form-input" value={form.approximateCost}
+                onChange={(e) => set('approximateCost', e.target.value)} placeholder="0" />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-wait">{t('submit.waitingTime')}</label>
+              <input id="s-wait" type="text" className="form-input" value={form.waitingTime}
+                onChange={(e) => set('waitingTime', e.target.value)} placeholder={t('submit.waitingPlaceholder')} />
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="s-result">{t('submit.resultTime')}</label>
+              <input id="s-result" type="text" className="form-input" value={form.resultTime}
+                onChange={(e) => set('resultTime', e.target.value)} placeholder={t('submit.resultPlaceholder')} />
+            </div>
+          </div>
+
+          <label className="checkbox-row">
+            <input type="checkbox" checked={form.isAnonymous} onChange={(e) => set('isAnonymous', e.target.checked)} />
+            <span>{t('submit.anonymous')}</span>
+          </label>
 
       {!isEdit && (
         <>
           <label className="checkbox-row">
+
             <input type="checkbox" checked={form.requestVerification} onChange={(e) => set('requestVerification', e.target.checked)} />
             <span>{t('submit.requestVerification')}</span>
           </label>
@@ -338,6 +380,8 @@ function SubmitExperienceForm({ experience }) {
           )}
         </>
       )}
+        </div>
+      </section>
 
       {showBlurTool && rawImageFile && (
         <ImageBlurTool
@@ -355,7 +399,7 @@ function SubmitExperienceForm({ experience }) {
         />
       )}
 
-      <div className="form-actions">
+      <div className="share-actions">
         <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
           {submitting
             ? (isEdit ? t('submit.saving') : t('submit.submitting'))
@@ -367,6 +411,7 @@ function SubmitExperienceForm({ experience }) {
             {t('submit.cancel')}
           </button>
         )}
+        <span className="share-actions-note">{t('submit.editAnytime')}</span>
       </div>
     </form>
   )
