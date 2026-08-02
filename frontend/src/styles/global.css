@@ -16,6 +16,10 @@
   --warning-light: #FAF5E4;
   --danger: #9A5A46;
   --danger-button: #9A5A46;
+  /* Clearly red, for "this field is missing" — distinct from the muted brick
+     used for destructive links so a validation error actually reads as one. */
+  --error: #B03A28;
+  --error-light: #FBEDEA;
 
   --bg: #EFEFE8;
   --surface: #FFFFFF;
@@ -60,6 +64,8 @@ html[data-theme='dark'] {
   --warning-light: #2E2814;
   --danger: #E0A08A;
   --danger-button: #8C4632;
+  --error: #E88E78;
+  --error-light: #341913;
   --bg: #101713;
   --surface: #17201B;
   --surface-2: #1A241E;
@@ -150,10 +156,13 @@ img, svg { display: block; max-width: 100%; }
 }
 
 /* ---------- Buttons ---------- */
+/* No nowrap: Albanian labels run 30-50% longer than the English ones and were
+   spilling out of their boxes. Buttons wrap and centre instead. */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 11px 20px; border-radius: var(--radius); font-weight: 600; font-size: 0.9rem;
-  border: 1px solid transparent; transition: all 0.15s ease; white-space: nowrap;
+  border: 1px solid transparent; transition: all 0.15s ease;
+  text-align: center; max-width: 100%;
 }
 .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .btn-primary { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
@@ -366,11 +375,12 @@ img, svg { display: block; max-width: 100%; }
   border-radius: var(--radius); font-family: inherit; font-size: 0.85rem; color: var(--text-muted);
 }
 .filter-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-/* Segmented control for public / private / all. */
+/* Segmented control for public / private / all. min-height rather than height so
+   longer Albanian labels can wrap instead of overflowing. */
 .filter-seg { display: flex; gap: 3px; background: var(--surface); border: 1px solid var(--border-strong);
-  border-radius: var(--radius); padding: 3px; height: 40px; }
-.filter-seg button { border-radius: var(--radius-sm); padding: 0 12px; font-size: 0.82rem;
-  font-weight: 500; color: var(--text-muted); }
+  border-radius: var(--radius); padding: 3px; min-height: 42px; }
+.filter-seg button { border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.82rem;
+  font-weight: 500; color: var(--text-muted); min-width: 0; line-height: 1.25; }
 .filter-seg button:hover { color: var(--text); }
 .filter-seg button[aria-pressed='true'] { background: var(--primary); color: var(--on-primary); font-weight: 600; }
 .filter-num { width: 92px; }
@@ -406,23 +416,24 @@ img, svg { display: block; max-width: 100%; }
 .exp-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
   border-top: 1px solid var(--border-light); padding-top: 11px; margin-top: auto; }
 .exp-metrics > div { min-width: 0; }
-.m-label { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-.m-value { display: block; font-size: 0.94rem; font-weight: 600; margin-top: 4px; }
+.m-label { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); overflow-wrap: anywhere; }
+.m-value { display: block; font-size: 0.94rem; font-weight: 600; margin-top: 4px; overflow-wrap: anywhere; }
 
 .exp-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px 14px;
   flex-wrap: wrap; border-top: 1px solid var(--border-light); padding-top: 10px; }
-.exp-foot-left { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; }
-.exp-foot-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.exp-foot-left { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; min-width: 0; }
+.exp-foot-right { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-wrap: wrap; }
 
 /* Verification reduced to two states, per the redesign. */
-.vbadge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; white-space: nowrap; }
+.vbadge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; min-width: 0; }
 .vbadge--DOCUMENT_SUPPORTED { color: var(--primary-mid); font-weight: 600; }
 .vbadge--SELF_REPORTED { color: var(--text-muted); }
 .vbadge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--warning-dot); flex-shrink: 0; }
 
 .icon-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 500;
   color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm);
-  height: 28px; padding: 0 10px; }
+  min-height: 28px; padding: 4px 10px; line-height: 1.25; max-width: 100%; }
 .icon-btn:hover { background: var(--tint); color: var(--text); border-color: var(--border-strong); }
 .icon-btn[aria-pressed='true'] { background: var(--primary-light); border-color: var(--primary-light); color: var(--primary); }
 .exp-open { height: 28px; padding: 0 11px; background: var(--primary-soft); border: 1px solid var(--primary-light);
@@ -433,7 +444,7 @@ img, svg { display: block; max-width: 100%; }
    A journey-level signal, not a user score. Built from how helpful readers found
    it, whether a document backs it, and the author's standing. The author's raw
    number is deliberately never rendered. */
-.trust-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 0.75rem; white-space: nowrap; }
+.trust-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 0.75rem; min-width: 0; }
 .trust-bars { display: flex; gap: 3px; flex-shrink: 0; }
 .trust-bar { width: 18px; height: 5px; border-radius: 3px; background: var(--border); }
 .trust-bar.is-on { background: var(--primary-mid); }
@@ -450,8 +461,7 @@ img, svg { display: block; max-width: 100%; }
 .form-label { font-weight: 600; font-size: 0.9rem; }
 .form-optional { font-weight: 400; color: var(--text-light); font-size: 0.8rem; }
 .form-hint { font-size: 0.8rem; color: var(--text-muted); }
-.field-error { font-size: 0.8rem; color: var(--danger); font-weight: 500; }
-.field-meta { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.field-meta { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
 .char-counter { color: var(--text-light); font-size: 0.78rem; white-space: nowrap; }
 .form-input, .form-select, .form-textarea {
   width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
@@ -514,6 +524,29 @@ img, svg { display: block; max-width: 100%; }
 .privacy-level-p { font-size: 0.84rem; line-height: 1.55; color: var(--text-muted); margin-top: 2px; }
 .form-textarea { resize: vertical; min-height: 90px; }
 .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.form-row-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+/* Missing required field. Colour is paired with an icon-free text message and
+   aria-invalid, so it never relies on colour alone. */
+.form-input.is-invalid, .form-select.is-invalid, .form-textarea.is-invalid,
+.filter-seg.is-invalid {
+  border-color: var(--error);
+  background: var(--error-light);
+}
+.form-input.is-invalid:focus, .form-select.is-invalid:focus, .form-textarea.is-invalid:focus {
+  border-color: var(--error); box-shadow: 0 0 0 3px var(--error-light);
+}
+.field-error {
+  display: flex; align-items: flex-start; gap: 6px;
+  font-size: 0.79rem; color: var(--error); font-weight: 600; margin-top: 5px;
+}
+.field-error::before { content: '!'; flex-shrink: 0;
+  width: 14px; height: 14px; border-radius: 50%; background: var(--error); color: #fff;
+  font-size: 0.6rem; font-weight: 700; display: grid; place-items: center; margin-top: 2px; }
+
+/* Full-width segmented control, as used for "Where you went" in the share form. */
+.filter-seg--block { width: 100%; }
+.filter-seg--block button { flex: 1; }
 .radio-row { display: flex; gap: 20px; flex-wrap: wrap; }
 .checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; }
 .checkbox-row input { accent-color: var(--primary); margin-top: 3px; }
@@ -699,6 +732,16 @@ img, svg { display: block; max-width: 100%; }
   .detail-side { position: static; }
 }
 
+/* The share form is 760px wide, so two columns still fit comfortably there;
+   only collapse once the viewport itself is genuinely narrow. */
+@media (max-width: 620px) {
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+
+/* Desktop: auth lives in the top-right cluster, so the copy inside the
+   collapsible panel is not needed. */
+.nav-auth-mobile { display: none; }
+
 @media (max-width: 1080px) {
   .nav-toggle { display: flex; }
   .nav-links {
@@ -708,6 +751,13 @@ img, svg { display: block; max-width: 100%; }
   }
   .nav-links--open { display: flex; }
   .nav-auth { margin-left: 0; margin-top: 8px; }
+  /* The top bar cannot fit brand + language + text size + auth + burger on a
+     phone, so auth moves into the panel and the burger stays reachable. */
+  .nav-tools .nav-auth, .nav-tools .account { display: none; }
+  .nav-auth-mobile { display: flex; flex-direction: column; gap: 8px; margin-top: 10px;
+    padding-top: 10px; border-top: 1px solid var(--border); }
+  .navbar-inner { padding: 0 16px; gap: 10px; }
+  .brand-text { font-size: 0.9rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .form-row-3 { grid-template-columns: 1fr; }
   .symptom-input-controls { flex-direction: column; }

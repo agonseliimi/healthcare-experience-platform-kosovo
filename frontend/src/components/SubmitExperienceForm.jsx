@@ -62,6 +62,9 @@ function SubmitExperienceForm({ experience }) {
   const [rawImageFile, setRawImageFile] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  // Per-field messages so the user is pointed at the field that is missing,
+  // rather than a single line at the top of a long form.
+  const [fieldErrors, setFieldErrors] = useState({})
   const [symptomInput, setSymptomInput] = useState('')
   const [symptomError, setSymptomError] = useState(null)
   const navigate = useNavigate()
@@ -70,6 +73,18 @@ function SubmitExperienceForm({ experience }) {
 
   function set(key, value) {
     setForm((prev) => ({ ...prev, [key]: value }))
+    // Clear a field's error as soon as the user acts on it.
+    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: null } : prev))
+  }
+
+  /** Returns a { field: message } map for every required field left blank. */
+  function validateRequired() {
+    const missing = {}
+    if (!form.category) missing.category = t('submit.errorCategory')
+    if (!form.city) missing.city = t('submit.errorCity')
+    if (!form.institutionType) missing.institutionType = t('submit.errorInstitution')
+    if (!form.stepsTaken.trim()) missing.stepsTaken = t('submit.errorSteps')
+    return missing
   }
 
   function symptomValidationMessage(value, selected = form.symptoms) {
@@ -105,8 +120,17 @@ function SubmitExperienceForm({ experience }) {
     e.preventDefault()
     setError(null)
 
-    if (!form.category || !form.institutionType || !form.city || !form.stepsTaken.trim()) {
+    const missing = validateRequired()
+    setFieldErrors(missing)
+    if (Object.keys(missing).length > 0) {
       setError(t('submit.requiredError'))
+      // Take the user to the first field that needs attention.
+      const firstId = { category: 's-cat', city: 's-city', institutionType: 'lbl-inst', stepsTaken: 's-steps' }[
+        Object.keys(missing)[0]
+      ]
+      const el = document.getElementById(firstId)
+      el?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      if (el?.focus) el.focus({ preventScroll: true })
       return
     }
 
@@ -179,26 +203,46 @@ function SubmitExperienceForm({ experience }) {
           <h2>{t('submit.sectionVisit')}</h2>
         </div>
         <div className="share-body">
-          <div className="form-row-3">
+          <div className="form-row-2">
             <div className="form-group">
               <label className="form-label" htmlFor="s-cat">{t('submit.category')}</label>
-              <select id="s-cat" className="form-select" value={form.category} onChange={(e) => set('category', e.target.value)}>
+              <select
+                id="s-cat"
+                className={`form-select ${fieldErrors.category ? 'is-invalid' : ''}`}
+                value={form.category}
+                onChange={(e) => set('category', e.target.value)}
+                aria-invalid={Boolean(fieldErrors.category)}
+                aria-describedby={fieldErrors.category ? 'err-category' : undefined}
+              >
                 <option value="">{t('submit.selectCategory')}</option>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{t(`categories.${c}`)}</option>)}
               </select>
+              {fieldErrors.category && <span id="err-category" className="field-error">{fieldErrors.category}</span>}
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="s-city">{t('submit.city')}</label>
-              <select id="s-city" className="form-select" value={form.city} onChange={(e) => set('city', e.target.value)}>
+              <select
+                id="s-city"
+                className={`form-select ${fieldErrors.city ? 'is-invalid' : ''}`}
+                value={form.city}
+                onChange={(e) => set('city', e.target.value)}
+                aria-invalid={Boolean(fieldErrors.city)}
+                aria-describedby={fieldErrors.city ? 'err-city' : undefined}
+              >
                 <option value="">{t('submit.selectCity')}</option>
                 {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
+              {fieldErrors.city && <span id="err-city" className="field-error">{fieldErrors.city}</span>}
             </div>
 
             <div className="form-group">
-              <span className="form-label">{t('submit.institutionType')}</span>
-              <div className="filter-seg" role="group" aria-label={t('submit.institutionType')}>
+              <span className="form-label" id="lbl-inst">{t('submit.institutionType')}</span>
+              <div
+                className={`filter-seg filter-seg--block ${fieldErrors.institutionType ? 'is-invalid' : ''}`}
+                role="group"
+                aria-labelledby="lbl-inst"
+              >
                 {INSTITUTION_TYPES.map((type) => (
                   <button
                     key={type.value}
@@ -210,6 +254,7 @@ function SubmitExperienceForm({ experience }) {
                   </button>
                 ))}
               </div>
+              {fieldErrors.institutionType && <span className="field-error">{fieldErrors.institutionType}</span>}
             </div>
           </div>
         </div>
@@ -282,9 +327,17 @@ function SubmitExperienceForm({ experience }) {
         <div className="share-body">
           <div className="form-group">
             <label className="form-label" htmlFor="s-steps">{t('submit.stepsTaken')}</label>
-            <textarea id="s-steps" className="form-textarea" rows={4} value={form.stepsTaken}
+            <textarea
+              id="s-steps"
+              className={`form-textarea ${fieldErrors.stepsTaken ? 'is-invalid' : ''}`}
+              rows={4}
+              value={form.stepsTaken}
               onChange={(e) => set('stepsTaken', e.target.value)}
-              placeholder={t('submit.stepsPlaceholder')} />
+              placeholder={t('submit.stepsPlaceholder')}
+              aria-invalid={Boolean(fieldErrors.stepsTaken)}
+              aria-describedby={fieldErrors.stepsTaken ? 'err-steps' : undefined}
+            />
+            {fieldErrors.stepsTaken && <span id="err-steps" className="field-error">{fieldErrors.stepsTaken}</span>}
             <p className="form-hint">{t('submit.stepsHint')}</p>
           </div>
 

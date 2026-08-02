@@ -82,6 +82,25 @@ function Navbar() {
           <NavLink to="/" className={linkClass} end>{t('navbar.home')}</NavLink>
           <NavLink to="/search" className={linkClass}>{t('navbar.search')}</NavLink>
           <NavLink to="/submit" className={linkClass}>{t('navbar.share')}</NavLink>
+          {isAuthenticated && (
+            <NavLink to="/dashboard" className={linkClass}>{t('navbar.dashboard')}</NavLink>
+          )}
+
+          {/* Auth actions repeat inside the collapsible panel because the top bar
+              has no room for them on a phone. Hidden on desktop via CSS. */}
+          <div className="nav-auth-mobile">
+            {!isAuthenticated ? (
+              <>
+                <NavLink to="/login" className="btn btn-secondary btn-sm">{t('navbar.login')}</NavLink>
+                <NavLink to="/register" className="btn btn-primary btn-sm">{t('navbar.register')}</NavLink>
+              </>
+            ) : (
+              <>
+                {isAdmin && <NavLink to="/admin" className={linkClass}>{t('navbar.admin')}</NavLink>}
+                <button className="btn btn-secondary btn-sm" onClick={handleLogout}>{t('navbar.logout')}</button>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="nav-tools">
@@ -112,12 +131,8 @@ function Navbar() {
               {accountOpen && (
                 <div className="account-menu" role="menu">
                   {user?.email && <div className="account-email">{user.email}</div>}
-                  <Link to="/dashboard" className="account-item" role="menuitem" onClick={() => setAccountOpen(false)}>
-                    {t('navbar.dashboard')}
-                  </Link>
-                  <Link to="/submit" className="account-item" role="menuitem" onClick={() => setAccountOpen(false)}>
-                    {t('navbar.share')}
-                  </Link>
+                  {/* Dashboard and Share sit in the primary nav now, so they are
+                      deliberately not repeated here. */}
                   {isAdmin && (
                     <Link to="/admin" className="account-item" role="menuitem" onClick={() => setAccountOpen(false)}>
                       {t('navbar.admin')}

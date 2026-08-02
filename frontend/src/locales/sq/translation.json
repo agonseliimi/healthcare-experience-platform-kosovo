@@ -21,11 +21,11 @@
   },
   "navbar": {
     "home": "Ballina",
-    "search": "Shfleto",
-    "share": "Ndaj",
+    "search": "Eksperiencat",
+    "share": "Ndaj përvojën",
     "privacy": "Privatësia",
     "contact": "Na kontaktoni",
-    "dashboard": "Paneli",
+    "dashboard": "Përvojat e mia",
     "admin": "Admin",
     "login": "Kyçu",
     "register": "Regjistrohu",
@@ -34,7 +34,7 @@
   },
   "hero": {
     "badge": "Anonimitet & Privatësi",
-    "title_line1": "Dije çfarë të presësh",
+    "title_line1": "Dije çka të presësh",
     "title_line2": "para se të shkosh.",
     "sub": "Përvoja anonime pacientësh nga spitalet dhe klinikat në Kosovë — hapat që ndoqën, sa kushtoi dhe sa pritën.",
     "disclaimer": "Përvoja pacientësh, jo këshillë mjekësore. Gjithmonë flisni me një mjek.",
@@ -78,7 +78,7 @@
   },
   "filters": {
     "title": "Filtruesit",
-    "clearAll": "Rivendos",
+    "clearAll": "Pastro",
     "city": "Qyteti",
     "allCities": "Të gjitha qytetet",
     "category": "Kategoria",
@@ -94,8 +94,8 @@
     "allLevels": "Të gjitha nivelet",
     "sort": "Rendit",
     "sortHelpful": "Më të dobishmet",
-    "sortRecent": "Më të rejat",
-    "sortCheapest": "Kostoja më e ulët"
+    "sortRecent": "Më të fundit",
+    "sortCheapest": "Më të lirat"
   },
   "categories": {
     "Cardiology": "Kardiologji",
@@ -136,12 +136,12 @@
     "moreSteps": "+{{count}} të tjera",
     "like": "Shëno si të dobishme",
     "dislike": "Shëno si jo të dobishme",
-    "helpful": "E dobishme",
-    "notHelpful": "Jo e dobishme"
+    "helpful": "Ndihmoi",
+    "notHelpful": "Nuk ndihmoi"
   },
   "searchPage": {
-    "title": "Shfleto përvojat",
-    "sub": "Përvoja anonime pacientësh nga e gjithë Kosova. Asnjë informacion personal nuk shfaqet.",
+    "title": "Eksperiencat",
+    "sub": "Përvoja anonime pacientësh nga e gjithë Kosova. Asnjë e dhënë personale nuk shfaqet.",
     "searchPlaceholder": "Kërko specialitet, qytet ose hap",
     "searchBtn": "Kërko",
     "loading": "Duke ngarkuar përvojat...",
@@ -186,7 +186,7 @@
   },
   "submit": {
     "pageTitle": "Ndaj përvojën tënde",
-    "pageSub": "Katër seksione të shkurtra, rreth dy minuta. Asgjë që shkruan nuk lidhet me emrin tënd.",
+    "pageSub": "Katër seksione të shkurtra, rreth dy minuta. Asgjë nuk lidhet me emrin tënd.",
     "editTitle": "Redakto Përvojën Tënde",
     "editSub": "Përditëso detajet më poshtë. Ndryshimet mbeten anonime si parazgjedhje dhe nuk përfshijnë kurrë identifikues personalë.",
     "privacyWarning": "Anonime si parazgjedhje.",
@@ -242,7 +242,7 @@
     "uploadHint": "Dokumenti do të jetë i dukshëm për të gjithë vizitorët. PDF ose imazhe, deri në 5MB.",
     "fileSelected": "Skedari i zgjedhur:",
     "removeFile": "Hiq",
-    "requiredError": "Ju lutem plotësoni kategorinë, llojin e institucionit, qytetin dhe hapat e ndërmarrë.",
+    "requiredError": "Disa fusha të detyrueshme janë ende bosh.",
     "submitting": "Duke dërguar...",
     "saving": "Duke ruajtur...",
     "submitBtn": "Publiko anonimisht",
@@ -257,7 +257,11 @@
     "sectionCostAside": "E përafërt mjafton · opsionale",
     "stepsHint": "Ndaj çdo hap me një shigjetë (→) dhe do ta shfaqim si kronologji të numëruar.",
     "optional": "opsionale",
-    "editAnytime": "Mund ta ndryshosh ose fshish në çdo kohë."
+    "editAnytime": "Mund ta ndryshosh ose fshish në çdo kohë.",
+    "errorCategory": "Zgjidh një specialitet.",
+    "errorCity": "Zgjidh një qytet.",
+    "errorInstitution": "Zgjidh ku shkove.",
+    "errorSteps": "Përshkruaj së paku një hap që ndoqe."
   },
   "verify": {
     "successTitle": "Verifikimi u kërkua. Një administrator do ta shqyrtojë. Dokumenti yt nuk shfaqet kurrë publikisht.",
@@ -303,7 +307,7 @@
   },
   "dashboard": {
     "welcome": "Mirë se erdhe, {{name}}",
-    "sub": "Gjithçka që ke ndarë dhe sa ka ndihmuar.",
+    "sub": "Gjithçka që ke ndarë dhe sa u ka ndihmuar të tjerëve.",
     "trust": "Besimi",
     "likesReceived": "Pëlqime të marra",
     "dislikesReceived": "Mospëlqime të marra",
@@ -328,18 +332,18 @@
     "colExperience": "Përvoja",
     "colNote": "Shënim",
     "colAdminNote": "Shënimi i adminit",
-    "title": "Përvojat e tua",
+    "title": "Përvojat e mia",
     "shared": "Të ndara",
-    "foundHelpful": "Të dobishme",
+    "foundHelpful": "U ndihmuan",
     "times": "herë",
-    "contributorStatus": "Statusi i kontribuuesit",
-    "tier_new": "Kontribuues i ri",
-    "tier_trusted": "I besuar",
+    "contributorStatus": "Statusi yt",
+    "tier_new": "I ri",
+    "tier_trusted": "I besueshëm",
     "tier_verified": "I verifikuar",
-    "helpfulCount": "{{count}} të dobishme"
+    "helpfulCount": "{{count}} ndihmuan"
   },
   "details": {
-    "back": "← Kthehu te përvojat",
+    "back": "← Kthehu te eksperiencat",
     "steps": "Hapat e ndërmarrë",
     "tests": "Testet e kryera",
     "cost": "Kostoja e përafërt",
@@ -357,12 +361,12 @@
     "verification": "Verifikimi",
     "verificationDocumented": "Një faturë ose letër referimi u ngarkua dhe u kontrollua nga një moderator. Të dhënat identifikuese u turbulluan më parë.",
     "verificationSelfReported": "Shkruar nga një pacient, pa dokument të bashkangjitur. Kostot dhe pritjet janë të përafërta.",
-    "howReliable": "Sa e besueshme është kjo?",
-    "howReliableNote": "Bazuar në sa e dobishme e panë lexuesit, nëse ka dokument mbështetës dhe në qëndrimin e kontribuuesit.",
-    "wasHelpful": "A ishte e dobishme kjo përvojë?",
-    "helpfulYes": "Po, e dobishme",
-    "helpfulNo": "Jo e dobishme",
-    "voteSummary": "{{likes}} e panë të dobishme · {{dislikes}} jo"
+    "howReliable": "Sa e besueshme është?",
+    "howReliableNote": "Bazuar në sa u ndihmoi lexuesve, nëse ka dokument mbështetës dhe në përvojën e atij që e ndau.",
+    "wasHelpful": "A të ndihmoi kjo përvojë?",
+    "helpfulYes": "Po, ndihmoi",
+    "helpfulNo": "Nuk ndihmoi",
+    "voteSummary": "{{likes}} thanë se ndihmoi · {{dislikes}} jo"
   },
   "report": {
     "title": "Raporto këtë përvojë",
@@ -389,8 +393,8 @@
     "continue": "Vazhdo me Pamje të Kufizuar"
   },
   "trust": {
-    "high": "Mbështetje e mirë",
-    "medium": "Njëfarë mbështetje",
+    "high": "Mbështetje e fortë",
+    "medium": "Mbështetje e pjesshme",
     "low": "Pak mbështetje",
     "tooltip": "Sa mbështetje ka kjo përvojë — besueshmëri e komunitetit, jo saktësi mjekësore."
   },
