@@ -155,6 +155,10 @@ public class ExperienceService {
                 e.setDocumentData(documentFile.getBytes());
                 e.setDocumentName(documentFile.getOriginalFilename());
                 e.setDocumentContentType(documentFile.getContentType());
+                // Attaching a document publishes it alongside the journey, so the
+                // journey counts as documented straight away. There is no review
+                // step: nobody moderates uploads, and the UI says so.
+                e.setVerificationLevel(VerificationLevel.DOCUMENT_SUPPORTED);
             } catch (IOException ex) {
                 throw new BadRequestException("Could not read the uploaded file.");
             }

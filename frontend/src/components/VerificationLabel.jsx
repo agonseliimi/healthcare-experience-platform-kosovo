@@ -3,20 +3,27 @@ import { useTranslation } from 'react-i18next'
 /**
  * The redesign reduces verification to two readable states.
  *
- * The backend enum still has three values. HIGH_CONFIDENCE is no longer offered
- * anywhere in the UI, but rows created before that change still carry it, so it
- * is treated as documented rather than silently rendering as unverified.
+ * A journey counts as documented when it carries a document, whichever way it
+ * got one:
+ *   - DOCUMENT_SUPPORTED, set on upload
+ *   - HIGH_CONFIDENCE, no longer offered but present on older rows
+ *   - hasDocument, which covers journeys uploaded before the level was set on
+ *     upload. Without this a page could show the document and still claim none
+ *     was attached.
  *
- * See isDocumented() for the single place that mapping lives.
+ * This is the single place that mapping lives.
  */
-export function isDocumented(verificationLevel) {
-  return verificationLevel === 'DOCUMENT_SUPPORTED' || verificationLevel === 'HIGH_CONFIDENCE'
+export function isDocumented(experience) {
+  if (!experience) return false
+  const level = typeof experience === 'string' ? experience : experience.verificationLevel
+  const hasDocument = typeof experience === 'string' ? false : Boolean(experience.hasDocument)
+  return hasDocument || level === 'DOCUMENT_SUPPORTED' || level === 'HIGH_CONFIDENCE'
 }
 
-function VerificationLabel({ verificationLevel }) {
+function VerificationLabel({ experience }) {
   const { t } = useTranslation()
 
-  if (isDocumented(verificationLevel)) {
+  if (isDocumented(experience)) {
     return (
       <span className="vbadge vbadge--DOCUMENT_SUPPORTED">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"

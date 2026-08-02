@@ -137,11 +137,12 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
 
       <footer className="exp-foot">
         <div className="exp-foot-left">
-          <VerificationLabel verificationLevel={exp.verificationLevel} />
+          <VerificationLabel experience={exp} />
           <TrustBadge
             likes={exp.likes}
             dislikes={exp.dislikes}
             verificationLevel={exp.verificationLevel}
+            hasDocument={exp.hasDocument}
             authorTrustScore={exp.authorTrustScore}
           />
         </div>

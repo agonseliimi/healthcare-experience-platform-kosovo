@@ -67,7 +67,7 @@ function ExperienceDetails() {
   if (!exp) return null
 
   const steps = parseJourneySteps(exp.stepsTaken)
-  const documented = isDocumented(exp.verificationLevel)
+  const documented = isDocumented(exp)
   const cost = exp.approximateCost == null
     ? '—'
     : exp.approximateCost === 0 ? t('experienceCard.free') : `${exp.approximateCost} €`
@@ -184,7 +184,7 @@ function ExperienceDetails() {
           <div className="side-card">
             <div className="eyebrow">{t('details.verification')}</div>
             <div className={`side-verdict ${documented ? 'side-verdict--doc' : 'side-verdict--self'}`}>
-              <VerificationLabel verificationLevel={exp.verificationLevel} />
+              <VerificationLabel experience={exp} />
             </div>
             <p className="side-text">
               {documented ? t('details.verificationDocumented') : t('details.verificationSelfReported')}
@@ -198,6 +198,7 @@ function ExperienceDetails() {
                 likes={exp.likes}
                 dislikes={exp.dislikes}
                 verificationLevel={exp.verificationLevel}
+                hasDocument={exp.hasDocument}
                 authorTrustScore={exp.authorTrustScore}
               />
             </div>

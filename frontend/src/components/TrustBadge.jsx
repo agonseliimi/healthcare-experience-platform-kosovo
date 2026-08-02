@@ -14,7 +14,7 @@ import { isDocumented } from './VerificationLabel'
  *
  * NOTE: this reflects community credibility, NOT medical correctness.
  */
-export function journeyTrustScore({ likes = 0, dislikes = 0, verificationLevel, authorTrustScore }) {
+export function journeyTrustScore({ likes = 0, dislikes = 0, verificationLevel, hasDocument, authorTrustScore }) {
   // Helpfulness (0..35). Ramps in over the first few votes so a single like
   // cannot push a brand-new journey into the top band.
   const totalVotes = (likes || 0) + (dislikes || 0)
@@ -24,7 +24,7 @@ export function journeyTrustScore({ likes = 0, dislikes = 0, verificationLevel, 
 
   // Evidence (0..40) — the strongest single signal available. Uses the same
   // mapping as the badge, so a journey shown as "Documented" always scores as one.
-  const documented = isDocumented(verificationLevel) ? 40 : 0
+  const documented = isDocumented({ verificationLevel, hasDocument }) ? 40 : 0
 
   // Author standing (0..25). Input only, never displayed.
   const author = (Math.min(Math.max(authorTrustScore ?? 0, 0), 100) / 100) * 25
@@ -38,10 +38,10 @@ export function journeyTrustScore({ likes = 0, dislikes = 0, verificationLevel, 
  *   verificationLevel  - backend enum for this journey
  *   authorTrustScore   - 0..100, scoring input only, never shown
  */
-function TrustBadge({ likes, dislikes, verificationLevel, authorTrustScore }) {
+function TrustBadge({ likes, dislikes, verificationLevel, hasDocument, authorTrustScore }) {
   const { t } = useTranslation()
 
-  const score = journeyTrustScore({ likes, dislikes, verificationLevel, authorTrustScore })
+  const score = journeyTrustScore({ likes, dislikes, verificationLevel, hasDocument, authorTrustScore })
 
   let tone = 'low'
   let filled = 1

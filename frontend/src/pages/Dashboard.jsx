@@ -116,7 +116,7 @@ function Dashboard() {
                     <div className="mine-row-title">{t(`categories.${e.category}`)}</div>
                     <div className="mine-row-sub">{t(`institutions.${e.institutionType}`)} · {e.city}</div>
                   </div>
-                  <VerificationLabel verificationLevel={e.verificationLevel} />
+                  <VerificationLabel experience={e} />
                   <span className="mine-row-helpful">{t('dashboard.helpfulCount', { count: e.likes ?? 0 })}</span>
                   <div className="mine-row-actions">
                     <Link className="link" to={`/experiences/${e.id}`}>{t('dashboard.view')}</Link>
