@@ -44,6 +44,12 @@ public class ExperienceResponse {
     private String documentName;
     private String documentContentType;
 
+    // "LIKE", "DISLIKE", or null when the reader has not voted / is anonymous.
+    private String myVote;
+
+    public String getMyVote() { return myVote; }
+    public void setMyVote(String myVote) { this.myVote = myVote; }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

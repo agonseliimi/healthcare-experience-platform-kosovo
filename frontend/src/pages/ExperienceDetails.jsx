@@ -218,13 +218,22 @@ function ExperienceDetails() {
           <div className="side-card">
             <div className="side-title">{t('details.wasHelpful')}</div>
             <div className="side-actions">
-              <button className="btn btn-ghost btn-sm" onClick={() => handleVote('LIKE')}>
-                {t('details.helpfulYes')}
+              <button
+                className={`btn btn-sm ${exp.myVote === 'LIKE' ? 'btn-success' : 'btn-secondary'}`}
+                aria-pressed={exp.myVote === 'LIKE'}
+                onClick={() => handleVote('LIKE')}
+              >
+                {exp.myVote === 'LIKE' ? `✓ ${t('details.helpfulYes')}` : t('details.helpfulYes')}
               </button>
-              <button className="btn btn-secondary btn-sm" onClick={() => handleVote('DISLIKE')}>
-                {t('details.helpfulNo')}
+              <button
+                className={`btn btn-sm ${exp.myVote === 'DISLIKE' ? 'btn-ghost' : 'btn-secondary'}`}
+                aria-pressed={exp.myVote === 'DISLIKE'}
+                onClick={() => handleVote('DISLIKE')}
+              >
+                {exp.myVote === 'DISLIKE' ? `✓ ${t('details.helpfulNo')}` : t('details.helpfulNo')}
               </button>
             </div>
+            {exp.myVote && <p className="side-vote-mine">{t('details.yourVoteNote')}</p>}
             <p className="side-vote-summary">
               {t('details.voteSummary', { likes: exp.likes ?? 0, dislikes: exp.dislikes ?? 0 })}
             </p>

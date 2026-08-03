@@ -233,7 +233,7 @@
     "resultPlaceholder": "e.g. 3 days",
     "summary": "Experience summary",
     "summaryPlaceholder": "A short general summary of your journey",
-    "anonymous": "Submit anonymously (your identity is never shown on the experience)",
+    "anonymous": "Publish anonymously",
     "requestVerification": "Add supporting document (will be visible to visitors)",
     "documentNote": "Document verification note",
     "documentNotePlaceholder": "Describe (without identifiers) what evidence supports this experience.",
@@ -261,7 +261,11 @@
     "errorCategory": "Choose a specialty.",
     "errorCity": "Choose a city.",
     "errorInstitution": "Choose where you went.",
-    "errorSteps": "Describe at least one step you took."
+    "errorSteps": "Describe at least one step you took.",
+    "displayName": "Sign it with a name",
+    "displayNamePlaceholder": "Leave empty to stay anonymous",
+    "displayNameEmpty": "Left empty, so this journey will be published anonymously.",
+    "displayNameShown": "This journey will be signed \"{{name}}\". Your account email is never shown."
   },
   "verify": {
     "successTitle": "Verification requested. An administrator will review it. Your document is never shown publicly.",
@@ -340,7 +344,9 @@
     "tier_new": "New contributor",
     "tier_trusted": "Trusted",
     "tier_verified": "Verified",
-    "helpfulCount": "{{count}} helpful"
+    "helpfulCount": "{{count}} helpful",
+    "savedTitle": "Saved for later ({{count}})",
+    "noSaved": "You have not saved any journeys yet."
   },
   "details": {
     "back": "← Back to journeys",
@@ -371,7 +377,8 @@
     "noSimilar": "No similar journeys yet.",
     "saveForLater": "Save for later",
     "saved": "Saved",
-    "removeSaved": "Remove from saved"
+    "removeSaved": "Remove from saved",
+    "yourVoteNote": "Your vote is saved. Press the same button again to undo it."
   },
   "report": {
     "title": "Report this experience",

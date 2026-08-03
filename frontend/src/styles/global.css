@@ -437,7 +437,12 @@ img, svg { display: block; max-width: 100%; }
   color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm);
   min-height: 28px; padding: 4px 10px; line-height: 1.25; max-width: 100%; }
 .icon-btn:hover { background: var(--tint); color: var(--text); border-color: var(--border-strong); }
-.icon-btn[aria-pressed='true'] { background: var(--primary-light); border-color: var(--primary-light); color: var(--primary); }
+/* Your own vote, so it is obvious the press registered. */
+.icon-btn[aria-pressed='true'] {
+  background: var(--primary-light); border-color: var(--primary-mid);
+  color: var(--primary); font-weight: 600;
+}
+.side-vote-mine { font-size: 0.74rem; color: var(--primary-mid); margin-top: 8px; }
 .exp-open { height: 28px; padding: 0 11px; background: var(--primary-soft); border: 1px solid var(--primary-light);
   border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 600; color: var(--primary); }
 .exp-open:hover { background: var(--primary-light); }

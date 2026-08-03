@@ -43,6 +43,9 @@ public class ExperienceRequest {
     @Size(max = 4000)
     private String summary;
 
+    @Size(max = 60, message = "The name can be at most 60 characters")
+    private String displayName;
+
     private Boolean isAnonymous = true;
 
     public String getCategory() { return category; }
@@ -76,6 +79,9 @@ public class ExperienceRequest {
 
     public String getSummary() { return summary; }
     public void setSummary(String summary) { this.summary = summary; }
+
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
 
     public Boolean getIsAnonymous() { return isAnonymous; }
     public void setIsAnonymous(Boolean isAnonymous) { this.isAnonymous = isAnonymous; }

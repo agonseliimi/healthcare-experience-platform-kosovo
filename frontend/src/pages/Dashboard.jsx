@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getMyExperiences, getMyVerificationRequests, deleteExperience } from '../api/api'
+import { getMyExperiences, getMyVerificationRequests, deleteExperience, getExperiences } from '../api/api'
 import { useAuth } from '../context/AuthContext'
 import VerificationLabel from '../components/VerificationLabel'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
+import { getSavedIds, toggleSaved } from '../utils/savedJourneys'
 
 /** Contributor standing, derived from the (private) trust score. */
 function contributorTier(trustScore) {
@@ -25,6 +26,9 @@ function Dashboard() {
   const [error, setError] = useState(null)
   const [deletingId, setDeletingId] = useState(null)
   const [actionError, setActionError] = useState(null)
+  // Saved journeys live in localStorage, so they are resolved against the public
+  // list rather than fetched from an endpoint.
+  const [saved, setSaved] = useState([])
 
   async function load() {
     setLoading(true)
@@ -34,6 +38,20 @@ function Dashboard() {
       // Filter out deleted (HIDDEN) experiences so they don't show up in the panel.
       setExperiences(exps.filter((e) => e.status !== 'HIDDEN'))
       setVerifications(verifs)
+
+      // Resolve saved ids to real journeys, keeping the saved order.
+      const ids = getSavedIds()
+      if (ids.length > 0) {
+        try {
+          const all = await getExperiences({})
+          const byId = new Map((Array.isArray(all) ? all : []).map((e) => [e.id, e]))
+          setSaved(ids.map((id) => byId.get(id)).filter(Boolean))
+        } catch {
+          setSaved([])
+        }
+      } else {
+        setSaved([])
+      }
     } catch (err) {
       setError(err.message)
     } finally {
@@ -134,6 +152,43 @@ function Dashboard() {
               ))}
             </div>
           )}
+
+          <section className="section">
+            <h2 className="section-title">{t('dashboard.savedTitle', { count: saved.length })}</h2>
+            {saved.length === 0 ? (
+              <p className="muted">{t('dashboard.noSaved')}</p>
+            ) : (
+              <div className="mine-list">
+                {saved.map((e) => (
+                  <div className="mine-row" key={e.id}>
+                    <div className="mine-row-main">
+                      <div className="mine-row-title">{t(`categories.${e.category}`)}</div>
+                      <div className="mine-row-sub">{t(`institutions.${e.institutionType}`)} · {e.city}</div>
+                    </div>
+                    <VerificationLabel experience={e} />
+                    <span className="mine-row-helpful">
+                      {e.approximateCost == null
+                        ? '—'
+                        : e.approximateCost === 0 ? t('experienceCard.free') : `${e.approximateCost} €`}
+                    </span>
+                    <div className="mine-row-actions">
+                      <Link className="link" to={`/experiences/${e.id}`}>{t('dashboard.view')}</Link>
+                      <button
+                        type="button"
+                        className="link link-danger"
+                        onClick={() => {
+                          toggleSaved(e.id)
+                          setSaved((prev) => prev.filter((item) => item.id !== e.id))
+                        }}
+                      >
+                        {t('details.removeSaved')}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
           <section className="section">
             <h2 className="section-title">{t('dashboard.myVerifications', { count: verifications.length })}</h2>

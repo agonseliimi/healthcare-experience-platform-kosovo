@@ -148,10 +148,20 @@ function ExperienceCard({ experience, onChanged, onRequireAuth }) {
         </div>
 
         <div className="exp-foot-right">
-          <button className="icon-btn" onClick={() => handleVote('LIKE')}>
+          {/* aria-pressed drives both the styling and the screen-reader state, so
+              the reader can see which way they already voted. */}
+          <button
+            className="icon-btn"
+            aria-pressed={exp.myVote === 'LIKE'}
+            onClick={() => handleVote('LIKE')}
+          >
             {t('experienceCard.helpful')} {exp.likes ?? 0}
           </button>
-          <button className="icon-btn" onClick={() => handleVote('DISLIKE')}>
+          <button
+            className="icon-btn"
+            aria-pressed={exp.myVote === 'DISLIKE'}
+            onClick={() => handleVote('DISLIKE')}
+          >
             {t('experienceCard.notHelpful')} {exp.dislikes ?? 0}
           </button>
           <button className="icon-btn" onClick={handleReport}>

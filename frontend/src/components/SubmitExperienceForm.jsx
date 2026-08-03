@@ -29,7 +29,8 @@ const emptyState = {
   waitingTime: '',
   resultTime: '',
   summary: '',
-  isAnonymous: true,
+  // Empty name = published anonymously. This is the only identity control.
+  displayName: '',
   requestVerification: false,
   documentNote: '',
 }
@@ -49,7 +50,7 @@ function toFormState(experience) {
     waitingTime: experience.waitingTime ?? '',
     resultTime: experience.resultTime ?? '',
     summary: experience.summary ?? '',
-    isAnonymous: experience.isAnonymous ?? true,
+    displayName: experience.displayName ?? '',
   }
 }
 
@@ -157,7 +158,8 @@ function SubmitExperienceForm({ experience }) {
       waitingTime: form.waitingTime,
       resultTime: form.resultTime,
       summary: form.summary,
-      isAnonymous: form.isAnonymous,
+      // The backend derives anonymity from this: an empty name stays anonymous.
+      displayName: form.displayName,
     }
 
     setSubmitting(true)
@@ -381,10 +383,26 @@ function SubmitExperienceForm({ experience }) {
             </div>
           </div>
 
-          <label className="checkbox-row">
-            <input type="checkbox" checked={form.isAnonymous} onChange={(e) => set('isAnonymous', e.target.checked)} />
-            <span>{t('submit.anonymous')}</span>
-          </label>
+          {/* Identity is one control: a name, or nothing. Empty means anonymous. */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="s-name">
+              {t('submit.displayName')} <span className="form-optional">{t('submit.optional')}</span>
+            </label>
+            <input
+              id="s-name"
+              type="text"
+              className="form-input"
+              maxLength={60}
+              value={form.displayName}
+              onChange={(e) => set('displayName', e.target.value)}
+              placeholder={t('submit.displayNamePlaceholder')}
+            />
+            <p className="form-hint">
+              {form.displayName.trim()
+                ? t('submit.displayNameShown', { name: form.displayName.trim() })
+                : t('submit.displayNameEmpty')}
+            </p>
+          </div>
 
       {!isEdit && (
         <>

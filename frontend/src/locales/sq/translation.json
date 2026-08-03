@@ -233,7 +233,7 @@
     "resultPlaceholder": "p.sh. 3 ditë",
     "summary": "Përmbledhja e përvojës",
     "summaryPlaceholder": "Një përmbledhje e shkurtër e rrugëtimit tënd",
-    "anonymous": "Dërgo në mënyrë anonime (identiteti yt nuk shfaqet kurrë në përvojë)",
+    "anonymous": "Publiko anonimisht",
     "requestVerification": "Shto dokument mbështetës (do të jetë i dukshëm për vizitorët)",
     "documentNote": "Shënim për verifikimin e dokumentit",
     "documentNotePlaceholder": "Përshkruaj (pa identifikues) çfarë dëshmie e mbështet këtë përvojë.",
@@ -261,7 +261,11 @@
     "errorCategory": "Zgjidh një specialitet.",
     "errorCity": "Zgjidh një qytet.",
     "errorInstitution": "Zgjidh ku shkove.",
-    "errorSteps": "Përshkruaj së paku një hap që ndoqe."
+    "errorSteps": "Përshkruaj së paku një hap që ndoqe.",
+    "displayName": "Nënshkruaje me një emër",
+    "displayNamePlaceholder": "Lëre bosh për të mbetur anonim",
+    "displayNameEmpty": "E lënë bosh, prandaj kjo përvojë publikohet anonime.",
+    "displayNameShown": "Kjo përvojë do të nënshkruhet \"{{name}}\". Emaili yt nuk shfaqet kurrë."
   },
   "verify": {
     "successTitle": "Verifikimi u kërkua. Një administrator do ta shqyrtojë. Dokumenti yt nuk shfaqet kurrë publikisht.",
@@ -340,7 +344,9 @@
     "tier_new": "I ri",
     "tier_trusted": "I besueshëm",
     "tier_verified": "I verifikuar",
-    "helpfulCount": "{{count}} ndihmuan"
+    "helpfulCount": "{{count}} ndihmuan",
+    "savedTitle": "Të ruajtura për më vonë ({{count}})",
+    "noSaved": "Ende nuk ke ruajtur asnjë përvojë."
   },
   "details": {
     "back": "← Kthehu te eksperiencat",
@@ -371,7 +377,8 @@
     "noSimilar": "Ende asnjë përvojë e ngjashme.",
     "saveForLater": "Ruaj për më vonë",
     "saved": "E ruajtur",
-    "removeSaved": "Hiq nga të ruajturat"
+    "removeSaved": "Hiq nga të ruajturat",
+    "yourVoteNote": "Vota jote u ruajt. Shtyp të njëjtin buton për ta hequr."
   },
   "report": {
     "title": "Raporto këtë përvojë",

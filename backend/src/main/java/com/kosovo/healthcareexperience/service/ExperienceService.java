@@ -284,9 +284,13 @@ public class ExperienceService {
         e.setWaitingTime(r.getWaitingTime());
         e.setResultTime(r.getResultTime());
         e.setSummary(r.getSummary());
-        if (r.getIsAnonymous() != null) {
-            e.setIsAnonymous(r.getIsAnonymous());
-        }
+
+        // The name is the single control for identity: leaving it empty keeps the
+        // journey anonymous. isAnonymous is kept in step so older readers of the
+        // API still see a consistent value.
+        String chosenName = r.getDisplayName() == null ? "" : r.getDisplayName().trim();
+        e.setDisplayName(chosenName.isEmpty() ? null : chosenName);
+        e.setIsAnonymous(chosenName.isEmpty());
     }
 
     private void requireOwnerOrAdmin(Experience e, User current) {
@@ -363,13 +367,23 @@ public class ExperienceService {
             r.setAuthorTrustScore(author.getTrustScore());
             r.setAuthorTrustLabel(trustScoreService.label(author.getTrustScore()));
 
-            if (Boolean.TRUE.equals(e.getIsAnonymous())) {
+            // The author may pick a name to sign the journey with. No name means
+            // anonymous, which is the default.
+            String chosenName = e.getDisplayName() == null ? "" : e.getDisplayName().trim();
+            if (chosenName.isEmpty()) {
                 r.setAuthorId(null);
                 r.setAuthorDisplayName("Anonymous");
             } else {
                 r.setAuthorId(author.getId());
-                r.setAuthorDisplayName(author.getDisplayName());
+                r.setAuthorDisplayName(chosenName);
             }
+        }
+
+        // So the UI can show which way the current reader already voted.
+        User viewer = userService.getCurrentUserOrNull();
+        if (viewer != null) {
+            voteRepository.findByUserAndExperience(viewer, e)
+                    .ifPresent(vote -> r.setMyVote(vote.getType().name()));
         }
         return r;
     }

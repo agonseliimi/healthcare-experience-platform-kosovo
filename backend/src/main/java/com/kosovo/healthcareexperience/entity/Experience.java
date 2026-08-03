@@ -85,6 +85,13 @@ public class Experience {
 
     private Boolean isAnonymous = true;
 
+    /**
+     * Name the author chose to sign this journey with. Blank or null means the
+     * journey is published anonymously, which is the default.
+     */
+    @Column(name = "display_name", length = 60)
+    private String displayName;
+
     private Integer likes = 0;
     private Integer dislikes = 0;
 
@@ -160,6 +167,9 @@ public class Experience {
 
     public ExperienceStatus getStatus() { return status; }
     public void setStatus(ExperienceStatus status) { this.status = status; }
+
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
 
     public Boolean getIsAnonymous() { return isAnonymous; }
     public void setIsAnonymous(Boolean isAnonymous) { this.isAnonymous = isAnonymous; }
