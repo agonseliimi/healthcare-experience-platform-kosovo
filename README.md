@@ -38,8 +38,8 @@ correctness.
 
 | Layer     | Technology |
 |-----------|------------|
-| Frontend  | React, Vite, JavaScript, React Router, plain CSS |
-| Backend   | Java 17+, Spring Boot 3.4, Spring Web, Spring Data JPA, Spring Security |
+| Frontend  | React 18, Vite 5, JavaScript, React Router, i18next, plain CSS |
+| Backend   | Java 17+, Spring Boot 3.4.5, Spring Web, Spring Data JPA, Spring Security |
 | Auth      | JWT (jjwt) + BCrypt password hashing |
 | Database  | SQLite (via `sqlite-jdbc` + Hibernate community SQLite dialect) |
 | Docs      | Swagger UI (springdoc-openapi) at `/swagger-ui.html` |
@@ -50,15 +50,20 @@ correctness.
 
 - Browse & filter anonymous experiences (city, category, institution, cost, waiting, verification)
 - Register / login with JWT; roles: **guest**, **user**, **admin**
-- Submit experiences (with server-side privacy sanitization)
+- Submit, edit, and hide experiences with server-side privacy sanitization
+- Publish anonymously or use an optional display name (email addresses are never public)
 - Add and display up to 10 reported symptoms per experience
+- Attach a public supporting PDF or image; images can be redacted with the built-in blur tool
+- Save journeys locally and receive similar-journey suggestions based on symptoms, category, and city
 - Send privacy-conscious feedback through a backend SMTP integration
-- Like / dislike (one vote per user, changeable)
+- Like / dislike with immediate vote feedback (one vote per user, changeable)
 - Report content for moderation
-- Optional, privacy-first verification workflow (documents never public)
+- Optional, privacy-first verification workflow with separate admin-only documents
 - Community **trust score** (credibility, not medical accuracy)
 - Admin dashboard, report review, and verification review
 - Limited guest access (5 free actions, tracked in localStorage)
+- Albanian / English localization and accessibility preferences (text size, dark mode,
+  high contrast, and reduced motion)
 
 ---
 
@@ -77,6 +82,15 @@ healthcare-experience-platform-kosovo/
 ## How to run
 
 The frontend and backend run in **two separate terminals**.
+
+### Prerequisites
+
+- Java 17 or newer
+- Node.js 18 or newer
+- npm (bundled with Node.js)
+
+Maven does not need to be installed globally because the repository includes the Maven
+Wrapper.
 
 ### Windows: one-command launcher (recommended)
 
@@ -125,9 +139,23 @@ Open <http://localhost:5173>.
 > The frontend expects the backend at `http://localhost:5000/api`. If the backend is not
 > running, the UI shows a friendly error instead of crashing.
 
+### Public evidence vs private verification documents
+
+The project intentionally supports two different document flows:
+
+- **Public supporting evidence:** an optional PDF or image attached while creating an
+  experience. It is displayed on the public experience-details page. Images can be
+  redacted with the built-in blur tool before upload; PDFs are published exactly as sent.
+- **Private verification evidence:** an optional document submitted through the backend
+  verification workflow. It is stored under `backend/data/uploads` and can only be
+  downloaded by an authenticated administrator. It is never exposed by a public endpoint.
+
+Users must remove names, identifiers, addresses, and other sensitive information before
+uploading either type of document. The MVP does not provide automatic PII guarantees.
+
 ### Feedback email configuration
 
-The public **Contact Us / Na kontaktoni** page calls `POST /api/feedback`; the React app
+The public **Contact Us** page calls `POST /api/feedback`; the React app
 never receives SMTP credentials. Configure the backend with environment variables before
 starting it:
 
@@ -184,19 +212,19 @@ Never commit secrets to properties files, `.env` files, frontend variables, or s
 
 ## Future roadmap
 
-- Real, encrypted document upload with admin-only viewer and deletion policy
+- Encrypt private verification documents and add retention/deletion policies and audit logs
 - Stronger privacy filtering (NER models) + human moderation queue
 - Pagination, sorting, and semantic search
 - Email verification and password reset
 - GDPR-aligned data policy, right-to-erasure, audit logs
-- Albanian / Serbian localisation
+- Serbian localization and broader internationalization coverage
 - Deployment (Docker) and a managed database (e.g. PostgreSQL) for production
 
 ---
 
 ## Documentation
 
-- [`docs/permbledhje-projekti-sq.md`](docs/permbledhje-projekti-sq.md) — përmbledhja funksionale, e përmbajtjes dhe e strukturës në shqip
+- [`docs/permbledhje-projekti-sq.md`](docs/permbledhje-projekti-sq.md) - detailed functional and structural project summary in Albanian
 - [`docs/final-project-summary.md`](docs/final-project-summary.md)
 - [`docs/database-schema.md`](docs/database-schema.md)
 - [`docs/api-routes.md`](docs/api-routes.md)

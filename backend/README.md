@@ -11,7 +11,7 @@ role-based access control.
 ## Stack
 
 - Java 17+ (built/tested on JDK 24; compiled to Java 17 bytecode)
-- Spring Boot 3.4 (Web, Data JPA, Security, Validation)
+- Spring Boot 3.4.5 (Web, Data JPA, Security, Validation)
 - Spring Mail (`JavaMailSender`) for backend-only feedback delivery
 - SQLite via `org.xerial:sqlite-jdbc`
 - Hibernate community **SQLite dialect** (`hibernate-community-dialects`)
@@ -68,6 +68,32 @@ backend/src/main/java/com/kosovo/healthcareexperience/
 - Connection pool is limited to 1 (`hikari.maximum-pool-size=1`) because SQLite is a
   single-writer file database — this avoids "database is locked" errors in the demo.
 - Delete `data/*.db` to reset to a fresh, re-seeded database.
+
+---
+
+## Document storage model
+
+The backend supports two separate document flows with different visibility rules.
+
+### Public experience documents
+
+- An optional PDF or image can be uploaded as part of `POST /api/experiences`.
+- The document bytes, original name, and content type are stored on the `Experience` entity
+  in SQLite.
+- Published experience documents are returned through `GET /api/experiences/{id}/document`
+  and are intentionally visible on the public details page.
+- The frontend can blur/redact images before upload. PDFs are accepted as provided, so users
+  must remove sensitive information themselves.
+
+### Private verification documents
+
+- An optional document can be uploaded through `POST /api/verification/request`.
+- The file is stored under `backend/data/uploads` using a generated server-side name; only
+  its metadata and storage reference are kept in the verification database row.
+- Download is available only through the admin-protected
+  `GET /api/verification/{id}/document` endpoint.
+- Verification documents are never exposed through public experience responses or public
+  file URLs.
 
 ---
 
@@ -139,7 +165,9 @@ with the configured mailbox/provider logs.
 - `SanitizationService` performs a **basic** check for emails, phone numbers, long ID-like
   numbers, and address-like phrases, and rejects such submissions. This is intentionally
   simple; production would need much stronger detection **plus human moderation**.
-- Verification documents are **never public**. In this MVP only a file-name reference and
-  a note are stored. Real document handling would require encryption, strict access control,
-  a deletion/retention policy, audit logs, and legal/privacy review (see comments in
-  `VerificationRequest.java`).
+- Public experience documents are deliberately visible to visitors, so contributors must
+  remove identifying information before upload. The frontend blur tool helps with images
+  but does not inspect PDFs.
+- Private verification documents are stored on disk and restricted to administrators.
+  Production use would still require encryption at rest, malware scanning, strict retention
+  and deletion policies, audit logs, backups, and a legal/privacy review.
